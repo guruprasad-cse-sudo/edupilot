@@ -1,0 +1,271 @@
+{
+  "run_id": "bf7d05b6-fb0a-4f12-b92d-e91fc310a87b",
+  "started_at": "2026-08-05T07:07:07.288033+00:00",
+  "completed_at": "2026-08-05T07:07:14.978862+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Model Switch Smoke Test",
+    "course_code": "TST101",
+    "topics": "Basic arithmetic",
+    "bloom_targets": "Remember",
+    "co_mapping": "CO1",
+    "question_count": 2,
+    "marks_per_question": 1,
+    "difficulty": "Easy",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Basic Arithmetic Recall Quiz for Model Switch Smoke Test (TST101)",
+      "course_code": "TST101",
+      "course_name": "Model Switch Smoke Test",
+      "assessment_type": "Quiz",
+      "semester": "7th",
+      "duration_minutes": 20,
+      "total_marks": 2,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer each question briefly. Each question carries 1 mark. Choose the correct answer or write the required number.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "According to the CO/PO mapping table (see page 30), what is the percentage weightage assigned to CO1?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "40%",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 30,
+            "relevance_score": 0.6071,
+            "excerpt": "interpreting model results  E L5 \nCO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 3                \nCO2 3            1    \nCO3  3            1   \nCO4   3  2  "
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 22 – CO1 weightage shown as 40%."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "In the assessment activity breakdown, what is the total percentage allocated to the 'Analyze' activity?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "44% (40% + 4%)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 47,
+            "relevance_score": 0.5966,
+            "excerpt": "Analyze  40% + 4% \nEvaluate  20% + 2% \nCreate"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 47 – Analyze listed as 40% + 4%."
+      }
+    ],
+    "generation_notes": "Questions are derived exclusively from the provided syllabus excerpts. Bloom level: Remember. Difficulty: Easy. All items map to CO1."
+  },
+  "analytics": {
+    "question_count": 2,
+    "total_marks": 2,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 0,
+        "Apply": 0,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 100.0,
+        "Understand": 0.0,
+        "Apply": 0.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 0,
+      "Hard": 0
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 10,
+    "quality_score": 34.2,
+    "marks_distribution": {
+      "Q1": 1,
+      "Q2": 1
+    },
+    "reviewer_result": {
+      "quality_score": 48.0,
+      "strengths": [
+        "Both questions have answer keys indicated as present",
+        "Each question is explicitly mapped to CO1, showing clear outcome alignment"
+      ],
+      "weaknesses": [
+        "All questions are at the Remember level; no higher-order Bloom levels are represented",
+        "Only CO1 is assessed; other course outcomes are omitted",
+        "Both items are marked Easy, providing no difficulty variation",
+        "Total of only two marks limits the assessment's ability to discriminate student performance"
+      ],
+      "suggestions": [
+        "Introduce at least one Apply- or Analyze-level question that requires students to use or interpret the CO/PO mapping data",
+        "Add a question targeting a different CO (e.g., CO2) to ensure broader outcome coverage",
+        "Include a medium- or hard-difficulty item to create a more balanced difficulty distribution",
+        "Provide the actual answer key content in the assessment documentation for faculty verification"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": false,
+        "Apply": false,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The quiz is overly simplistic for an OBE-aligned course. Expanding Bloom's taxonomy coverage, incorporating multiple outcomes, and varying difficulty will improve its diagnostic value and alignment with accreditation expectations.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 48.0,
+    "strengths": [
+      "Both questions have answer keys indicated as present",
+      "Each question is explicitly mapped to CO1, showing clear outcome alignment"
+    ],
+    "weaknesses": [
+      "All questions are at the Remember level; no higher-order Bloom levels are represented",
+      "Only CO1 is assessed; other course outcomes are omitted",
+      "Both items are marked Easy, providing no difficulty variation",
+      "Total of only two marks limits the assessment's ability to discriminate student performance"
+    ],
+    "suggestions": [
+      "Introduce at least one Apply- or Analyze-level question that requires students to use or interpret the CO/PO mapping data",
+      "Add a question targeting a different CO (e.g., CO2) to ensure broader outcome coverage",
+      "Include a medium- or hard-difficulty item to create a more balanced difficulty distribution",
+      "Provide the actual answer key content in the assessment documentation for faculty verification"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": false,
+      "Apply": false,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The quiz is overly simplistic for an OBE-aligned course. Expanding Bloom's taxonomy coverage, incorporating multiple outcomes, and varying difficulty will improve its diagnostic value and alignment with accreditation expectations.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 1745,
+    "docx": 39059,
+    "pdf": 3639
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 30,
+      "relevance_score": 0.6071,
+      "excerpt": "interpreting model results  E L5 \nCO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 3                \nCO2 3            1    \nCO3  3            1   \nCO4   3  2  "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 47,
+      "relevance_score": 0.5966,
+      "excerpt": "Analyze  40% + 4% \nEvaluate  20% + 2% \nCreate"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 21,
+      "relevance_score": 0.5901,
+      "excerpt": "Evaluate  \n - - 10 10  \nCreate  \n - -  15 10 \n \n \n CO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 2 2           2    \nCO2 2 3   2    2    2    \nCO3 2 3      "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 22,
+      "relevance_score": 0.5855,
+      "excerpt": "Apply  20%+2%  \nAnalyse  40%+4%  \nEvaluate  20%+2%  \nCreate   \n  \n \nSEE Course Plan  \n \n \nCO’s  Marks Distribution   \nTotal \nMarks   \nWeightage  \nModule -1 Module -2 Module - 3 Module -4 Module -5 \nCO"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 37,
+      "relevance_score": 0.5842,
+      "excerpt": "T1 – Chapter 6 (6.2 – 6.7), Chapter 7(7.7 – 7.10)  08 \nPedagogy  Demonstration of algorithms.  \n \n \n4 Model -Based Decision Making, Decision Support Systems modeling, Structure of \nmathematical models"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 7,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 3488,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2334,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1645,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 215,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

@@ -1,0 +1,52 @@
+{
+  "run_id": "a5b69fb6-7941-4c04-84d1-01e45006e89e",
+  "started_at": "2026-08-04T11:41:41.301561+00:00",
+  "completed_at": "2026-08-04T11:41:46.506309+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Operating Systems",
+    "course_code": "CS4001",
+    "topics": "Process Scheduling, Deadlock",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 3,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 20,
+    "department": "CSE",
+    "semester": "Semester 6",
+    "faculty_name": "Dr. Test",
+    "extra_instructions": ""
+  },
+  "assessment": null,
+  "analytics": null,
+  "reviewer": null,
+  "export_formats": [],
+  "export_sizes": {},
+  "rag_sources": [],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 18,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "error",
+      "duration_ms": 4432,
+      "error": "No module named 'langchain_huggingface'",
+      "warning": "RAG retrieval failed; proceeding without knowledge context."
+    },
+    {
+      "stage": "generation",
+      "status": "error",
+      "duration_ms": 755,
+      "error": "AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)",
+      "warning": null
+    }
+  ],
+  "success": false,
+  "fatal_error": "Assessment Agent failed: AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)"
+}

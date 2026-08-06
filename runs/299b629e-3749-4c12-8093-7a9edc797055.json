@@ -1,0 +1,334 @@
+{
+  "run_id": "299b629e-3749-4c12-8093-7a9edc797055",
+  "started_at": "2026-08-04T15:32:42.208074+00:00",
+  "completed_at": "2026-08-04T15:32:48.065407+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "topics": "Perceptrons and convergence theorem",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Internal Assessment",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Please ensure you clearly label each question with its corresponding question number."
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What is the Perceptron Convergence Theorem, and what are its implications for single-layer perceptrons?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "The Perceptron Convergence Theorem states that a single-layer perceptron can converge to a solution if the data is linearly separable. This implies that the perceptron can learn to classify data into two classes if the classes are separable by a hyperplane. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6944,
+            "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+          }
+        ],
+        "notes": "Assess understanding of the Perceptron Convergence Theorem and its implications."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Describe the difference between a biological neuron and an artificial neuron in the context of neural network architectures.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "A biological neuron is a living cell that processes and transmits information, whereas an artificial neuron is a mathematical model that mimics the behavior of a biological neuron in a neural network. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6703,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Assess recall of basic concepts in neural network architectures."
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Apply the concept of the Perceptron Convergence Theorem to a scenario where you have a dataset that is not linearly separable. How would you modify the perceptron to handle this scenario?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "To handle a dataset that is not linearly separable, you could modify the perceptron by adding more layers, creating a multilayer perceptron (MLP). This would allow the model to learn more complex relationships between the inputs and outputs. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 30,
+            "relevance_score": 0.6602,
+            "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+          }
+        ],
+        "notes": "Assess ability to apply the Perceptron Convergence Theorem to a real-world scenario."
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "What are the limitations of a single-layer perceptron, and how do multilayer perceptrons (MLPs) address these limitations?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "A single-layer perceptron is limited by its inability to learn complex relationships between inputs and outputs. Multilayer perceptrons (MLPs) address this limitation by adding more layers, allowing the model to learn more complex relationships. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.6582,
+            "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+          }
+        ],
+        "notes": "Assess understanding of the limitations of single-layer perceptrons and how MLPs address these limitations."
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Describe the concept of backpropagation learning in the context of neural networks, and how it is used for efficient training of deep neural networks.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Backpropagation learning is an algorithm used for training neural networks. It involves propagating the error backwards through the network, adjusting the weights and biases to minimize the error. This is used for efficient training of deep neural networks. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 27)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6552,
+            "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+          }
+        ],
+        "notes": "Assess ability to apply the concept of backpropagation learning to neural networks."
+      }
+    ],
+    "generation_notes": "Questions generated based on provided knowledge-base context, focusing on Perceptrons and convergence theorem."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 2,
+        "Apply": 2,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 20.0,
+        "Understand": 40.0,
+        "Apply": 40.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 2,
+      "Hard": 2
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 82.5,
+      "strengths": [
+        "All questions have clear and specific learning objectives mapped to course outcomes (CO1 and CO2)",
+        "The assessment covers a range of Bloom levels, including Remember, Understand, and Apply",
+        "All questions have answer keys present, which is essential for accurate grading"
+      ],
+      "weaknesses": [
+        "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+        "The assessment only covers two course outcomes (CO1 and CO2), which may not be comprehensive enough",
+        "The difficulty level distribution is skewed towards Hard and Medium, with only one Easy question"
+      ],
+      "suggestions": [
+        "Add questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy to improve cognitive depth",
+        "Consider adding more course outcomes to the assessment to ensure comprehensive coverage of the course material",
+        "Balance the difficulty level distribution by adding more Easy and Medium questions to cater to different student abilities"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment has a good foundation, but needs to be expanded to cover more Bloom levels and course outcomes. Additionally, the difficulty level distribution needs to be balanced to cater to different student abilities.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 82.5,
+    "strengths": [
+      "All questions have clear and specific learning objectives mapped to course outcomes (CO1 and CO2)",
+      "The assessment covers a range of Bloom levels, including Remember, Understand, and Apply",
+      "All questions have answer keys present, which is essential for accurate grading"
+    ],
+    "weaknesses": [
+      "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+      "The assessment only covers two course outcomes (CO1 and CO2), which may not be comprehensive enough",
+      "The difficulty level distribution is skewed towards Hard and Medium, with only one Easy question"
+    ],
+    "suggestions": [
+      "Add questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy to improve cognitive depth",
+      "Consider adding more course outcomes to the assessment to ensure comprehensive coverage of the course material",
+      "Balance the difficulty level distribution by adding more Easy and Medium questions to cater to different student abilities"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment has a good foundation, but needs to be expanded to cover more Bloom levels and course outcomes. Additionally, the difficulty level distribution needs to be balanced to cater to different student abilities.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4538,
+    "docx": 39690,
+    "pdf": 5574
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6944,
+      "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6703,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 30,
+      "relevance_score": 0.6602,
+      "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.6582,
+      "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.6552,
+      "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 28,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 346,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 3228,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1378,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 875,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

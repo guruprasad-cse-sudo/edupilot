@@ -1,0 +1,341 @@
+{
+  "run_id": "5d9fb6eb-d455-4b43-83da-0b12a8719945",
+  "started_at": "2026-08-05T10:46:45.896226+00:00",
+  "completed_at": "2026-08-05T10:47:24.534636+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "topics": "UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs Artificial Neuron, \nNeural Network Architectures. \nSingle Layer Perceptron: Perceptron model, Learning rule, Perceptron Convergence \nTheorem, Limitations of Perceptron. \nMultilayer Perceptron (MLP): Feedforward Neural Networks, Activation Functions \n(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization. \nBackpropagation Algorithm: Chain Rule, Error propagation, Training of neural networks. \nNeed of DL: Usecase: DL in Computer Vision Applications, NLP, Healthcare and \nMedical Imaging \nText book 1:  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress, 2016 – Chapter 6 (Deep Feedforward Networks) \nText book 3:  Simon Haykin, Neural Networks and Learning Machines, 3rd Edition,",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 1,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "refer to the knowledge base and generate the MCQs/quiz",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Foundations Quiz",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Quiz",
+      "semester": "7th",
+      "duration_minutes": 25,
+      "total_marks": 5,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer all questions. Each question carries 1 mark. Write the most concise correct answer (1–3 sentences for short answer) or select the correct option for MCQs.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Which of the following activation functions is NOT listed in the syllabus for Unit 1?\nA) Sigmoid\nB) Tanh\nC) ReLU\nD) Softmax\nE) Linear",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "E) Linear",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.8658,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: Source 2 – activation functions (Sigmoid, Tanh, ReLU, Softmax) are listed; Linear is not."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Identify the topic in Unit 1 that addresses the distinction between Machine Learning and Deep Learning.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "Difference between Machine Learning and Deep Learning.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7759,
+            "excerpt": "(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization.  \nBackpropagation Algorithm : Chain Rule, Error propagation, Training of neural networks.  \nNeed of DL: Usecase: DL in Co"
+          }
+        ],
+        "notes": "Source: Source 1 – topic list includes \"Difference between Machine Learning and Deep Learning\"."
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "According to the Perceptron Convergence Theorem, what happens when the training data are linearly separable?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 1,
+        "answer_key": "The perceptron learning algorithm will converge to a weight vector that correctly classifies all training examples.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7439,
+            "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+          }
+        ],
+        "notes": "Source: Source 1 – mentions Perceptron Convergence Theorem; implication is convergence on linearly separable data."
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Name any two application domains of Deep Learning mentioned in the syllabus.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 1,
+        "answer_key": "Examples: Computer Vision and Natural Language Processing (other acceptable answers: Healthcare, Medical Imaging).",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7268,
+            "excerpt": "– Chapter 9 (Convolutional Networks)  \nText book 2 : Charu C. Aggarwal, Neural Networks and Deep Learning, Springer – \nChapter 8          \n8 \nPedagogy  CNN implementation labs, dataset experiments, st"
+          }
+        ],
+        "notes": "Source: Source 2 – lists use‑cases: Computer Vision Applications, NLP, Healthcare and Medical Imaging."
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "What is the purpose of the chain rule in the backpropagation algorithm?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 1,
+        "answer_key": "The chain rule is used to compute the gradient of the loss with respect to each weight by propagating error derivatives backward through the network layers.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.7191,
+            "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+          }
+        ],
+        "notes": "Source: Source 2 – Backpropagation Algorithm includes \"Chain Rule, Error propagation\"."
+      }
+    ],
+    "generation_notes": "5 mixed‑difficulty questions covering Unit‑1 topics. Bloom levels: Remember, Understand, Apply. All content drawn directly from the provided syllabus excerpts."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 5,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 3,
+        "Understand": 1,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 60.0,
+        "Understand": 20.0,
+        "Apply": 20.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 4,
+      "CO2": 4
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 22,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 1,
+      "Q2": 1,
+      "Q3": 1,
+      "Q4": 1,
+      "Q5": 1
+    },
+    "reviewer_result": {
+      "quality_score": 62.0,
+      "strengths": [
+        "All five questions have answer keys present, facilitating reliable grading.",
+        "The quiz includes a range of difficulty levels (Easy, Medium, Hard) that is appropriate for a 25‑minute assessment."
+      ],
+      "weaknesses": [
+        "Higher‑order Bloom levels (Analyze, Evaluate, Create) are completely absent, limiting cognitive depth.",
+        "Q3 is labeled as \"Apply\" but merely asks for a factual statement about the Perceptron Convergence Theorem, which is a Remember/Understand task.",
+        "Only one question (Q3) attempts an application-level task, resulting in minimal coverage of practical problem‑solving."
+      ],
+      "suggestions": [
+        "Replace or redesign Q3 to present a scenario where students must apply the Perceptron Convergence Theorem to predict convergence behavior on a given dataset.",
+        "Add at least one Analyze‑level question, e.g., compare the advantages and limitations of different activation functions in deep networks.",
+        "Introduce an Evaluate‑level item that asks students to critique a backpropagation implementation or choose an optimization strategy for a specific model.",
+        "Include a Create‑level task, such as designing a simple neural network architecture for a given application domain.",
+        "Consider assigning higher marks (2–3) to the new higher‑order questions to reflect their increased cognitive demand."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The quiz meets basic recall objectives but needs stronger emphasis on analysis, evaluation, and creation to align with OBE outcomes for a Deep Learning course.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 62.0,
+    "strengths": [
+      "All five questions have answer keys present, facilitating reliable grading.",
+      "The quiz includes a range of difficulty levels (Easy, Medium, Hard) that is appropriate for a 25‑minute assessment."
+    ],
+    "weaknesses": [
+      "Higher‑order Bloom levels (Analyze, Evaluate, Create) are completely absent, limiting cognitive depth.",
+      "Q3 is labeled as \"Apply\" but merely asks for a factual statement about the Perceptron Convergence Theorem, which is a Remember/Understand task.",
+      "Only one question (Q3) attempts an application-level task, resulting in minimal coverage of practical problem‑solving."
+    ],
+    "suggestions": [
+      "Replace or redesign Q3 to present a scenario where students must apply the Perceptron Convergence Theorem to predict convergence behavior on a given dataset.",
+      "Add at least one Analyze‑level question, e.g., compare the advantages and limitations of different activation functions in deep networks.",
+      "Introduce an Evaluate‑level item that asks students to critique a backpropagation implementation or choose an optimization strategy for a specific model.",
+      "Include a Create‑level task, such as designing a simple neural network architecture for a given application domain.",
+      "Consider assigning higher marks (2–3) to the new higher‑order questions to reflect their increased cognitive demand."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The quiz meets basic recall objectives but needs stronger emphasis on analysis, evaluation, and creation to align with OBE outcomes for a Deep Learning course.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 3458,
+    "docx": 39591,
+    "pdf": 5388
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.8658,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7759,
+      "excerpt": "(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization.  \nBackpropagation Algorithm : Chain Rule, Error propagation, Training of neural networks.  \nNeed of DL: Usecase: DL in Co"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7439,
+      "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7268,
+      "excerpt": "– Chapter 9 (Convolutional Networks)  \nText book 2 : Charu C. Aggarwal, Neural Networks and Deep Learning, Springer – \nChapter 8          \n8 \nPedagogy  CNN implementation labs, dataset experiments, st"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.7191,
+      "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 126,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 3619,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 34681,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 209,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

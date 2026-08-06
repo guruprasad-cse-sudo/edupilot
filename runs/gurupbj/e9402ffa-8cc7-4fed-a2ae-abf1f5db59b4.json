@@ -1,0 +1,335 @@
+{
+  "run_id": "e9402ffa-8cc7-4fed-a2ae-abf1f5db59b4",
+  "started_at": "2026-08-05T03:49:38.745937+00:00",
+  "completed_at": "2026-08-05T03:49:52.069859+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Deep learning",
+    "course_code": "BCS702",
+    "topics": "Module 1 from the syllabus",
+    "bloom_targets": "Remember, Understand, Analyze",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": "check the document - scheme and syllabus for the Deep Learning subject and prepare questions only from this document"
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Internal Assessment",
+      "course_code": "BCS702",
+      "course_name": "Deep learning",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Ensure you provide clear and concise responses."
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Explain the difference between Machine Learning and Deep Learning.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Machine Learning is a subset of Artificial Intelligence that involves training algorithms to make predictions or decisions based on data. Deep Learning is a subset of Machine Learning that involves the use of neural networks with multiple layers to analyze data.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.7051,
+            "excerpt": "1. Classroom lectures supported by visual illustrations, neural network architecture diagrams, and mathematical derivations to s trengthen the \ntheoretical understanding of deep learning concepts.  \n2"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Describe the Perceptron model and its limitations.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "The Perceptron model is a type of neural network that uses a single layer of perceptrons to make predictions. Its limitations include the inability to learn non-linear relationships and the need for a large number of perceptrons to achieve good performance.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "21CS743.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6974,
+            "excerpt": "Module  -1 *Bloom’s \nTaxonomy \nLevel   \n                 \nCOs  Marks  \nQ.01  a Explain the historical trends in deep learning.  L2 1 10 \n b Define machine learning. Explain different types of ML algor"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Analyze the advantages and disadvantages of using a Multilayer Perceptron (MLP) for deep learning tasks.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Advantages of MLP include its ability to learn complex relationships and its flexibility in terms of the number of layers and neurons. Disadvantages include the risk of overfitting and the need for careful tuning of hyperparameters.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6932,
+            "excerpt": "Applications: Speech recognition, Language modeling, Time -series prediction, \nIntroduction to Attention Mechanism.  \nText book 1 : Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT P"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Explain the concept of a biological neuron and how it relates to an artificial neuron.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "A biological neuron is a cell in the brain that processes and transmits information. An artificial neuron is a mathematical model that mimics the behavior of a biological neuron, using inputs, weights, and activation functions to make predictions.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6815,
+            "excerpt": "Processing, Computer Vision.  \nText book 1: Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT Press \n– Chapter 14 (Autoencoders)  \nText book 2: Charu C. Aggarwal, Neural Networks and "
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Describe the role of activation functions in a neural network.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Activation functions introduce non-linearity into a neural network, allowing it to learn complex relationships between inputs and outputs.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6789,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      }
+    ],
+    "generation_notes": "Questions generated based on Module 1 of the Deep Learning course, targeting Bloom levels Remember, Understand, and Analyze, and mapping to Course Outcomes CO1 and CO2."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 2,
+        "Apply": 0,
+        "Analyze": 1,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 40.0,
+        "Understand": 40.0,
+        "Apply": 0.0,
+        "Analyze": 20.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 4,
+      "CO2": 1
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "21CS743.pdf",
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 72.5,
+      "strengths": [
+        "All questions have answer keys present, ensuring clarity and fairness in assessment",
+        "CO1 is well-covered with four questions, and CO2 is covered with one question, demonstrating a good course outcome mapping",
+        "The assessment covers a range of difficulties, including Easy, Medium, and Hard questions"
+      ],
+      "weaknesses": [
+        "No questions are present at the Apply, Evaluate, or Create levels of Bloom's taxonomy, indicating a significant gap in cognitive depth",
+        "Q2 and Q5 are both at the Remember level, which may not fully challenge students' understanding of the subject matter",
+        "The assessment only has five questions, which may not be sufficient to comprehensively assess student learning outcomes"
+      ],
+      "suggestions": [
+        "Add questions at the Apply, Evaluate, and Create levels to improve cognitive depth and challenge students' critical thinking skills",
+        "Replace Q2 or Q5 with a question at a higher Bloom level to reduce repetition and increase assessment rigor",
+        "Consider adding more questions to the assessment to ensure a more comprehensive evaluation of student learning outcomes"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": false,
+        "Analyze": true,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment demonstrates a good foundation, but additional questions at higher Bloom levels and increased question count would enhance its overall quality and effectiveness.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 72.5,
+    "strengths": [
+      "All questions have answer keys present, ensuring clarity and fairness in assessment",
+      "CO1 is well-covered with four questions, and CO2 is covered with one question, demonstrating a good course outcome mapping",
+      "The assessment covers a range of difficulties, including Easy, Medium, and Hard questions"
+    ],
+    "weaknesses": [
+      "No questions are present at the Apply, Evaluate, or Create levels of Bloom's taxonomy, indicating a significant gap in cognitive depth",
+      "Q2 and Q5 are both at the Remember level, which may not fully challenge students' understanding of the subject matter",
+      "The assessment only has five questions, which may not be sufficient to comprehensively assess student learning outcomes"
+    ],
+    "suggestions": [
+      "Add questions at the Apply, Evaluate, and Create levels to improve cognitive depth and challenge students' critical thinking skills",
+      "Replace Q2 or Q5 with a question at a higher Bloom level to reduce repetition and increase assessment rigor",
+      "Consider adding more questions to the assessment to ensure a more comprehensive evaluation of student learning outcomes"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": false,
+      "Analyze": true,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment demonstrates a good foundation, but additional questions at higher Bloom levels and increased question count would enhance its overall quality and effectiveness.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 3749,
+    "docx": 39554,
+    "pdf": 5253
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.7051,
+      "excerpt": "1. Classroom lectures supported by visual illustrations, neural network architecture diagrams, and mathematical derivations to s trengthen the \ntheoretical understanding of deep learning concepts.  \n2"
+    },
+    {
+      "document_name": "21CS743.pdf",
+      "page_number": 1,
+      "relevance_score": 0.6974,
+      "excerpt": "Module  -1 *Bloom’s \nTaxonomy \nLevel   \n                 \nCOs  Marks  \nQ.01  a Explain the historical trends in deep learning.  L2 1 10 \n b Define machine learning. Explain different types of ML algor"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.6932,
+      "excerpt": "Applications: Speech recognition, Language modeling, Time -series prediction, \nIntroduction to Attention Mechanism.  \nText book 1 : Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT P"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.6815,
+      "excerpt": "Processing, Computer Vision.  \nText book 1: Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT Press \n– Chapter 14 (Autoencoders)  \nText book 2: Charu C. Aggarwal, Neural Networks and "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6789,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 19,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 9230,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2404,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1343,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 326,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

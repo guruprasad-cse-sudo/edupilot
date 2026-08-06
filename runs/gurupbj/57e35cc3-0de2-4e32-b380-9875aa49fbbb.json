@@ -1,0 +1,283 @@
+{
+  "run_id": "57e35cc3-0de2-4e32-b380-9875aa49fbbb",
+  "started_at": "2026-08-05T10:53:52.043141+00:00",
+  "completed_at": "2026-08-05T10:54:06.641924+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "MCQ Options Smoke Test",
+    "course_code": "TST102",
+    "topics": "Basic arithmetic",
+    "bloom_targets": "Remember",
+    "co_mapping": "CO1",
+    "question_count": 2,
+    "marks_per_question": 1,
+    "difficulty": "Easy",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Basic Arithmetic Recall Quiz – Smoke Test",
+      "course_code": "TST102",
+      "course_name": "MCQ Options Smoke Test",
+      "assessment_type": "Quiz",
+      "semester": "7th",
+      "duration_minutes": 20,
+      "total_marks": 2,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Select the most appropriate answer for each question. Each question carries 1 mark.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "According to the SEE Course Plan, what percentage of the total assessment marks is allocated to CO1?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "40% – CO1 accounts for 40% of the total marks.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 47,
+            "relevance_score": 0.5923,
+            "excerpt": "Analyze  40% + 4% \nEvaluate  20% + 2% \nCreate"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th_8th_1.pdf, page 39 (CO1 weightage 40%).",
+        "options": [
+          "25%",
+          "40%",
+          "50%",
+          "60%"
+        ]
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "In the SEE Course Plan, how many marks are assigned to CO1 for Module‑3?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "40 – Module‑3 allocates 40 marks to CO1.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 39,
+            "relevance_score": 0.5847,
+            "excerpt": "Total \nMarks   \nWeightage  Test-1 Test-2 \nModule - 1 Module - 2 Module  \n 2 to 2.5 Module  \n2.5 to 3 Module - 4 Module - 5 \nCO1 10 5 5 5 5 5 35 25% \nCO2 10 10 5 5 10 10 50 25% \nCO3  5   5 5 15 35% \nCO"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th_8th_1.pdf, page 39 (CO1 marks for Module‑3 = 40).",
+        "options": [
+          "20",
+          "30",
+          "40",
+          "50"
+        ]
+      }
+    ],
+    "generation_notes": "Questions derived exclusively from the provided syllabus excerpts (Source 2, page 39). Bloom level: Remember. Difficulty: Easy. All items map to CO1."
+  },
+  "analytics": {
+    "question_count": 2,
+    "total_marks": 2,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 0,
+        "Apply": 0,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 100.0,
+        "Understand": 0.0,
+        "Apply": 0.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 0,
+      "Hard": 0
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 10,
+    "quality_score": 34.2,
+    "marks_distribution": {
+      "Q1": 1,
+      "Q2": 1
+    },
+    "reviewer_result": {
+      "quality_score": 45.0,
+      "strengths": [
+        "Both questions include an answer key, facilitating automated grading.",
+        "Each question is explicitly mapped to CO1, ensuring clear alignment with the stated outcome."
+      ],
+      "weaknesses": [
+        "Only the Remember level is represented; no higher-order Bloom levels are assessed.",
+        "Both items target the same course outcome (CO1), leaving other COs uncovered.",
+        "The assessment contains only Easy difficulty questions, providing no challenge gradient.",
+        "Total marks (2) and question count (2) are insufficient for a meaningful quiz in most higher‑education contexts."
+      ],
+      "suggestions": [
+        "Introduce at least one Apply‑level or higher question that requires students to use CO1 knowledge in a new context.",
+        "Add items mapped to other course outcomes (e.g., CO2, CO3) to achieve broader OBE coverage.",
+        "Incorporate Medium and Hard difficulty questions to create a balanced cognitive load.",
+        "Consider adding a Create‑level scenario or project‑based item if the assessment type permits."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": false,
+        "Apply": false,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The quiz functions as a very basic smoke test but requires substantial enrichment to meet OBE standards for a university‑level assessment.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 45.0,
+    "strengths": [
+      "Both questions include an answer key, facilitating automated grading.",
+      "Each question is explicitly mapped to CO1, ensuring clear alignment with the stated outcome."
+    ],
+    "weaknesses": [
+      "Only the Remember level is represented; no higher-order Bloom levels are assessed.",
+      "Both items target the same course outcome (CO1), leaving other COs uncovered.",
+      "The assessment contains only Easy difficulty questions, providing no challenge gradient.",
+      "Total marks (2) and question count (2) are insufficient for a meaningful quiz in most higher‑education contexts."
+    ],
+    "suggestions": [
+      "Introduce at least one Apply‑level or higher question that requires students to use CO1 knowledge in a new context.",
+      "Add items mapped to other course outcomes (e.g., CO2, CO3) to achieve broader OBE coverage.",
+      "Incorporate Medium and Hard difficulty questions to create a balanced cognitive load.",
+      "Consider adding a Create‑level scenario or project‑based item if the assessment type permits."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": false,
+      "Apply": false,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The quiz functions as a very basic smoke test but requires substantial enrichment to meet OBE standards for a university‑level assessment.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 1849,
+    "docx": 39091,
+    "pdf": 4522
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 47,
+      "relevance_score": 0.5923,
+      "excerpt": "Analyze  40% + 4% \nEvaluate  20% + 2% \nCreate"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 39,
+      "relevance_score": 0.5847,
+      "excerpt": "Total \nMarks   \nWeightage  Test-1 Test-2 \nModule - 1 Module - 2 Module  \n 2 to 2.5 Module  \n2.5 to 3 Module - 4 Module - 5 \nCO1 10 5 5 5 5 5 35 25% \nCO2 10 10 5 5 10 10 50 25% \nCO3  5   5 5 15 35% \nCO"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 22,
+      "relevance_score": 0.5845,
+      "excerpt": "Apply  20%+2%  \nAnalyse  40%+4%  \nEvaluate  20%+2%  \nCreate   \n  \n \nSEE Course Plan  \n \n \nCO’s  Marks Distribution   \nTotal \nMarks   \nWeightage  \nModule -1 Module -2 Module - 3 Module -4 Module -5 \nCO"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 21,
+      "relevance_score": 0.5804,
+      "excerpt": "Evaluate  \n - - 10 10  \nCreate  \n - -  15 10 \n \n \n CO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 2 2           2    \nCO2 2 3   2    2    2    \nCO3 2 3      "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 63,
+      "relevance_score": 0.5766,
+      "excerpt": "S CO5,PO5,PO11,PSO2     \n  Max marks  50 50    \n  Excellent      50 Create a logically coherent project \nreport and publish a paper     \n  good  40 Create a logically coherent project"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 10,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 3444,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2622,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 8161,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 357,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

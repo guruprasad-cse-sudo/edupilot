@@ -1,0 +1,299 @@
+{
+  "run_id": "57b42353-e4a3-412f-b9a5-a546a2b9aefb",
+  "started_at": "2026-08-05T11:15:39.051663+00:00",
+  "completed_at": "2026-08-05T11:15:49.641654+00:00",
+  "plan": {
+    "assessment_type": "Role Play",
+    "course_name": "Deep Learning",
+    "course_code": "",
+    "topics": "functioning of a perceptron",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 3,
+    "marks_per_question": 4,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "prepare a role play for functioning of a perceptron",
+    "test_date": "07 August 2026"
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Role‑Play Scenarios on the Functioning of a Perceptron",
+      "course_code": "CS501",
+      "course_name": "Deep Learning",
+      "assessment_type": "Role Play",
+      "semester": "7th",
+      "duration_minutes": 36,
+      "total_marks": 12,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Students will be divided into small groups. Each group will enact the given scenario, assuming the listed roles. Focus on the task, interact authentically, and demonstrate the required understanding of perceptron concepts. The facilitator will observe and award marks according to the rubric provided for each scenario.",
+      "test_date": "07 August 2026"
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "### **Scenario**\nA newly formed AI startup is holding its first technical meeting. The team needs to agree on the basic building block they will use for a binary classification prototype.\n\n### **Roles**\n- **Product Manager** – wants a simple, explainable model.\n- **Data Scientist** – explains the algorithmic details.\n- **Software Engineer** – asks about implementation requirements.\n\n### **Setup**\n- Duration: 12 minutes (including 3‑minute debrief).\n- Room: Round‑table arrangement, whiteboard and markers.\n- Props: Printed hand‑out showing a single‑layer perceptron diagram (from lecture slides).\n\n### **Task**\nThe participants must collaboratively identify and describe the essential components of a perceptron (inputs, weights, bias, activation rule, decision boundary) and state how the perceptron makes a binary decision.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 4,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objectives**: Recall the structural elements of a perceptron and its basic activation rule (CO1).\n- **Debrief Questions**: \n  1. What are the inputs and how are they weighted?\n  2. What role does the bias (or threshold) play?\n  3. How does the perceptron produce a binary output?\n- **Expected Talking Points per Role**:\n  *Product Manager* – emphasizes need for interpretability; should mention that the perceptron provides a clear linear decision boundary.\n  *Data Scientist* – correctly names inputs, weights, bias, activation (step) function, and explains that output = 1 if Σ(w_i·x_i)+b > 0 else 0.\n  *Software Engineer* – asks about required data format and mentions that implementation needs a weight vector and a simple threshold check.\n- **Observation Rubric (4 marks)**:\n  1. Correctly lists all five components – 1 mark.\n  2. Accurately describes the activation (step) rule – 1 mark.\n  3. Connects components to the binary decision (decision boundary) – 1 mark.\n  4. Demonstrates collaborative discussion (each role contributes) – 1 mark.\n- **Notes**: Content drawn from Source 2 (perceptrons mentioned) – \"including perceptrons, multilayer neural networks, and back propagation learning\".",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6897,
+            "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+          }
+        ],
+        "notes": "Source 2: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 27.",
+        "options": []
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "### **Scenario**\nIn a university lab, a professor is reviewing a student’s report on a perceptron that classifies emails as spam or not‑spam. The professor asks the student to explain how the perceptron’s weights influence the classification decision.\n\n### **Roles**\n- **Professor** – probes understanding of the model’s behavior.\n- **Student** – explains the perceptron’s decision process.\n- **Peer Reviewer** – challenges the explanation with a counter‑example.\n\n### **Setup**\n- Duration: 13 minutes (including 4‑minute debrief).\n- Room: Classroom with projector showing a simple perceptron weight table.\n- Props: Sample input vector (e.g., [1,0,1]) and weight vector (e.g., [0.8, -0.5, 0.3]) displayed on screen.\n\n### **Task**\nThe student must interpret how each weight contributes to the summed activation, describe the effect of positive vs. negative weights, and state the resulting binary output for the given sample.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 4,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objectives**: Explain the influence of individual weights on perceptron output and demonstrate comprehension of linear separability (CO1).\n- **Debrief Questions**:\n  1. How does a positive weight affect the activation for a given input?\n  2. What is the impact of a negative weight?\n  3. How does the bias (threshold) shift the decision boundary?\n- **Expected Talking Points per Role**:\n  *Professor* – asks the student to compute Σ(w_i·x_i)+b and interpret sign.\n  *Student* – correctly calculates activation (0.8*1 + (-0.5)*0 + 0.3*1 = 1.1), states that because 1.1 > 0 the output is 1 (spam). Explains that the positive weight on feature 1 and feature 3 push the sum upward, while a negative weight would pull it down.\n  *Peer Reviewer* – proposes changing feature 2 to 1 and asks the student to predict the new output, checking understanding of weight sign.\n- **Observation Rubric (4 marks)**:\n  1. Correct calculation of weighted sum – 1 mark.\n  2. Accurate interpretation of positive vs. negative weight effects – 1 mark.\n  3. Correct binary decision based on threshold – 1 mark.\n  4. Engages with reviewer’s counter‑example (demonstrates deeper understanding) – 1 mark.\n- **Notes**: Based on the syllabus reference to perceptrons in Source 2.",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.6771,
+            "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+          }
+        ],
+        "notes": "Source 2: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 27.",
+        "options": []
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "### **Scenario**\nA workshop on neural network training asks participants to act out a single step of the perceptron learning algorithm. The group must take a training example, compute the perceptron output, compare it with the target label, and update the weights accordingly.\n\n### **Roles**\n- **Trainer** – presents the input vector, target label, learning rate, and current weights.\n- **Trainee** – performs the forward pass, determines the error, and calculates the new weights.\n- **Observer** – records each calculation step and notes any misconceptions.\n\n### **Setup**\n- Duration: 11 minutes (including 3‑minute debrief).\n- Room: Lab with a whiteboard and markers.\n- Props: Card with the training example (input = [1, 1], target = 1), current weights = [0.2, ‑0.4], bias = 0.0, learning rate η = 0.5.\n\n### **Task**\nThe Trainee must:\n1. Compute the perceptron output using the step activation.\n2. Determine the error (target − output).\n3. Update each weight with Δw = η · error · x_i and update the bias similarly.\n4. State the new weight vector and bias.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 4,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objectives**: Apply the perceptron learning rule to perform a weight update (CO2).\n- **Debrief Questions**:\n  1. What was the computed output and why?\n  2. How is the error calculated and what does its sign indicate?\n  3. Show the weight‑update formula and compute the new values.\n  4. How would repeated updates affect the decision boundary?\n- **Expected Talking Points per Role**:\n  *Trainer* – clearly states input, target, η, and current weights.\n  *Trainee* –\n    - Forward pass: Σ = 0.2*1 + (‑0.4)*1 + 0 = ‑0.2 → output = 0 (since ‑0.2 ≤ 0).\n    - Error = target − output = 1 − 0 = 1.\n    - Weight updates: Δw1 = 0.5*1*1 = 0.5 → w1_new = 0.2 + 0.5 = 0.7;\n      Δw2 = 0.5*1*1 = 0.5 → w2_new = ‑0.4 + 0.5 = 0.1.\n    - Bias update: Δb = 0.5*1 = 0.5 → b_new = 0 + 0.5 = 0.5.\n    - Announces new weights [0.7, 0.1] and bias = 0.5.\n  *Observer* – notes each arithmetic step, checks for sign errors, and provides corrective feedback if needed.\n- **Observation Rubric (4 marks)**:\n  1. Correct forward‑pass computation and output – 1 mark.\n  2. Accurate error determination – 1 mark.\n  3. Correct application of Δw = η·error·x_i for both weights – 1 mark.\n  4. Proper bias update and clear presentation of new parameters – 1 mark.\n- **Notes**: The perceptron learning update is consistent with the syllabus emphasis on \"Apply principles of Deep Learning to solve numerical and analytical problems involving neural network computations\" (CO2) from Source 5.",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.662,
+            "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+          }
+        ],
+        "notes": "Source 5: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 30.",
+        "options": []
+      }
+    ],
+    "generation_notes": "All scenarios are derived exclusively from Source 2 of the provided syllabus, which mentions perceptrons, multilayer neural networks, and back‑propagation learning. Bloom levels are distributed as Remember (Q1), Understand (Q2), Apply (Q3). CO mapping follows the syllabus: CO1 (theoretical knowledge) for Q1 & Q2, CO2 (application) for Q3. Difficulty is mixed: Easy (Q1), Medium (Q2), Hard (Q3)."
+  },
+  "analytics": {
+    "question_count": 3,
+    "total_marks": 12,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 1,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 33.3,
+        "Understand": 33.3,
+        "Apply": 33.3,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2,
+      "CO2": 1
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 1,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 12,
+    "quality_score": 72.5,
+    "marks_distribution": {
+      "Q1": 4,
+      "Q2": 4,
+      "Q3": 4
+    },
+    "reviewer_result": {
+      "quality_score": 78.0,
+      "strengths": [
+        "Clear, authentic role‑play scenarios that align with real‑world AI team interactions",
+        "Progressive Bloom levels from Remember (Q1) to Apply (Q3) showing increasing cognitive demand",
+        "All three questions include answer keys, facilitating consistent marking",
+        "Balanced difficulty distribution (Easy, Medium, Hard) appropriate for a 36‑minute role‑play assessment"
+      ],
+      "weaknesses": [
+        "Higher‑order Bloom levels (Analyze, Evaluate, Create) are completely absent, limiting depth of assessment",
+        "Course Outcome mapping is narrow: CO1 is used for two questions and CO2 for only one; other COs are not addressed",
+        "No explicit rubric or performance criteria for role‑play interaction, which may affect reliability of marking"
+      ],
+      "suggestions": [
+        "Add at least one Analyze‑level role‑play (e.g., compare perceptron vs. logistic regression on a given dataset) to cover the missing Bloom tier",
+        "Introduce an Evaluate or Create scenario where students must design a simple perceptron‑based solution for a new classification problem",
+        "Expand CO mapping to include additional outcomes (e.g., CO3: critique model limitations) to ensure broader curriculum alignment",
+        "Provide a detailed scoring rubric that assesses communication, teamwork, and correctness of technical content in the role‑play"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment is well‑structured for a role‑play format and covers basic perceptron concepts effectively. To achieve full OBE rigor, incorporate higher‑order tasks and a comprehensive rubric, and ensure all major course outcomes are represented.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 78.0,
+    "strengths": [
+      "Clear, authentic role‑play scenarios that align with real‑world AI team interactions",
+      "Progressive Bloom levels from Remember (Q1) to Apply (Q3) showing increasing cognitive demand",
+      "All three questions include answer keys, facilitating consistent marking",
+      "Balanced difficulty distribution (Easy, Medium, Hard) appropriate for a 36‑minute role‑play assessment"
+    ],
+    "weaknesses": [
+      "Higher‑order Bloom levels (Analyze, Evaluate, Create) are completely absent, limiting depth of assessment",
+      "Course Outcome mapping is narrow: CO1 is used for two questions and CO2 for only one; other COs are not addressed",
+      "No explicit rubric or performance criteria for role‑play interaction, which may affect reliability of marking"
+    ],
+    "suggestions": [
+      "Add at least one Analyze‑level role‑play (e.g., compare perceptron vs. logistic regression on a given dataset) to cover the missing Bloom tier",
+      "Introduce an Evaluate or Create scenario where students must design a simple perceptron‑based solution for a new classification problem",
+      "Expand CO mapping to include additional outcomes (e.g., CO3: critique model limitations) to ensure broader curriculum alignment",
+      "Provide a detailed scoring rubric that assesses communication, teamwork, and correctness of technical content in the role‑play"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment is well‑structured for a role‑play format and covers basic perceptron concepts effectively. To achieve full OBE rigor, incorporate higher‑order tasks and a comprehensive rubric, and ensure all major course outcomes are represented.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 9192,
+    "docx": 41825,
+    "pdf": 11136
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6897,
+      "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.6771,
+      "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.662,
+      "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.6609,
+      "excerpt": "1. Classroom lectures supported by visual illustrations, neural network architecture diagrams, and mathematical derivations to s trengthen the \ntheoretical understanding of deep learning concepts.  \n2"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 30,
+      "relevance_score": 0.6551,
+      "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 4,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 1522,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 7101,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 3,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1730,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 227,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

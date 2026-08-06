@@ -1,0 +1,334 @@
+{
+  "run_id": "47327650-25d1-44d3-9862-5ab93883e816",
+  "started_at": "2026-08-04T15:36:39.625104+00:00",
+  "completed_at": "2026-08-04T15:36:48.721670+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "deep learning",
+    "course_code": "BCS702",
+    "topics": "neural networks , MLP and convergence theorem",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Internal Assessment",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Please note the specific question type and follow the instructions accordingly."
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What is the Vanishing Gradient Problem in the context of neural networks, and how does it affect the training of deep neural networks?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "The Vanishing Gradient Problem refers to the issue where gradients used to update weights in a neural network become smaller as they backpropagate through the layers, making it difficult to train deep neural networks. This is mentioned in Source 1: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7153,
+            "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Describe the Perceptron Convergence Theorem and its limitations.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "The Perceptron Convergence Theorem states that a single layer perceptron can converge to a solution for a linearly separable problem. However, it has limitations such as not being able to learn non-linearly separable patterns. This is mentioned in Source 5: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 30,
+            "relevance_score": 0.6832,
+            "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Explain the concept of Multilayer Perceptron (MLP) and its architecture.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "A Multilayer Perceptron (MLP) is a type of feedforward neural network that consists of multiple layers of perceptrons. It includes an input layer, one or more hidden layers, and an output layer. This is mentioned in Source 5: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6764,
+            "excerpt": "Applications: Speech recognition, Language modeling, Time -series prediction, \nIntroduction to Attention Mechanism.  \nText book 1 : Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT P"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Apply the principles of Deep Learning to solve a numerical problem involving neural network computations. Consider a simple neural network with one input layer, one hidden layer, and one output layer.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "To solve this problem, students should apply the principles of Deep Learning, such as forward propagation and backpropagation, to compute the output of the neural network and update the weights. This requires applying the concepts mentioned in Source 2: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 30.",
+        "question_type": "Numerical",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6721,
+            "excerpt": "Pearson – Chapters 1 & 4   \n8 \nPedagogy  Conceptual lectures, visualization, coding exercises, quizzes  \n2 UNIT – 2: Optimization and Regularization in Deep Learning Challenges in training \ndeep neura"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 30"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "What are the challenges in training deep neural networks, and how can optimization techniques such as Stochastic Gradient Descent (SGD) help overcome these challenges?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "The challenges in training deep neural networks include Vanishing gradients, Exploding gradients, and Overfitting. Optimization techniques such as Stochastic Gradient Descent (SGD) can help overcome these challenges by iteratively updating the weights to minimize the loss function. This is mentioned in Source 4: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6693,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      }
+    ],
+    "generation_notes": "Questions are based on the provided knowledge-base context, strictly adhering to the specified topics and Bloom levels."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 3,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 20.0,
+        "Understand": 60.0,
+        "Apply": 20.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2,
+      "CO2": 3
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 3,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 58.3,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 82.5,
+      "strengths": [
+        "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+        "A range of question types are used, including Short Answer, Long Answer, and Numerical",
+        "All questions have an answer key present, which is essential for accurate assessment"
+      ],
+      "weaknesses": [
+        "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+        "The assessment only covers two course outcomes (CO1 and CO2), which may not be comprehensive enough",
+        "The difficulty levels of the questions are not evenly distributed, with only one Hard question"
+      ],
+      "suggestions": [
+        "Add questions at the Analyze, Evaluate, and Create levels to improve cognitive depth and coverage of Bloom's taxonomy",
+        "Consider adding more course outcomes to the assessment to ensure comprehensive coverage of the course material",
+        "Review the difficulty levels of the questions and adjust them to achieve a more balanced distribution"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment has a good foundation, but could benefit from additional questions at higher levels of Bloom's taxonomy and a more balanced distribution of difficulty levels.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 82.5,
+    "strengths": [
+      "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+      "A range of question types are used, including Short Answer, Long Answer, and Numerical",
+      "All questions have an answer key present, which is essential for accurate assessment"
+    ],
+    "weaknesses": [
+      "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+      "The assessment only covers two course outcomes (CO1 and CO2), which may not be comprehensive enough",
+      "The difficulty levels of the questions are not evenly distributed, with only one Hard question"
+    ],
+    "suggestions": [
+      "Add questions at the Analyze, Evaluate, and Create levels to improve cognitive depth and coverage of Bloom's taxonomy",
+      "Consider adding more course outcomes to the assessment to ensure comprehensive coverage of the course material",
+      "Review the difficulty levels of the questions and adjust them to achieve a more balanced distribution"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment has a good foundation, but could benefit from additional questions at higher levels of Bloom's taxonomy and a more balanced distribution of difficulty levels.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4419,
+    "docx": 39707,
+    "pdf": 5644
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7153,
+      "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 30,
+      "relevance_score": 0.6832,
+      "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.6764,
+      "excerpt": "Applications: Speech recognition, Language modeling, Time -series prediction, \nIntroduction to Attention Mechanism.  \nText book 1 : Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT P"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6721,
+      "excerpt": "Pearson – Chapters 1 & 4   \n8 \nPedagogy  Conceptual lectures, visualization, coding exercises, quizzes  \n2 UNIT – 2: Optimization and Regularization in Deep Learning Challenges in training \ndeep neura"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6693,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 12,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 4408,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2878,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1368,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 427,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

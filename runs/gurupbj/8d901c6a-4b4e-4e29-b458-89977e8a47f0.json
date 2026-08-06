@@ -1,0 +1,336 @@
+{
+  "run_id": "8d901c6a-4b4e-4e29-b458-89977e8a47f0",
+  "started_at": "2026-08-05T05:37:22.237705+00:00",
+  "completed_at": "2026-08-05T05:37:33.474378+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "BI",
+    "course_code": "BCS703A",
+    "topics": "An Overview of Business Intelligence, Analytics, and Decision Support, Information \nSystems Support for Decision Making, An Early Framework for Computerized Decision \nSupport, The Concept of Decision Support Systems, A Framework for Business Intelligence, \nBusiness Analytics Overview, Brief Introduction to Big Data Analytics",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": "REFER TO BI course from the scheme and syllabus and generate for BI",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Internal Assessment for BI (BCS703A) Course",
+      "course_code": "BCS703A",
+      "course_name": "Business Intelligence",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Please refer to the relevant chapters and topics from the course material.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What are the main components of a Decision Support System (DSS)?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "The main components of a DSS include hardware, software, data, models, and user interface. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 37,
+            "relevance_score": 0.7563,
+            "excerpt": "Business Analytics Overview, Brief Introduction to Big Data Analytics  \nT1 – Chapter 1 (1.4. – 1.9) 08 \nPedagogy  Video demonstration and visualization.  \n \n \n2 Decision Making, Introduction and Defin"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Explain the concept of Business Intelligence and its relationship with Decision Support Systems.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Business Intelligence refers to the process of collecting, analyzing, and presenting data to support decision-making. Decision Support Systems are a type of Business Intelligence system that provides a framework for decision-making. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 37,
+            "relevance_score": 0.6856,
+            "excerpt": "DSATM  Scheme of Teaching and Examinations for BE Program -2026 -27 Outcome  Based  Education  and \nChoice  Based  Credit  System  (CBCS) (Effective from the Academic Year 2026 -27) \nCOURSE  CURRICULU"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Describe the phases of the decision-making process and how Decision Support Systems support each phase.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "The phases of the decision-making process include intelligence, design, choice, and implementation. Decision Support Systems support each phase by providing tools and models for data analysis, scenario planning, and decision evaluation. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 38,
+            "relevance_score": 0.6715,
+            "excerpt": "Course Outcomes: At the end of the course, the student will be able to:  \n \nCO  \nCourse  Outcomes  RBT \nLevel  RBT \nLevel Indicator  \nCO1 Understand the Business Intelligence, Analytics and Decision S"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "What is the role of Automated Decision Systems in Business Intelligence?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Automated Decision Systems use artificial intelligence and machine learning to make decisions without human intervention. They play a crucial role in Business Intelligence by enabling rapid and accurate decision-making. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 37,
+            "relevance_score": 0.6668,
+            "excerpt": "Comparisons  \nT1 – Chapter 9 (9.2 – 9.9) 08 \nPedagogy  Presentation and poster presentation.  \n5 Automated Decision Systems and Expert Systems Automated  Decision Systems, The \nArtificial Intelligence"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Explain the concept of Big Data Analytics and its relationship with Business Intelligence.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Big Data Analytics refers to the process of analyzing large datasets to extract insights and patterns. It is a key component of Business Intelligence, as it enables organizations to make data-driven decisions. (Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 37,
+            "relevance_score": 0.6615,
+            "excerpt": "T1 – Chapter 6 (6.2 – 6.7), Chapter 7(7.7 – 7.10)  08 \nPedagogy  Demonstration of algorithms.  \n \n \n4 Model -Based Decision Making, Decision Support Systems modeling, Structure of \nmathematical models"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 37"
+      }
+    ],
+    "generation_notes": "Questions are based on the provided knowledge-base context, strictly adhering to the specified topics and course outcomes."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 2,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 40.0,
+        "Understand": 40.0,
+        "Apply": 20.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 4,
+      "CO2": 1
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 72.5,
+      "strengths": [
+        "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+        "Answer keys are present for all questions, ensuring transparency and ease of grading",
+        "A mix of short and long answer questions is used to cater to different types of learners"
+      ],
+      "weaknesses": [
+        "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+        "The assessment only covers two course outcomes (CO1 and CO2), potentially leaving other outcomes unassessed",
+        "Two questions (Q1 and Q4) are at the Remember level, which may not adequately challenge students' higher-order thinking skills"
+      ],
+      "suggestions": [
+        "Add questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy to improve cognitive depth",
+        "Include questions that cover other course outcomes to ensure comprehensive assessment",
+        "Replace one of the Remember-level questions with a higher-level question to promote deeper learning"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment has a good balance of easy, medium, and hard questions, but could benefit from more comprehensive coverage of Bloom's taxonomy and course outcomes.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 72.5,
+    "strengths": [
+      "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+      "Answer keys are present for all questions, ensuring transparency and ease of grading",
+      "A mix of short and long answer questions is used to cater to different types of learners"
+    ],
+    "weaknesses": [
+      "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+      "The assessment only covers two course outcomes (CO1 and CO2), potentially leaving other outcomes unassessed",
+      "Two questions (Q1 and Q4) are at the Remember level, which may not adequately challenge students' higher-order thinking skills"
+    ],
+    "suggestions": [
+      "Add questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy to improve cognitive depth",
+      "Include questions that cover other course outcomes to ensure comprehensive assessment",
+      "Replace one of the Remember-level questions with a higher-level question to promote deeper learning"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment has a good balance of easy, medium, and hard questions, but could benefit from more comprehensive coverage of Bloom's taxonomy and course outcomes.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4007,
+    "docx": 39539,
+    "pdf": 5350
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 37,
+      "relevance_score": 0.7563,
+      "excerpt": "Business Analytics Overview, Brief Introduction to Big Data Analytics  \nT1 – Chapter 1 (1.4. – 1.9) 08 \nPedagogy  Video demonstration and visualization.  \n \n \n2 Decision Making, Introduction and Defin"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 37,
+      "relevance_score": 0.6856,
+      "excerpt": "DSATM  Scheme of Teaching and Examinations for BE Program -2026 -27 Outcome  Based  Education  and \nChoice  Based  Credit  System  (CBCS) (Effective from the Academic Year 2026 -27) \nCOURSE  CURRICULU"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 38,
+      "relevance_score": 0.6715,
+      "excerpt": "Course Outcomes: At the end of the course, the student will be able to:  \n \nCO  \nCourse  Outcomes  RBT \nLevel  RBT \nLevel Indicator  \nCO1 Understand the Business Intelligence, Analytics and Decision S"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 37,
+      "relevance_score": 0.6668,
+      "excerpt": "Comparisons  \nT1 – Chapter 9 (9.2 – 9.9) 08 \nPedagogy  Presentation and poster presentation.  \n5 Automated Decision Systems and Expert Systems Automated  Decision Systems, The \nArtificial Intelligence"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 37,
+      "relevance_score": 0.6615,
+      "excerpt": "T1 – Chapter 6 (6.2 – 6.7), Chapter 7(7.7 – 7.10)  08 \nPedagogy  Demonstration of algorithms.  \n \n \n4 Model -Based Decision Making, Decision Support Systems modeling, Structure of \nmathematical models"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 154,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 6277,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2859,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 2,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1237,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 706,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

@@ -1,0 +1,237 @@
+{
+  "run_id": "78bf4c46-80c9-4b5e-ab88-e12f3b39c8db",
+  "started_at": "2026-08-04T10:54:59.472966+00:00",
+  "completed_at": "2026-08-04T10:55:06.453870+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Data Structures",
+    "course_code": "CS3001",
+    "topics": "Binary Search Trees",
+    "bloom_targets": "Apply, Analyze",
+    "co_mapping": "CO1, CO2",
+    "question_count": 3,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "Semester 5",
+    "faculty_name": "Dr. Smith",
+    "extra_instructions": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Data Structures Quiz: Binary Search Trees",
+      "course_code": "CS3001",
+      "course_name": "Data Structures",
+      "assessment_type": "Quiz",
+      "semester": "Semester 5",
+      "duration_minutes": 25,
+      "total_marks": 15,
+      "department": "CSE",
+      "faculty_name": "Dr. Smith",
+      "instructions": "Choose the correct answer for each question. This quiz assesses your understanding and application of Binary Search Trees."
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What is the primary advantage of using a Binary Search Tree (BST) over a simple sorted array for searching?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "The primary advantage is that BSTs allow for efficient insertion and deletion of elements, whereas in a sorted array, these operations can be costly.",
+        "question_type": "MCQ",
+        "sources": [],
+        "notes": "Source: General academic knowledge of data structures"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Analyze the time complexity of searching, inserting, and deleting a node in a balanced Binary Search Tree. How do these operations compare in terms of efficiency?",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Searching, inserting, and deleting a node in a balanced BST each have an average time complexity of O(log n), making them equally efficient in terms of time complexity.",
+        "question_type": "Short Answer",
+        "sources": [],
+        "notes": "Assumes knowledge of Big O notation and basic operations on BSTs"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Consider a scenario where you need to frequently search for and insert new elements into a dataset. Would you prefer using a Binary Search Tree or a hash table? Justify your choice.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "A Binary Search Tree would be preferred because it allows for both efficient search (O(log n)) and insertion (O(log n)) operations, whereas a hash table, while excellent for search (O(1) average), may have variable performance for insertion depending on the load factor and collision resolution strategy.",
+        "question_type": "Short Answer",
+        "sources": [],
+        "notes": "Requires understanding of trade-offs between data structures"
+      }
+    ],
+    "generation_notes": "Questions are designed to test Apply and Analyze levels of Bloom's Taxonomy, mapping to Course Outcomes CO1 and CO2."
+  },
+  "analytics": {
+    "question_count": 3,
+    "total_marks": 15,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 0,
+        "Understand": 0,
+        "Apply": 2,
+        "Analyze": 1,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 0.0,
+        "Understand": 0.0,
+        "Apply": 66.7,
+        "Analyze": 33.3,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 1,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [],
+    "estimated_time_saved_minutes": 12,
+    "quality_score": 68.3,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5
+    },
+    "reviewer_result": {
+      "quality_score": 82.5,
+      "strengths": [
+        "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+        "The assessment covers a range of Bloom levels, including Apply and Analyze",
+        "All questions have an answer key present"
+      ],
+      "weaknesses": [
+        "No questions are present at the Remember or Understand levels of Bloom's taxonomy",
+        "The assessment only contains three questions, which may not be sufficient to comprehensively assess student learning",
+        "There are no questions at the Evaluate or Create levels of Bloom's taxonomy"
+      ],
+      "suggestions": [
+        "Add questions at the Remember and Understand levels to provide a more comprehensive assessment of student knowledge",
+        "Consider adding more questions to the assessment to provide a more robust evaluation of student learning",
+        "Include questions at the Evaluate and Create levels to challenge students to think critically and apply their knowledge in more complex scenarios"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": false,
+        "Understand": false,
+        "Apply": true,
+        "Analyze": true,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment has a good balance of easy, medium, and hard questions, but could benefit from additional questions to provide a more comprehensive evaluation of student learning.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 82.5,
+    "strengths": [
+      "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+      "The assessment covers a range of Bloom levels, including Apply and Analyze",
+      "All questions have an answer key present"
+    ],
+    "weaknesses": [
+      "No questions are present at the Remember or Understand levels of Bloom's taxonomy",
+      "The assessment only contains three questions, which may not be sufficient to comprehensively assess student learning",
+      "There are no questions at the Evaluate or Create levels of Bloom's taxonomy"
+    ],
+    "suggestions": [
+      "Add questions at the Remember and Understand levels to provide a more comprehensive assessment of student knowledge",
+      "Consider adding more questions to the assessment to provide a more robust evaluation of student learning",
+      "Include questions at the Evaluate and Create levels to challenge students to think critically and apply their knowledge in more complex scenarios"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": false,
+      "Understand": false,
+      "Apply": true,
+      "Analyze": true,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment has a good balance of easy, medium, and hard questions, but could benefit from additional questions to provide a more comprehensive evaluation of student learning.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 2704,
+    "docx": 39392,
+    "pdf": 4912
+  },
+  "rag_sources": [],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 2,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "error",
+      "duration_ms": 3238,
+      "error": "Could not import sentence_transformers python package. Please install it with `pip install sentence-transformers`.",
+      "warning": "RAG retrieval failed; proceeding without knowledge context."
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2080,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1337,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 322,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

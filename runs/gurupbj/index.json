@@ -1,0 +1,1336 @@
+[
+  {
+    "run_id": "41670d67-3549-4c52-9087-9ebe7e7ef4e1",
+    "started_at": "2026-08-05T13:57:25.340321+00:00",
+    "completed_at": "2026-08-05T13:57:38.911741+00:00",
+    "course_name": "Data Structures",
+    "course_code": "TST106",
+    "assessment_type": "Question Bank",
+    "question_count": 12,
+    "total_marks": 60,
+    "quality_score": 81.7,
+    "reviewer_score": null,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 7,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 1247,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 11837,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "error",
+        "duration_ms": 64,
+        "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+        "warning": "Reviewer LLM degraded: Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 413,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "329d3d76-dbb1-4321-9510-11faacdcb66f",
+    "started_at": "2026-08-05T13:48:23.511843+00:00",
+    "completed_at": "2026-08-05T13:49:02.592654+00:00",
+    "course_name": "Data Structures",
+    "course_code": "TST105",
+    "assessment_type": "Question Bank",
+    "question_count": 4,
+    "total_marks": 8,
+    "quality_score": 59.5,
+    "reviewer_score": 66.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 3,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 1789,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 4013,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 33036,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 237,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "85fae1f6-d9a3-4907-880d-528756dfb3d8",
+    "started_at": "2026-08-05T13:45:14.478538+00:00",
+    "completed_at": "2026-08-05T13:46:05.744792+00:00",
+    "course_name": "Data Structures",
+    "course_code": "TST104",
+    "assessment_type": "Question Bank",
+    "question_count": 4,
+    "total_marks": 8,
+    "quality_score": 59.5,
+    "reviewer_score": 68.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 11,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 12048,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 4540,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 34050,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 610,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "87c7651c-af95-4463-a72d-59e58296e446",
+    "started_at": "2026-08-05T11:18:11.202156+00:00",
+    "completed_at": "2026-08-05T11:19:10.071554+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Role Play",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 73.8,
+    "reviewer_score": 78.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 153,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 8134,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 3,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 50405,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 168,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "57b42353-e4a3-412f-b9a5-a546a2b9aefb",
+    "started_at": "2026-08-05T11:15:39.051663+00:00",
+    "completed_at": "2026-08-05T11:15:49.641654+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "",
+    "assessment_type": "Role Play",
+    "question_count": 3,
+    "total_marks": 12,
+    "quality_score": 72.5,
+    "reviewer_score": 78.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 4,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 1522,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 7101,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 3,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1730,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 227,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "5d8dbe71-9cf2-4129-b945-d965b493a24f",
+    "started_at": "2026-08-05T11:11:50.783602+00:00",
+    "completed_at": "2026-08-05T11:12:30.880451+00:00",
+    "course_name": "Software Engineering",
+    "course_code": "TST103",
+    "assessment_type": "Role Play",
+    "question_count": 1,
+    "total_marks": 10,
+    "quality_score": 34.2,
+    "reviewer_score": 58.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 12,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 3075,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 4517,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 32110,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 380,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "c0a58ae0-ed70-44aa-968c-cc325232a7ea",
+    "started_at": "2026-08-05T11:03:20.261487+00:00",
+    "completed_at": "2026-08-05T11:04:07.361593+00:00",
+    "course_name": "Deep learning",
+    "course_code": "BCS702",
+    "assessment_type": "Quiz",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 68.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 21,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 5123,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 5159,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 36223,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 569,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "57e35cc3-0de2-4e32-b380-9875aa49fbbb",
+    "started_at": "2026-08-05T10:53:52.043141+00:00",
+    "completed_at": "2026-08-05T10:54:06.641924+00:00",
+    "course_name": "MCQ Options Smoke Test",
+    "course_code": "TST102",
+    "assessment_type": "Quiz",
+    "question_count": 2,
+    "total_marks": 2,
+    "quality_score": 34.2,
+    "reviewer_score": 45.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 10,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 3444,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2622,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 8161,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 357,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "10541d15-fc70-4c34-9a3f-e0a602c1b57d",
+    "started_at": "2026-08-05T10:48:51.185946+00:00",
+    "completed_at": "2026-08-05T10:49:27.661666+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Quiz",
+    "question_count": 5,
+    "total_marks": 5,
+    "quality_score": 65.4,
+    "reviewer_score": 66.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 89,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 3121,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 33188,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 75,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "5d9fb6eb-d455-4b43-83da-0b12a8719945",
+    "started_at": "2026-08-05T10:46:45.896226+00:00",
+    "completed_at": "2026-08-05T10:47:24.534636+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Quiz",
+    "question_count": 5,
+    "total_marks": 5,
+    "quality_score": 65.4,
+    "reviewer_score": 62.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 126,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 3619,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 34681,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 209,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "6feeaeca-f153-4aa6-89f5-0cbf33f750e0",
+    "started_at": "2026-08-05T10:22:52.129045+00:00",
+    "completed_at": "2026-08-05T10:23:51.575369+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 50,
+    "quality_score": 65.4,
+    "reviewer_score": 65.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 256,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 13564,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 5421,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 38909,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 1293,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "ad7fa2b1-2eae-400c-a325-baefd8df4930",
+    "started_at": "2026-08-05T07:32:24.600359+00:00",
+    "completed_at": "2026-08-05T07:33:04.305088+00:00",
+    "course_name": "Parallel Computing",
+    "course_code": "BCS703B",
+    "assessment_type": "Internal Assessment",
+    "question_count": 2,
+    "total_marks": 10,
+    "quality_score": 50.6,
+    "reviewer_score": 58.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 171,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 6481,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 3548,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 28842,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 659,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "bf7d05b6-fb0a-4f12-b92d-e91fc310a87b",
+    "started_at": "2026-08-05T07:07:07.288033+00:00",
+    "completed_at": "2026-08-05T07:07:14.978862+00:00",
+    "course_name": "Model Switch Smoke Test",
+    "course_code": "TST101",
+    "assessment_type": "Quiz",
+    "question_count": 2,
+    "total_marks": 2,
+    "quality_score": 34.2,
+    "reviewer_score": 48.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 7,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 3488,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2334,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1645,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 215,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "2a0a9e4a-fd9f-4327-8afa-602e4a44bdf7",
+    "started_at": "2026-08-05T07:05:50.972030+00:00",
+    "completed_at": "2026-08-05T07:06:43.405257+00:00",
+    "course_name": "Model Switch Smoke Test",
+    "course_code": "TST101",
+    "assessment_type": "Quiz",
+    "question_count": 2,
+    "total_marks": 2,
+    "quality_score": 34.2,
+    "reviewer_score": 42.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 1791,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 30323,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 19230,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 1079,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "44c5ed7e-6605-4e06-a13c-e3a5a3a94aea",
+    "started_at": "2026-08-05T07:05:06.726372+00:00",
+    "completed_at": "2026-08-05T07:05:37.905768+00:00",
+    "course_name": "Model Switch Smoke Test",
+    "course_code": "TST101",
+    "assessment_type": "Quiz",
+    "question_count": 2,
+    "total_marks": 2,
+    "quality_score": 34.2,
+    "reviewer_score": 48.0,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 1529,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2367,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 27090,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 189,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "ac265085-8077-4871-9440-984c2dbab868",
+    "started_at": "2026-08-05T06:50:45.924932+00:00",
+    "completed_at": "2026-08-05T06:50:50.219367+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 10,
+    "total_marks": 200,
+    "quality_score": 57.1,
+    "reviewer_score": null,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 3,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 61,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 4003,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "error",
+        "duration_ms": 71,
+        "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 100000, Requested 6024. Please try again in 1h26m44.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+        "warning": "Reviewer LLM degraded: Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 100000, Requested 6024. Please try again in 1h26m44.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 150,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "45605745-94c6-401c-838a-b777c2b3f2f0",
+    "started_at": "2026-08-05T06:34:47.344022+00:00",
+    "completed_at": "2026-08-05T06:35:00.200103+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 58.3,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 90,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 8147,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2713,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1314,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 587,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "16245b75-ff55-4718-a999-2dcd0ba36d5f",
+    "started_at": "2026-08-05T05:48:51.105510+00:00",
+    "completed_at": "2026-08-05T05:49:01.841004+00:00",
+    "course_name": "Parallel Computing",
+    "course_code": "BCS703B",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 72.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 19,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 5934,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2812,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1313,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 655,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "4c6089bb-7ae3-4ef3-a2bc-e4e8be700940",
+    "started_at": "2026-08-05T05:45:59.091266+00:00",
+    "completed_at": "2026-08-05T05:46:04.425350+00:00",
+    "course_name": "Parallel Computing",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 1123,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2640,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1414,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 154,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "8d901c6a-4b4e-4e29-b458-89977e8a47f0",
+    "started_at": "2026-08-05T05:37:22.237705+00:00",
+    "completed_at": "2026-08-05T05:37:33.474378+00:00",
+    "course_name": "BI",
+    "course_code": "BCS703A",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 72.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 154,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 6277,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2859,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 2,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1237,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 706,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "b4052d94-d93c-4799-8da8-34d6a0c285af",
+    "started_at": "2026-08-05T05:31:07.910434+00:00",
+    "completed_at": "2026-08-05T05:31:16.701552+00:00",
+    "course_name": "Business Intelligence",
+    "course_code": "21CS743",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 72.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 133,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 4602,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2641,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1082,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 330,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "e25dbc40-7f19-4cd4-828e-2647f4290a8b",
+    "started_at": "2026-08-05T04:58:40.716403+00:00",
+    "completed_at": "2026-08-05T04:58:52.567775+00:00",
+    "course_name": "Intelligent Language processing",
+    "course_code": "BCS701",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 60.4,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 38,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 6162,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 3357,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1498,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 794,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "e9402ffa-8cc7-4fed-a2ae-abf1f5db59b4",
+    "started_at": "2026-08-05T03:49:38.745937+00:00",
+    "completed_at": "2026-08-05T03:49:52.069859+00:00",
+    "course_name": "Deep learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 72.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 19,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 9230,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2404,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1343,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 326,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  }
+]

@@ -1,0 +1,466 @@
+{
+  "run_id": "41670d67-3549-4c52-9087-9ebe7e7ef4e1",
+  "started_at": "2026-08-05T13:57:25.340321+00:00",
+  "completed_at": "2026-08-05T13:57:38.911741+00:00",
+  "plan": {
+    "assessment_type": "Question Bank",
+    "course_name": "Data Structures",
+    "course_code": "TST106",
+    "topics": "Stacks, Queues, Linked Lists, Trees",
+    "bloom_targets": "Remember, Understand, Apply, Analyze",
+    "co_mapping": "CO1, CO2, CO3",
+    "question_count": 12,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Data Structures (TST106) Question Bank – Stacks, Queues, Linked Lists, Trees",
+      "course_code": "TST106",
+      "course_name": "Data Structures",
+      "assessment_type": "Question Bank",
+      "semester": "7th",
+      "duration_minutes": 60,
+      "total_marks": 60,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer each question in the space provided. Use clear, concise explanations and, where required, show all steps of any algorithm or analysis. Marks are allocated as indicated.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "**[Stacks]** Define a stack and list its primary operations.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "A stack is a linear data structure that follows Last‑In‑First‑Out (LIFO) ordering. Primary operations are:\n1. push – insert an element on the top,\n2. pop – remove the top element,\n3. top/peek – view the top element without removing it,\n4. isEmpty – test whether the stack contains any elements.\n(Any equivalent definition and list of operations earns full marks.)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.7396,
+            "excerpt": "CS3001 - Data Structures and Algorithms\nCourse Syllabus | Semester 5, 2024-25\nCourse Objectives:\n1. Understand classical data structures: arrays, linked lists, stacks, queues, trees, graphs.\n2. Analyz"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "**[Stacks]** Show how a stack can be used to evaluate the postfix expression `3 4 + 2 *`. List the stack contents after each step and give the final result.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Step‑wise evaluation (5 marks total):\n1. Push 3 → [3]\n2. Push 4 → [3,4]\n3. Encounter ‘+’: pop 4 and 3, compute 3+4=7, push 7 → [7]\n4. Push 2 → [7,2]\n5. Encounter ‘*’: pop 2 and 7, compute 7*2=14, push 14 → [14]\nFinal result = 14. Full marks for correct sequence and final answer.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6784,
+            "excerpt": "Applications: expression evaluation, BFS/DFS scaffolding.\nUnit 2: Sorting and Searching (8 hrs)\n  Bubble, Selection, Insertion, Merge, Quick, Heap sort.\n  Binary search, interpolation search.\n  Comple"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "**[Stacks]** Compare an array‑based implementation of a stack with a linked‑list implementation in terms of time complexity for push/pop and space overhead.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO3"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Marking scheme (5 marks):\n- Push operation: both O(1) time (1 mark).\n- Pop operation: both O(1) time (1 mark).\n- Space overhead: array implementation uses contiguous memory; may need resizing (occasionally O(n) copy) – 1 mark. Linked list stores an extra pointer per node, increasing memory per element – 1 mark.\n- Overall comment on trade‑off (e.g., array may waste unused slots, linked list uses extra pointers) – 1 mark.\nFull answer should mention O(1) for push/pop and describe the extra pointer overhead of the linked list.",
+        "question_type": "Essay",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 2,
+            "relevance_score": 0.6623,
+            "excerpt": "Reference Books:\n  1. CLRS - Introduction to Algorithms, 4th Edition.\n  2. Data Structures Using C - Reema Thareja.\n  3. The Algorithm Design Manual - Skiena."
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "**[Queues]** Define a queue and describe its basic operations.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "A queue is a linear data structure that follows First‑In‑First‑Out (FIFO) ordering. Basic operations are:\n1. enqueue – insert an element at the rear,\n2. dequeue – remove the front element,\n3. front/peek – view the front element without removing it,\n4. isEmpty – test whether the queue is empty.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.6569,
+            "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "**[Queues]** Explain how a queue can be used to perform a level‑order (breadth‑first) traversal of a binary tree. Outline the algorithm steps.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Algorithm (5 marks):\n1. Create an empty queue and enqueue the root node.\n2. While the queue is not empty:\n   a. Dequeue a node and visit it (process its data).\n   b. If the dequeued node has a left child, enqueue the left child.\n   c. If the dequeued node has a right child, enqueue the right child.\n3. The visitation order produced is the level‑order traversal.\nFull credit for correctly describing the use of a queue and the three steps above.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.6406,
+            "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 2",
+        "options": []
+      },
+      {
+        "question_id": "Q6",
+        "question_text": "**[Queues]** Analyse the time complexity of enqueue and dequeue operations for (a) an array‑based circular queue and (b) a linked‑list based queue. Mention any differences in space usage.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO3"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Marking scheme (5 marks):\n- Enqueue (circular array): O(1) time; may need wrap‑around handling – 1 mark.\n- Dequeue (circular array): O(1) time – 1 mark.\n- Enqueue (linked list): O(1) time by linking a new node at rear – 1 mark.\n- Dequeue (linked list): O(1) time by removing front node – 1 mark.\n- Space usage: array uses fixed size (may waste unused slots); linked list uses a node per element plus a pointer per node – 1 mark.\nAnswer must state O(1) for all operations and discuss the space characteristics.",
+        "question_type": "Essay",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.7396,
+            "excerpt": "CS3001 - Data Structures and Algorithms\nCourse Syllabus | Semester 5, 2024-25\nCourse Objectives:\n1. Understand classical data structures: arrays, linked lists, stacks, queues, trees, graphs.\n2. Analyz"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q7",
+        "question_text": "**[Linked Lists]** List the three types of linked lists mentioned in the syllabus.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Singly linked list, doubly linked list, circular linked list.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6784,
+            "excerpt": "Applications: expression evaluation, BFS/DFS scaffolding.\nUnit 2: Sorting and Searching (8 hrs)\n  Bubble, Selection, Insertion, Merge, Quick, Heap sort.\n  Binary search, interpolation search.\n  Comple"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q8",
+        "question_text": "**[Linked Lists]** Perform the following operations on an initially empty singly linked list and show the final list:\n1. Insert 10 at the head.\n2. Insert 20 at the tail.\n3. Delete the node containing 10.\nProvide the resulting sequence of node values.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Step‑wise answer (5 marks):\n1. After inserting 10 at head → List: 10\n2. After inserting 20 at tail → List: 10 → 20\n3. Delete node with value 10 (head) → List: 20\nFinal list contains a single node with value 20. Full credit for correct intermediate and final lists.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 2,
+            "relevance_score": 0.6623,
+            "excerpt": "Reference Books:\n  1. CLRS - Introduction to Algorithms, 4th Edition.\n  2. Data Structures Using C - Reema Thareja.\n  3. The Algorithm Design Manual - Skiena."
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q9",
+        "question_text": "**[Linked Lists]** Compare the space overhead of a singly linked list with that of a doubly linked list.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO3"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Marking scheme (5 marks):\n- Singly linked list node stores data + one pointer (to next) – 1 mark.\n- Doubly linked list node stores data + two pointers (next and prev) – 1 mark.\n- Hence doubly linked list uses an extra pointer per node, increasing memory consumption – 1 mark.\n- Discuss impact: more memory but enables backward traversal – 1 mark.\n- Any correct comparison of pointer count and memory implication earns full marks.",
+        "question_type": "Essay",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.6569,
+            "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q10",
+        "question_text": "**[Trees]** Enumerate the four tree traversal orders covered in the syllabus.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Inorder, preorder, postorder, level‑order.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.6406,
+            "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 2",
+        "options": []
+      },
+      {
+        "question_id": "Q11",
+        "question_text": "**[Trees]** Explain the defining property of a Binary Search Tree (BST) and how it differs from a general binary tree.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "A BST is a binary tree in which for every node:\n- All keys in the left subtree are less than the node’s key.\n- All keys in the right subtree are greater than the node’s key.\nThis ordering property is not required in a generic binary tree, which may have any arrangement of values. The BST property enables systematic searching by comparing the target key with the current node and moving left or right accordingly.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.7396,
+            "excerpt": "CS3001 - Data Structures and Algorithms\nCourse Syllabus | Semester 5, 2024-25\nCourse Objectives:\n1. Understand classical data structures: arrays, linked lists, stacks, queues, trees, graphs.\n2. Analyz"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 2",
+        "options": []
+      },
+      {
+        "question_id": "Q12",
+        "question_text": "**[Trees]** Given a binary tree with nodes arranged as follows (parent → left child, right child):\n- 10 → left 5, right 15\n- 5 → left 2, right 7\n- 15 → left 12, right 20\nDetermine whether this tree satisfies the BST property. Justify your answer using an inorder traversal.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO3"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Inorder traversal of the given tree yields the sequence: 2, 5, 7, 10, 12, 15, 20. The sequence is strictly increasing, which is a necessary and sufficient condition for a binary tree to be a BST. Therefore, the tree satisfies the BST property. (5 marks for correct traversal, correct ordering check, and clear conclusion.)",
+        "question_type": "Essay",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6784,
+            "excerpt": "Applications: expression evaluation, BFS/DFS scaffolding.\nUnit 2: Sorting and Searching (8 hrs)\n  Bubble, Selection, Insertion, Merge, Quick, Heap sort.\n  Binary search, interpolation search.\n  Comple"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 2",
+        "options": []
+      }
+    ],
+    "generation_notes": "12 descriptive questions covering Stacks, Queues, Linked Lists and Trees. Bloom levels Remember, Understand, Apply and Analyze are represented. Questions are evenly distributed across CO1, CO2 and CO3, with mixed difficulty (Easy, Medium, Hard). All content is drawn from the supplied syllabus excerpts."
+  },
+  "analytics": {
+    "question_count": 12,
+    "total_marks": 60,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 4,
+        "Understand": 2,
+        "Apply": 2,
+        "Analyze": 4,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 33.3,
+        "Understand": 16.7,
+        "Apply": 16.7,
+        "Analyze": 33.3,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 4,
+      "CO2": 4,
+      "CO3": 4
+    },
+    "difficulty_distribution": {
+      "Easy": 4,
+      "Medium": 4,
+      "Hard": 4
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "sample_syllabus.pdf"
+    ],
+    "estimated_time_saved_minutes": 48,
+    "quality_score": 81.7,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5,
+      "Q6": 5,
+      "Q7": 5,
+      "Q8": 5,
+      "Q9": 5,
+      "Q10": 5,
+      "Q11": 5,
+      "Q12": 5
+    },
+    "reviewer_result": {
+      "quality_score": 0.0,
+      "strengths": [],
+      "weaknesses": [],
+      "suggestions": [],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {},
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "",
+      "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    }
+  },
+  "reviewer": {
+    "quality_score": 0.0,
+    "strengths": [],
+    "weaknesses": [],
+    "suggestions": [],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {},
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "",
+    "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 9851,
+    "docx": 41575,
+    "pdf": 10773
+  },
+  "rag_sources": [
+    {
+      "document_name": "sample_syllabus.pdf",
+      "page_number": 1,
+      "relevance_score": 0.7396,
+      "excerpt": "CS3001 - Data Structures and Algorithms\nCourse Syllabus | Semester 5, 2024-25\nCourse Objectives:\n1. Understand classical data structures: arrays, linked lists, stacks, queues, trees, graphs.\n2. Analyz"
+    },
+    {
+      "document_name": "sample_syllabus.pdf",
+      "page_number": 1,
+      "relevance_score": 0.6784,
+      "excerpt": "Applications: expression evaluation, BFS/DFS scaffolding.\nUnit 2: Sorting and Searching (8 hrs)\n  Bubble, Selection, Insertion, Merge, Quick, Heap sort.\n  Binary search, interpolation search.\n  Comple"
+    },
+    {
+      "document_name": "sample_syllabus.pdf",
+      "page_number": 2,
+      "relevance_score": 0.6623,
+      "excerpt": "Reference Books:\n  1. CLRS - Introduction to Algorithms, 4th Edition.\n  2. Data Structures Using C - Reema Thareja.\n  3. The Algorithm Design Manual - Skiena."
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.6569,
+      "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.6406,
+      "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 7,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 1247,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 11837,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "error",
+      "duration_ms": 64,
+      "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "warning": "Reviewer LLM degraded: Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18566, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 413,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

@@ -1,0 +1,9 @@
+credentials:
+  usernames:
+    gurupbj:
+      email: guruprasad.jayarao@gmail.com
+      first_name: Guruprasad
+      last_name: BJ
+      logged_in: false
+      password: $2b$12$MXL2lkiISC2yojz0VI5ueOxE./3OISaMOSM3jMNS3v53IvC/mo51a
+      roles: null

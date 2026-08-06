@@ -1,0 +1,337 @@
+{
+  "run_id": "10541d15-fc70-4c34-9a3f-e0a602c1b57d",
+  "started_at": "2026-08-05T10:48:51.185946+00:00",
+  "completed_at": "2026-08-05T10:49:27.661666+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "topics": "UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs Artificial Neuron, \nNeural Network Architectures. \nSingle Layer Perceptron: Perceptron model, Learning rule, Perceptron Convergence \nTheorem, Limitations of Perceptron. \nMultilayer Perceptron (MLP): Feedforward Neural Networks, Activation Functions \n(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization. \nBackpropagation Algorithm: Chain Rule, Error propagation, Training of neural networks. \nNeed of DL: Usecase: DL in Computer Vision Applications, NLP, Healthcare and \nMedical Imaging \nText book 1:  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress, 2016 – Chapter 6 (Deep Feedforward Networks) \nText book 3:  Simon Haykin, Neural Networks and Learning Machines, 3rd Edition,",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 1,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "can you generate the MCQs in the format like we do in google form?",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Foundations Quiz",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Quiz",
+      "semester": "7th",
+      "duration_minutes": 25,
+      "total_marks": 5,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer all questions. Each question carries 1 mark. Choose the best answer for MCQs or write a brief response (1‑3 sentences) for short answer items.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Which of the following activation functions is NOT listed in the syllabus for this course?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "Leaky ReLU",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.8658,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: Source 2 – activation functions mentioned are Sigmoid, Tanh, ReLU, Softmax."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Briefly describe one key difference between a biological neuron and an artificial neuron as outlined in the curriculum.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 1,
+        "answer_key": "A biological neuron is a living cell that transmits electrical signals via synapses, whereas an artificial neuron is a mathematical model that computes a weighted sum of inputs and applies an activation function.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7759,
+            "excerpt": "(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization.  \nBackpropagation Algorithm : Chain Rule, Error propagation, Training of neural networks.  \nNeed of DL: Usecase: DL in Co"
+          }
+        ],
+        "notes": "Source: Source 1 – topics include Biological Neuron vs Artificial Neuron."
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "According to the perceptron learning rule, when a positive example is misclassified, the weight vector is updated by:",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 1,
+        "answer_key": "w_new = w_old + η × x",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7439,
+            "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+          }
+        ],
+        "notes": "Source: Source 1 – Perceptron model and learning rule."
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Which textbook and chapter specifically covers the backpropagation algorithm for feedforward networks?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT Press, 2016 – Chapter 6",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7268,
+            "excerpt": "– Chapter 9 (Convolutional Networks)  \nText book 2 : Charu C. Aggarwal, Neural Networks and Deep Learning, Springer – \nChapter 8          \n8 \nPedagogy  CNN implementation labs, dataset experiments, st"
+          }
+        ],
+        "notes": "Source: Source 1 and Source 2 – reference to Goodfellow Chapter 6 (Deep Feedforward Networks)."
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Which optimization method is explicitly listed in the syllabus for training deep neural networks?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 1,
+        "answer_key": "Gradient Descent",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.7191,
+            "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+          }
+        ],
+        "notes": "Source: Source 2 – mentions Gradient Descent Optimization."
+      }
+    ],
+    "generation_notes": "Questions are drawn exclusively from the provided syllabus excerpts and textbook references. Bloom's levels are limited to Remember, Understand, and Apply. Difficulty is mixed across Easy, Medium, and Hard."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 5,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 3,
+        "Understand": 1,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 60.0,
+        "Understand": 20.0,
+        "Apply": 20.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 3
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 1,
+      "Q2": 1,
+      "Q3": 1,
+      "Q4": 1,
+      "Q5": 1
+    },
+    "reviewer_result": {
+      "quality_score": 66.0,
+      "strengths": [
+        "Bloom taxonomy includes three different cognitive levels (Remember, Understand, Apply) across the five items.",
+        "All listed Course Outcomes (CO1 and CO2) are addressed, with multiple questions mapping to each CO."
+      ],
+      "weaknesses": [
+        "Higher-order Bloom levels (Analyze, Evaluate, Create) are completely absent.",
+        "Three of the five questions are simple recall (Remember) MCQs, resulting in an over‑reliance on low‑level cognition.",
+        "Question format variety is limited to MCQs and a single short‑answer; no problem‑solving or data‑interpretation items."
+      ],
+      "suggestions": [
+        "Replace one of the Remember‑level MCQs (e.g., Q5) with an Analyze‑level scenario that asks students to compare two optimization methods and justify which is more suitable for a given network architecture.",
+        "Add an Evaluate‑level question that requires students to critique the choice of activation function for a specific deep‑learning task.",
+        "Introduce a Create‑level task, such as designing a simple neural‑network architecture to solve a defined problem, possibly as a short‑answer or mini‑project item.",
+        "Increase question-type diversity by including a data‑interpretation or diagram‑labeling item to move beyond pure MCQs."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The quiz meets basic OBE requirements but needs higher-order cognitive items and greater format variety to fully assess deep learning competencies.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 66.0,
+    "strengths": [
+      "Bloom taxonomy includes three different cognitive levels (Remember, Understand, Apply) across the five items.",
+      "All listed Course Outcomes (CO1 and CO2) are addressed, with multiple questions mapping to each CO."
+    ],
+    "weaknesses": [
+      "Higher-order Bloom levels (Analyze, Evaluate, Create) are completely absent.",
+      "Three of the five questions are simple recall (Remember) MCQs, resulting in an over‑reliance on low‑level cognition.",
+      "Question format variety is limited to MCQs and a single short‑answer; no problem‑solving or data‑interpretation items."
+    ],
+    "suggestions": [
+      "Replace one of the Remember‑level MCQs (e.g., Q5) with an Analyze‑level scenario that asks students to compare two optimization methods and justify which is more suitable for a given network architecture.",
+      "Add an Evaluate‑level question that requires students to critique the choice of activation function for a specific deep‑learning task.",
+      "Introduce a Create‑level task, such as designing a simple neural‑network architecture to solve a defined problem, possibly as a short‑answer or mini‑project item.",
+      "Increase question-type diversity by including a data‑interpretation or diagram‑labeling item to move beyond pure MCQs."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The quiz meets basic OBE requirements but needs higher-order cognitive items and greater format variety to fully assess deep learning competencies.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 3261,
+    "docx": 39599,
+    "pdf": 5427
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.8658,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7759,
+      "excerpt": "(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization.  \nBackpropagation Algorithm : Chain Rule, Error propagation, Training of neural networks.  \nNeed of DL: Usecase: DL in Co"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7439,
+      "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7268,
+      "excerpt": "– Chapter 9 (Convolutional Networks)  \nText book 2 : Charu C. Aggarwal, Neural Networks and Deep Learning, Springer – \nChapter 8          \n8 \nPedagogy  CNN implementation labs, dataset experiments, st"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.7191,
+      "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 89,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 3121,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 33188,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 75,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

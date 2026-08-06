@@ -1,0 +1,351 @@
+{
+  "run_id": "87c7651c-af95-4463-a72d-59e58296e446",
+  "started_at": "2026-08-05T11:18:11.202156+00:00",
+  "completed_at": "2026-08-05T11:19:10.071554+00:00",
+  "plan": {
+    "assessment_type": "Role Play",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "topics": "Explaining the gradient descent algorithm",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "create role plays for \" Explaining the gradient descent algorithm\"",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Role‑Play Scenarios on Explaining the Gradient Descent Algorithm",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Role Play",
+      "semester": "7th",
+      "duration_minutes": 75,
+      "total_marks": 25,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "In each scenario a small group of students will assume the listed roles and act out the situation. The facilitator observes, guides discussion, and awards marks using the provided rubric. Each scenario lasts 10–15 minutes followed by a brief debrief.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "### Scenario\nA new undergraduate student joins the Deep Learning lab and asks the team to define the **gradient descent algorithm**.\n\n### Roles\n- **Lab Mentor** – briefly states the definition.\n- **Student A** – asks a clarification question.\n- **Student B** – repeats the definition in their own words.\n\n### Setup\n- Duration: 10 minutes.\n- Seating: Circle of chairs.\n- Props: None.\n\n### Task\nThe group must convey the definition of gradient descent accurately so that the newcomer can write it down.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objective**: Students recall the formal definition of gradient descent.\n- **Debrief Questions**: What is the core idea of gradient descent? Which component of the algorithm does the term ‘descent’ refer to?\n- **Expected Behaviour per Role**:\n  - *Lab Mentor*: Provides a concise definition, e.g., “Gradient descent is an iterative optimisation algorithm that updates parameters in the opposite direction of the loss gradient to minimise the loss.”\n  - *Student A*: Requests clarification such as “What does ‘gradient’ mean here?”\n  - *Student B*: Re‑states the definition in their own words.\n- **Observation Rubric (5 marks)**:\n  1. Correct definition given (2 pts).\n  2. Correct use of terminology (gradient, iterative, minimise) (1 pt).\n  3. Peer clarification question relevant (1 pt).\n  4. Accurate paraphrase by Student B (1 pt).\n- **Notes**: Definition drawn from Source 3 (Q.04 a) – “Explain briefly about gradient descent algorithm.”",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7114,
+            "excerpt": "Pearson – Chapters 1 & 4   \n8 \nPedagogy  Conceptual lectures, visualization, coding exercises, quizzes  \n2 UNIT – 2: Optimization and Regularization in Deep Learning Challenges in training \ndeep neura"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1 (Q.04 a).",
+        "options": []
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "### Scenario\nDuring a weekly tutorial the instructor asks the group to **explain why gradient descent is used for training neural networks** and outline its basic steps.\n\n### Roles\n- **Instructor** – poses the question and prompts discussion.\n- **Student C** – explains the motivation (e.g., optimisation of loss).\n- **Student D** – lists the step‑by‑step procedure (initialise, compute gradient, update, repeat).\n- **Observer** – notes whether key points are covered.\n\n### Setup\n- Duration: 12 minutes.\n- Seating: Classroom front‑back arrangement.\n- Props: Whiteboard and markers.\n\n### Task\nThe participants must collectively produce a clear, ordered explanation of the purpose and workflow of gradient descent.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objective**: Students demonstrate comprehension of the purpose and procedural flow of gradient descent.\n- **Debrief Questions**: Why is an iterative method needed? How does the gradient indicate the direction of steepest ascent?\n- **Expected Behaviour per Role**:\n  - *Instructor*: Encourages elaboration, asks “What happens after we compute the gradient?”\n  - *Student C*: States that gradient descent finds parameter values that minimise the empirical risk (loss) of a neural network.\n  - *Student D*: Enumerates steps – (1) initialise weights, (2) compute loss, (3) compute gradient of loss w.r.t. weights, (4) update weights: w←w‑η∇L, (5) repeat until convergence.\n  - *Observer*: Checks inclusion of all five steps.\n- **Observation Rubric (5 marks)**:\n  1. Correct motivation described (2 pts).\n  2. All procedural steps mentioned (2 pts).\n  3. Clear sequencing and use of correct symbols (η for learning rate) (1 pt).\n- **Notes**: Content aligns with Source 3 (Q.04 a) and Source 1 optimisation techniques.",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7114,
+            "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1 (Q.04 a) and Pearson Chapters 1 & 4 (Source 1).",
+        "options": []
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "### Scenario\nA small team is given a simple quadratic loss L(w)= (w‑3)² and asked to **perform two iterations of gradient descent manually** using a learning rate η=0.1.\n\n### Roles\n- **Facilitator** – provides the loss function and learning rate.\n- **Student E** – computes the gradient and the first update.\n- **Student F** – computes the second update.\n- **Recorder** – writes each intermediate value on the board.\n\n### Setup\n- Duration: 15 minutes.\n- Seating: Table with paper and calculators.\n- Props: Calculator, worksheet with the loss expression.\n\n### Task\nThe group must calculate w₀ (initial guess = 0), w₁, and w₂, showing all arithmetic.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objective**: Apply the gradient descent update rule to a concrete numerical example.\n- **Debrief Questions**: What does the sign of the gradient tell us? How does the learning rate affect the step size?\n- **Expected Behaviour per Role**:\n  - *Facilitator*: States w₀=0, η=0.1.\n  - *Student E*: Computes ∇L = 2(w‑3) → at w₀=0, ∇L = -6. Updates w₁ = 0 – 0.1(‑6) = 0.6.\n  - *Student F*: Computes ∇L at w₁=0.6 → 2(0.6‑3)=‑4.8. Updates w₂ = 0.6 – 0.1(‑4.8)=1.08.\n  - *Recorder*: Writes w₀=0, w₁=0.6, w₂=1.08.\n- **Observation Rubric (5 marks)**:\n  1. Correct gradient calculation for iteration 1 (1 pt).\n  2. Correct update w₁ (1 pt).\n  3. Correct gradient calculation for iteration 2 (1 pt).\n  4. Correct update w₂ (1 pt).\n  5. Clear presentation of steps (1 pt).\n- **Notes**: Uses the basic gradient‑descent update formula described in Source 3 (Q.04 a).",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "21CS743.pdf",
+            "page_number": 1,
+            "relevance_score": 0.7099,
+            "excerpt": "b What is regularization? How does regularization help in reducing overfitting.  L3 2 10 \nOR    \nQ.04  a Explain briefly about gradient descent algorithm.  L2 2 10 \n b Discuss the working of Backpropo"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1 (Q.04 a).",
+        "options": []
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "### Scenario\nThe class is split into two groups to **compare Stochastic Gradient Descent (SGD) with Batch Gradient Descent** for a given dataset.\n\n### Roles\n- **Group 1 – SGD Team** – argues the advantages of updating parameters after each training example.\n- **Group 2 – Batch Team** – argues the advantages of using the whole dataset per update.\n- **Moderator** – ensures each group presents a 2‑minute summary.\n- **Evaluator** – records points made about convergence speed, computational cost, and noise.\n\n### Setup\n- Duration: 13 minutes (6 min preparation, 4 min presentations, 3 min moderator wrap‑up).\n- Seating: Two tables facing the board.\n- Props: Flip‑chart paper, markers.\n\n### Task\nEach group must list at least three distinct characteristics (pros/cons) of their assigned gradient‑descent variant and relate them to the optimisation challenges (vanishing/exploding gradients, over‑fitting) mentioned in the syllabus.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objective**: Analyse differences between SGD and batch GD and connect them to optimisation challenges.\n- **Debrief Questions**: How does the noise in SGD help avoid local minima? In what situations might batch GD be preferable?\n- **Expected Behaviour per Role**:\n  - *SGD Team*: Mentions (1) frequent noisy updates can escape shallow minima, (2) lower memory requirement, (3) faster per‑epoch updates but higher variance.\n  - *Batch Team*: Mentions (1) exact gradient leads to stable convergence, (2) can exploit vectorised operations, (3) higher memory/computation per step.\n  - *Both*: Relate noise to mitigating vanishing gradients and over‑fitting (regularisation effect).\n  - *Evaluator*: Checks that each group provides ≥3 points and references at least one challenge from Source 1 (vanishing/exploding gradients, over‑fitting).\n- **Observation Rubric (5 marks)**:\n  1. Correct identification of ≥3 characteristics (2 pts).\n  2. Clear linkage to optimisation challenges (1 pt).\n  3. Logical comparison (pros vs cons) (1 pt).\n  4. Effective presentation within time limit (1 pt).\n- **Notes**: Optimisation techniques (SGD, Momentum, etc.) and challenges are listed in Source 1; analysis requirement matches CO2.",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.681,
+            "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1.pdf, page 28 (Source 1).",
+        "options": []
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "### Scenario\nIn a mini‑lab the students must **design a gradient‑descent‑based training plan** for a shallow neural network, choosing a learning rate and optionally a momentum term, then justify their choices.\n\n### Roles\n- **Designer A** – proposes a learning‑rate value (e.g., η=0.01) and explains why it is suitable for stable convergence.\n- **Designer B** – proposes adding momentum (γ=0.9) and explains its effect on speed and oscillation.\n- **Critic** – challenges the proposals by asking about possible overshooting or slow learning.\n- **Recorder** – documents the final plan and justification.\n\n### Setup\n- Duration: 15 minutes (5 min planning, 8 min discussion, 2 min summary).\n- Seating: Round table.\n- Props: Laptop with a simple NN script (optional), paper.\n\n### Task\nThe team must produce a concise training plan that includes:\n1. Learning‑rate value.\n2. Whether momentum will be used.\n3. Expected impact on convergence based on the optimisation challenges from the syllabus.",
+        "bloom_level": "Evaluate",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "#### Faculty Facilitation Guide\n- **Learning Objective**: Evaluate and create an appropriate gradient‑descent configuration for a neural‑network training scenario.\n- **Debrief Questions**: How does the chosen learning rate balance convergence speed and stability? What risk does momentum mitigate?\n- **Expected Behaviour per Role**:\n  - *Designer A*: States a small learning rate (e.g., 0.01) to avoid overshooting, cites stability in presence of vanishing gradients.\n  - *Designer B*: Suggests momentum γ=0.9 to accelerate learning and damp oscillations, referencing the optimisation techniques list (Source 1).\n  - *Critic*: Questions if η is too small (slow) or if momentum could cause divergence on steep loss surfaces.\n  - *Recorder*: Writes a plan: “Use η=0.01 with momentum γ=0.9; expect smoother descent, reduced risk of getting stuck in flat regions, and faster convergence despite possible exploding‑gradient scenarios.”\n- **Observation Rubric (5 marks)**:\n  1. Reasonable learning‑rate choice with justification (1 pt).\n  2. Appropriate use (or justified omission) of momentum (1 pt).\n  3. Connection to syllabus challenges (vanishing/exploding gradients, over‑fitting) (1 pt).\n  4. Logical defence against Critic’s concerns (1 pt).\n  5. Clear written plan (1 pt).\n- **Notes**: Relies on optimisation techniques (SGD, Momentum) and challenges from Source 1; aligns with CO2’s application focus.",
+        "question_type": "Role Play",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 30,
+            "relevance_score": 0.6686,
+            "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1.pdf, page 28 (optimisation techniques) and page 28 (challenges).",
+        "options": []
+      }
+    ],
+    "generation_notes": "All scenarios are derived exclusively from the supplied syllabus excerpts that mention gradient descent, stochastic gradient descent and related optimisation techniques (Source 3 and Source 1). Bloom levels span Remember, Understand, Apply, Analyze, Evaluate, Create. CO1 and CO2 mappings follow the programme outcomes."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 1,
+        "Apply": 1,
+        "Analyze": 1,
+        "Evaluate": 1,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 20.0,
+        "Understand": 20.0,
+        "Apply": 20.0,
+        "Analyze": 20.0,
+        "Evaluate": 20.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 3
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 2,
+      "Hard": 2
+    },
+    "knowledge_sources_used": [
+      "21CS743.pdf",
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 21,
+    "quality_score": 73.8,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 78.0,
+      "strengths": [
+        "All five Bloom levels from Remember to Evaluate are represented, providing a clear cognitive progression.",
+        "Each question is explicitly mapped to specific Course Outcomes (CO1 or CO2), ensuring alignment with the OBE framework.",
+        "The role‑play format is consistently applied with detailed scenarios, roles, and setups, promoting active learning and communication skills.",
+        "Difficulty levels are well balanced (Easy, Medium, Hard) across the five items, matching the increasing cognitive demand.",
+        "Answer key presence is indicated for every question, supporting reliable grading."
+      ],
+      "weaknesses": [
+        "No Create‑level question is included, leaving the highest Bloom domain unassessed.",
+        "All items focus exclusively on gradient descent; the assessment lacks coverage of other core deep‑learning topics (e.g., activation functions, regularisation, architectures).",
+        "The rubric for evaluating role‑play performance is not mentioned, which may lead to inconsistent scoring.",
+        "While answer keys are marked as present, the actual keys are not provided in the data, preventing verification of grading consistency."
+      ],
+      "suggestions": [
+        "Introduce a Create‑level role‑play (e.g., students design a new optimizer or hybrid gradient‑descent strategy) to address the missing highest cognitive level.",
+        "Develop and attach a detailed scoring rubric for each role‑play scenario to ensure transparent and consistent assessment.",
+        "Broaden the assessment scope by adding at least one question that targets a different deep‑learning concept, such as model regularisation or architecture selection.",
+        "Provide the actual answer keys or marking guides alongside the assessment package to enable auditability."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": true,
+        "Evaluate": true,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment is well‑structured and aligns with the stated COs, but to achieve a fully robust OBE instrument it should incorporate a Create‑level task and a broader range of deep‑learning content. Adding a rubric will also strengthen reliability.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 78.0,
+    "strengths": [
+      "All five Bloom levels from Remember to Evaluate are represented, providing a clear cognitive progression.",
+      "Each question is explicitly mapped to specific Course Outcomes (CO1 or CO2), ensuring alignment with the OBE framework.",
+      "The role‑play format is consistently applied with detailed scenarios, roles, and setups, promoting active learning and communication skills.",
+      "Difficulty levels are well balanced (Easy, Medium, Hard) across the five items, matching the increasing cognitive demand.",
+      "Answer key presence is indicated for every question, supporting reliable grading."
+    ],
+    "weaknesses": [
+      "No Create‑level question is included, leaving the highest Bloom domain unassessed.",
+      "All items focus exclusively on gradient descent; the assessment lacks coverage of other core deep‑learning topics (e.g., activation functions, regularisation, architectures).",
+      "The rubric for evaluating role‑play performance is not mentioned, which may lead to inconsistent scoring.",
+      "While answer keys are marked as present, the actual keys are not provided in the data, preventing verification of grading consistency."
+    ],
+    "suggestions": [
+      "Introduce a Create‑level role‑play (e.g., students design a new optimizer or hybrid gradient‑descent strategy) to address the missing highest cognitive level.",
+      "Develop and attach a detailed scoring rubric for each role‑play scenario to ensure transparent and consistent assessment.",
+      "Broaden the assessment scope by adding at least one question that targets a different deep‑learning concept, such as model regularisation or architecture selection.",
+      "Provide the actual answer keys or marking guides alongside the assessment package to enable auditability."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": true,
+      "Evaluate": true,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment is well‑structured and aligns with the stated COs, but to achieve a fully robust OBE instrument it should incorporate a Create‑level task and a broader range of deep‑learning content. Adding a rubric will also strengthen reliability.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 12215,
+    "docx": 42766,
+    "pdf": 13018
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7114,
+      "excerpt": "Pearson – Chapters 1 & 4   \n8 \nPedagogy  Conceptual lectures, visualization, coding exercises, quizzes  \n2 UNIT – 2: Optimization and Regularization in Deep Learning Challenges in training \ndeep neura"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7114,
+      "excerpt": "(BPTT), Vanishing gradient problem.  \nAdvanced RNN architectures: Long Short -Term Memory (LSTM), Gated Recurrent Unit \n(GRU), Bidirectional RNN.        \n8"
+    },
+    {
+      "document_name": "21CS743.pdf",
+      "page_number": 1,
+      "relevance_score": 0.7099,
+      "excerpt": "b What is regularization? How does regularization help in reducing overfitting.  L3 2 10 \nOR    \nQ.04  a Explain briefly about gradient descent algorithm.  L2 2 10 \n b Discuss the working of Backpropo"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.681,
+      "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 30,
+      "relevance_score": 0.6686,
+      "excerpt": "Neural Networks  \n U L1/L2  \nCO2 Apply principles of Deep Learning to solve numerical and analytical problems \ninvolving neural network computations, gradient updates, and performance \nevaluation .  A"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 153,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 8134,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 3,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 50405,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 168,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

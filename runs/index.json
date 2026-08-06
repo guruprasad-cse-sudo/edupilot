@@ -1,0 +1,368 @@
+[
+  {
+    "run_id": "47327650-25d1-44d3-9862-5ab93883e816",
+    "started_at": "2026-08-04T15:36:39.625104+00:00",
+    "completed_at": "2026-08-04T15:36:48.721670+00:00",
+    "course_name": "deep learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 58.3,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 12,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 4408,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2878,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1368,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 427,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "299b629e-3749-4c12-8093-7a9edc797055",
+    "started_at": "2026-08-04T15:32:42.208074+00:00",
+    "completed_at": "2026-08-04T15:32:48.065407+00:00",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 65.4,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 28,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "ok",
+        "duration_ms": 346,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 3228,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1378,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 875,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "17ab3b1a-e364-41db-92af-b53b290a5b18",
+    "started_at": "2026-08-04T14:17:55.262026+00:00",
+    "completed_at": "2026-08-04T14:17:58.116479+00:00",
+    "course_name": "Deep learning",
+    "course_code": "BCS702",
+    "assessment_type": "Internal Assessment",
+    "question_count": 0,
+    "total_marks": 0,
+    "quality_score": 0.0,
+    "reviewer_score": null,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 99,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "error",
+        "duration_ms": 1961,
+        "error": "No module named 'langchain_huggingface'",
+        "warning": "RAG retrieval failed; proceeding without knowledge context."
+      },
+      {
+        "stage": "generation",
+        "status": "error",
+        "duration_ms": 792,
+        "error": "AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)",
+        "warning": null
+      }
+    ],
+    "success": false,
+    "fatal_error": "Assessment Agent failed: AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)"
+  },
+  {
+    "run_id": "a5b69fb6-7941-4c04-84d1-01e45006e89e",
+    "started_at": "2026-08-04T11:41:41.301561+00:00",
+    "completed_at": "2026-08-04T11:41:46.506309+00:00",
+    "course_name": "Operating Systems",
+    "course_code": "CS4001",
+    "assessment_type": "Quiz",
+    "question_count": 0,
+    "total_marks": 0,
+    "quality_score": 0.0,
+    "reviewer_score": null,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 18,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "error",
+        "duration_ms": 4432,
+        "error": "No module named 'langchain_huggingface'",
+        "warning": "RAG retrieval failed; proceeding without knowledge context."
+      },
+      {
+        "stage": "generation",
+        "status": "error",
+        "duration_ms": 755,
+        "error": "AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)",
+        "warning": null
+      }
+    ],
+    "success": false,
+    "fatal_error": "Assessment Agent failed: AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)"
+  },
+  {
+    "run_id": "78bf4c46-80c9-4b5e-ab88-e12f3b39c8db",
+    "started_at": "2026-08-04T10:54:59.472966+00:00",
+    "completed_at": "2026-08-04T10:55:06.453870+00:00",
+    "course_name": "Data Structures",
+    "course_code": "CS3001",
+    "assessment_type": "Quiz",
+    "question_count": 3,
+    "total_marks": 15,
+    "quality_score": 68.3,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 2,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "error",
+        "duration_ms": 3238,
+        "error": "Could not import sentence_transformers python package. Please install it with `pip install sentence-transformers`.",
+        "warning": "RAG retrieval failed; proceeding without knowledge context."
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 2080,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 1,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1337,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 322,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "71452701-a036-4062-8b7c-2919fe2403b5",
+    "started_at": "2026-08-04T10:54:03.731945+00:00",
+    "completed_at": "2026-08-04T10:54:06.517725+00:00",
+    "course_name": "Data Structures",
+    "course_code": "CS3001",
+    "assessment_type": "Quiz",
+    "question_count": 0,
+    "total_marks": 0,
+    "quality_score": 0.0,
+    "reviewer_score": null,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 8,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "error",
+        "duration_ms": 2772,
+        "error": "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/torch/lib/libtorch_global_deps.so: cannot open shared object file: No such file or directory",
+        "warning": "RAG retrieval failed; proceeding without knowledge context."
+      },
+      {
+        "stage": "generation",
+        "status": "error",
+        "duration_ms": 4,
+        "error": "/home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/torch/lib/libtorch_global_deps.so: cannot open shared object file: No such file or directory",
+        "warning": null
+      }
+    ],
+    "success": false,
+    "fatal_error": "Assessment Agent failed: /home/runner/workspace/.pythonlibs/lib/python3.12/site-packages/torch/lib/libtorch_global_deps.so: cannot open shared object file: No such file or directory"
+  },
+  {
+    "run_id": "bfdfeffc-fe8f-4225-8997-9f66c034bfc5",
+    "started_at": "2026-08-04T10:51:07.081692+00:00",
+    "completed_at": "2026-08-04T10:51:13.640404+00:00",
+    "course_name": "Data Structures and Algorithms",
+    "course_code": "CS3001",
+    "assessment_type": "Quiz",
+    "question_count": 5,
+    "total_marks": 25,
+    "quality_score": 61.3,
+    "reviewer_score": 82.5,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "ok",
+        "duration_ms": 1377,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "rag",
+        "status": "error",
+        "duration_ms": 1777,
+        "error": "No module named 'langchain_huggingface'",
+        "warning": "RAG retrieval failed; proceeding without knowledge context."
+      },
+      {
+        "stage": "generation",
+        "status": "ok",
+        "duration_ms": 1761,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "analytics",
+        "status": "ok",
+        "duration_ms": 0,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "reviewer",
+        "status": "ok",
+        "duration_ms": 1090,
+        "error": null,
+        "warning": null
+      },
+      {
+        "stage": "export_prep",
+        "status": "ok",
+        "duration_ms": 553,
+        "error": null,
+        "warning": null
+      }
+    ],
+    "success": true,
+    "fatal_error": null
+  },
+  {
+    "run_id": "0d5ee1e1-dbd8-4db9-be05-93d026b1e0f3",
+    "started_at": "2026-08-04T10:50:16.798415+00:00",
+    "completed_at": "2026-08-04T10:50:20.486146+00:00",
+    "course_name": "",
+    "course_code": "",
+    "assessment_type": "",
+    "question_count": 0,
+    "total_marks": 0,
+    "quality_score": 0.0,
+    "reviewer_score": null,
+    "stages": [
+      {
+        "stage": "planning",
+        "status": "error",
+        "duration_ms": 3688,
+        "error": "1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)",
+        "warning": null
+      }
+    ],
+    "success": false,
+    "fatal_error": "Planning Agent failed: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)"
+  }
+]

@@ -1,0 +1,340 @@
+{
+  "run_id": "6feeaeca-f153-4aa6-89f5-0cbf33f750e0",
+  "started_at": "2026-08-05T10:22:52.129045+00:00",
+  "completed_at": "2026-08-05T10:23:51.575369+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "topics": "UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs Artificial Neuron, \nNeural Network Architectures. \nSingle Layer Perceptron: Perceptron model, Learning rule, Perceptron Convergence \nTheorem, Limitations of Perceptron. \nMultilayer Perceptron (MLP): Feedforward Neural Networks, Activation Functions \n(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization. \nBackpropagation Algorithm: Chain Rule, Error propagation, Training of neural networks. \nNeed of DL: Usecase: DL in Computer Vision Applications, NLP, Healthcare and \nMedical Imaging \nText book 1:  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress, 2016 – Chapter 6 (Deep Feedforward Networks) \nText book 3:  Simon Haykin, Neural Networks and Learning Machines, 3rd Edition,",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 10,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "REFER to the schem and syllabus for DL and generate",
+    "test_date": "13 August 2026"
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Mid-Semester Internal Assessment – Foundations of Deep Learning",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Internal Assessment",
+      "semester": "7th",
+      "duration_minutes": 90,
+      "total_marks": 50,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer all questions. Write clearly and show all necessary steps for calculation based questions. The total marks for the paper are 50.",
+      "test_date": "13 August 2026"
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Define the perceptron model and state its learning rule. Include the mathematical expression for the weight update.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 10,
+        "answer_key": "A perceptron is a single‑layer artificial neuron that computes a weighted sum of its inputs and passes the result through a step activation to produce a binary output. The learning rule updates each weight w_i as: w_i ← w_i + η (t - y) x_i, where η is the learning rate, t the target label, y the perceptron output, and x_i the i‑th input. (Source: Source 1)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.8658,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: Source 1 – CSE Scheme and Syllabus, UNIT‑1 topics on Single Layer Perceptron."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Explain the key differences between a biological neuron and an artificial neuron as described in the syllabus. Discuss at least three aspects.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 10,
+        "answer_key": "1. **Structure**: A biological neuron consists of dendrites, a soma, and an axon that transmit electrochemical signals, whereas an artificial neuron is a mathematical unit that receives numeric inputs, multiplies them by weights, sums them, and applies an activation function. \n2. **Signal Transmission**: Biological neurons use spikes of neurotransmitters and have variable firing thresholds; artificial neurons use deterministic functions (e.g., step, sigmoid) with fixed thresholds. \n3. **Learning Mechanism**: Biological learning involves synaptic plasticity (e.g., Hebbian learning) and complex biochemical processes, while artificial neurons learn via explicit algorithms such as the perceptron learning rule or gradient‑based updates. \nThese points are directly drawn from the syllabus description of \"Biological Neuron vs Artificial Neuron\" in UNIT‑1. (Source: Source 1)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7759,
+            "excerpt": "(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization.  \nBackpropagation Algorithm : Chain Rule, Error propagation, Training of neural networks.  \nNeed of DL: Usecase: DL in Co"
+          }
+        ],
+        "notes": "Source: Source 1 – UNIT‑1 topic list."
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Consider a perceptron with two inputs x1 and x2, initial weights w1 = 0.5, w2 = -0.5, bias b = 0, learning rate η = 0.1, and the training example (x1, x2, target) = (1, 0, 1). Perform one iteration of the perceptron learning rule and give the updated weights and bias.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 10,
+        "answer_key": "1. Compute net input: z = w1·x1 + w2·x2 + b = 0.5·1 + (-0.5)·0 + 0 = 0.5.\n2. Perceptron output (step function): y = 1 if z ≥ 0 else 0 → y = 1.\n3. Error: t - y = 1 - 1 = 0.\n4. Weight update: w_i ← w_i + η (t - y) x_i → No change because error = 0.\n5. Bias update: b ← b + η (t - y) → No change.\nResult: w1 = 0.5, w2 = -0.5, b = 0. (If the example had produced an error, the formula would apply as given in Q1.) (Source: Source 1 – Perceptron learning rule.)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7439,
+            "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+          }
+        ],
+        "notes": "Source: Source 1 – Perceptron model and learning rule."
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Compare the four activation functions listed in the syllabus (Sigmoid, Tanh, ReLU, Softmax). For each, state its output range and a typical scenario where it is preferred.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 10,
+        "answer_key": "• **Sigmoid** – Output range (0, 1). Used in binary classification output layers because it maps to a probability.\n• **Tanh** – Output range (‑1, 1). Preferred in hidden layers when zero‑centered activations help gradient flow.\n• **ReLU** – Output range [0, ∞). Favoured in deep hidden layers for its simplicity and ability to mitigate vanishing gradients.\n• **Softmax** – Output range (0, 1) for each component and sums to 1 across all classes. Used in multi‑class classification output layers to produce a probability distribution over classes.\nThese descriptions follow the activation‑function list in UNIT‑1 of the syllabus. (Source: Source 2)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7268,
+            "excerpt": "– Chapter 9 (Convolutional Networks)  \nText book 2 : Charu C. Aggarwal, Neural Networks and Deep Learning, Springer – \nChapter 8          \n8 \nPedagogy  CNN implementation labs, dataset experiments, st"
+          }
+        ],
+        "notes": "Source: Source 2 – Activation Functions (Sigmoid, Tanh, ReLU, Softmax)."
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Outline the back‑propagation algorithm for a feed‑forward neural network with one hidden layer. Your answer should include: (a) the role of the chain rule, (b) how error is propagated from output to hidden layer, and (c) the weight‑update step using gradient descent.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 10,
+        "answer_key": "1. **Forward Pass** – Compute activations of hidden layer (h) and output layer (o) using current weights.\n2. **Compute Loss** – Evaluate a loss function (e.g., cross‑entropy) comparing o with target t.\n3. **Chain Rule (a)** – To obtain gradients of the loss w.r.t. each weight, apply the chain rule: ∂L/∂w = ∂L/∂o · ∂o/∂net_o · ∂net_o/∂w, where net_o is the weighted sum at the output neuron.\n4. **Error Propagation (b)** – Calculate output error δ_o = (o‑t)·f' (net_o). Propagate to hidden layer: δ_h = (W_{ho}^T δ_o)·f' (net_h), where f' is the derivative of the hidden activation.\n5. **Weight Update (c)** – Update output weights: W_{ho} ← W_{ho} – η·δ_o·h^T. Update hidden weights: W_{ih} ← W_{ih} – η·δ_h·x^T, where x is the input vector and η the learning rate.\n6. **Iterate** – Repeat forward and backward passes for all training examples until convergence.\nAll steps are derived from the syllabus items on Backpropagation Algorithm, Chain Rule, and Error Propagation. (Source: Source 2)",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.7191,
+            "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+          }
+        ],
+        "notes": "Source: Source 2 – Backpropagation Algorithm, Chain Rule, Error propagation."
+      }
+    ],
+    "generation_notes": "Questions are based exclusively on the syllabus excerpts provided (Sources 1‑5). Bloom levels are balanced with at least one Apply/Analyze item. CO mapping follows the course outcomes CO1 (knowledge of DL fundamentals) and CO2 (ability to apply DL techniques)."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 50,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 2,
+        "Apply": 2,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 20.0,
+        "Understand": 40.0,
+        "Apply": 40.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 2,
+      "Hard": 2
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 10,
+      "Q2": 10,
+      "Q3": 10,
+      "Q4": 10,
+      "Q5": 10
+    },
+    "reviewer_result": {
+      "quality_score": 65.0,
+      "strengths": [
+        "All questions have answer keys provided, ensuring objective grading.",
+        "A mix of short-answer (Q1, Q3) and long-answer (Q2, Q4, Q5) formats tests both concise recall and extended explanation.",
+        "Difficulty levels are well‑distributed: Easy (Q1), Medium (Q2, Q4), Hard (Q3, Q5).",
+        "Core outcomes CO1 and CO2 are each addressed by multiple items."
+      ],
+      "weaknesses": [
+        "Higher‑order Bloom levels (Analyze, Evaluate, Create) are completely absent.",
+        "Only two course outcomes (CO1, CO2) are mapped; any additional outcomes in the syllabus are ignored.",
+        "Understand level is over‑represented (Q2, Q4) while Apply level dominates the higher‑mark items, limiting cognitive diversity."
+      ],
+      "suggestions": [
+        "Introduce at least one Analyze‑level question (e.g., compare convergence properties of different optimizers) to raise cognitive depth.",
+        "Add an Evaluate‑level scenario (e.g., critique the suitability of a given activation function for a specific task) to align with OBE expectations.",
+        "If the syllabus includes a third outcome (e.g., CO3 – ethical considerations), create a Create‑level task such as designing a simple neural‑network architecture for a real‑world problem.",
+        "Consider incorporating a data‑interpretation or case‑study question that requires students to draw conclusions from model performance metrics."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment is structurally sound but needs higher‑order cognitive tasks and broader outcome mapping to fully meet OBE standards for a Deep Learning course.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 65.0,
+    "strengths": [
+      "All questions have answer keys provided, ensuring objective grading.",
+      "A mix of short-answer (Q1, Q3) and long-answer (Q2, Q4, Q5) formats tests both concise recall and extended explanation.",
+      "Difficulty levels are well‑distributed: Easy (Q1), Medium (Q2, Q4), Hard (Q3, Q5).",
+      "Core outcomes CO1 and CO2 are each addressed by multiple items."
+    ],
+    "weaknesses": [
+      "Higher‑order Bloom levels (Analyze, Evaluate, Create) are completely absent.",
+      "Only two course outcomes (CO1, CO2) are mapped; any additional outcomes in the syllabus are ignored.",
+      "Understand level is over‑represented (Q2, Q4) while Apply level dominates the higher‑mark items, limiting cognitive diversity."
+    ],
+    "suggestions": [
+      "Introduce at least one Analyze‑level question (e.g., compare convergence properties of different optimizers) to raise cognitive depth.",
+      "Add an Evaluate‑level scenario (e.g., critique the suitability of a given activation function for a specific task) to align with OBE expectations.",
+      "If the syllabus includes a third outcome (e.g., CO3 – ethical considerations), create a Create‑level task such as designing a simple neural‑network architecture for a real‑world problem.",
+      "Consider incorporating a data‑interpretation or case‑study question that requires students to draw conclusions from model performance metrics."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment is structurally sound but needs higher‑order cognitive tasks and broader outcome mapping to fully meet OBE standards for a Deep Learning course.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 6905,
+    "docx": 41132,
+    "pdf": 8741
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.8658,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7759,
+      "excerpt": "(Sigmoid, Tanh, ReLU, Softmax), Loss Functions, Gradient Descent Optimization.  \nBackpropagation Algorithm : Chain Rule, Error propagation, Training of neural networks.  \nNeed of DL: Usecase: DL in Co"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7439,
+      "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7268,
+      "excerpt": "– Chapter 9 (Convolutional Networks)  \nText book 2 : Charu C. Aggarwal, Neural Networks and Deep Learning, Springer – \nChapter 8          \n8 \nPedagogy  CNN implementation labs, dataset experiments, st"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.7191,
+      "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 256,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 13564,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 5421,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 38909,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 1293,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

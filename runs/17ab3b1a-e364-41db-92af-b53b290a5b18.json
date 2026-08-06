@@ -1,0 +1,52 @@
+{
+  "run_id": "17ab3b1a-e364-41db-92af-b53b290a5b18",
+  "started_at": "2026-08-04T14:17:55.262026+00:00",
+  "completed_at": "2026-08-04T14:17:58.116479+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Deep learning",
+    "course_code": "BCS702",
+    "topics": "Perceptrons , perceptron learning algorith, , convergence theorem",
+    "bloom_targets": "Remember, Understand, Apply, Create, Evaluate, Analyze",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Medium",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": ""
+  },
+  "assessment": null,
+  "analytics": null,
+  "reviewer": null,
+  "export_formats": [],
+  "export_sizes": {},
+  "rag_sources": [],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 99,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "error",
+      "duration_ms": 1961,
+      "error": "No module named 'langchain_huggingface'",
+      "warning": "RAG retrieval failed; proceeding without knowledge context."
+    },
+    {
+      "stage": "generation",
+      "status": "error",
+      "duration_ms": 792,
+      "error": "AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)",
+      "warning": null
+    }
+  ],
+  "success": false,
+  "fatal_error": "Assessment Agent failed: AssessmentAgent failed to produce valid JSON after 3 attempts.  Last error: 1 validation error for ChatGroq\n__root__\n  Client.__init__() got an unexpected keyword argument 'proxies' (type=type_error)"
+}

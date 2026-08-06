@@ -1,0 +1,337 @@
+{
+  "run_id": "16245b75-ff55-4718-a999-2dcd0ba36d5f",
+  "started_at": "2026-08-05T05:48:51.105510+00:00",
+  "completed_at": "2026-08-05T05:49:01.841004+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Parallel Computing",
+    "course_code": "BCS703B",
+    "topics": "Introduction to Parallel Algorithm Models with Hardware and software in Parallel \nComputing \nIntroduction to Types of Parallel Models, Classifications of parallel computers, SIMD \nsystems, MIMD systems, Interconnection networks, Cache coherence, Shared-memory vs. \ndistributed-memory, Coordinating the processes/threads, Shared-memory, Distributed\nmemory.",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Internal Assessment for Parallel Computing (BCS703B)",
+      "course_code": "BCS703B",
+      "course_name": "Parallel Computing",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Please ensure you clearly label each question with its corresponding question number.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What are the primary types of parallel models discussed in the context of parallel computing?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "SIMD and MIMD systems",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.7593,
+            "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Explain the difference between shared-memory and distributed-memory architectures in parallel computing.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Shared-memory architecture uses a common memory space accessible by all processors, while distributed-memory architecture uses private memory for each processor, requiring data exchange through communication.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 40,
+            "relevance_score": 0.7472,
+            "excerpt": "Sl. No Course  Objectives  \n1 Understand the need for Parallel Computing basics ,algorithms and Classification of Parallel Computers  \n2 Apply the suitable parallel programming techniques for efficien"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Describe the role of interconnection networks in parallel computing systems.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Interconnection networks enable communication between processors in parallel computing systems.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 42,
+            "relevance_score": 0.7056,
+            "excerpt": "CO4 Design Message Passing Interface and OpenMP interface programs for various \ntypes of parallel computers  L4 \n An \nCO5 Evaluate the study of distributed, shared memory organizations using suitable "
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Apply the concept of Amdahl’s law to evaluate the potential speedup of a parallel algorithm on a MIMD system.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Amdahl’s law states that the maximum theoretical speedup that can be achieved by a program is limited by the fraction of the program that cannot be parallelized. To apply this, calculate the speedup using the formula: Speedup = 1 / (1 - P + P/S), where P is the fraction of the program that can be parallelized and S is the number of processors.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 42,
+            "relevance_score": 0.6907,
+            "excerpt": "Engineering Computation  \n \nCO  \nCourse  Outcomes  RBT \nLevel  RBT \nLevel \nIndicator  \nCO1 Understand the need for Parallel Computing basics ,algorithms and Classification of \nParallel Computers  L2 U"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 42"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Discuss the importance of coordinating processes/threads in shared-memory and distributed-memory architectures.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Coordinating processes/threads is crucial for achieving efficient parallel computation, ensuring data consistency, and preventing race conditions in both shared-memory and distributed-memory architectures.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.6732,
+            "excerpt": "DSATM   \nScheme of Teaching and Examinations for BE Program -2026 -27 Outcome  Based  Education  and \nChoice  Based  Credit  System  (CBCS) (Effective from the Academic Year 202 6-27) \nCOURSE  CURRICU"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      }
+    ],
+    "generation_notes": "Questions are designed based on the provided knowledge-base context, strictly adhering to the specified topics and Bloom levels."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 3,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 20.0,
+        "Understand": 60.0,
+        "Apply": 20.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 4,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 72.5,
+      "strengths": [
+        "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+        "Answer keys are present for all questions, ensuring clarity in assessment",
+        "A mix of short and long answer questions caters to different types of learners"
+      ],
+      "weaknesses": [
+        "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+        "The assessment primarily focuses on CO1, with only one question (Q4) mapping to CO2",
+        "The difficulty levels are somewhat balanced but could be more evenly distributed across easy, medium, and hard"
+      ],
+      "suggestions": [
+        "Add questions that target the higher levels of Bloom's taxonomy (Analyze, Evaluate, Create) to enhance cognitive depth",
+        "Include more questions that map to CO2 and potentially other course outcomes to ensure comprehensive coverage",
+        "Consider revising the difficulty distribution to achieve a more balanced mix of easy, medium, and hard questions"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment demonstrates a good foundation but requires expansion in terms of Bloom's taxonomy coverage and course outcome mapping to achieve a more comprehensive evaluation of student learning outcomes.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 72.5,
+    "strengths": [
+      "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+      "Answer keys are present for all questions, ensuring clarity in assessment",
+      "A mix of short and long answer questions caters to different types of learners"
+    ],
+    "weaknesses": [
+      "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+      "The assessment primarily focuses on CO1, with only one question (Q4) mapping to CO2",
+      "The difficulty levels are somewhat balanced but could be more evenly distributed across easy, medium, and hard"
+    ],
+    "suggestions": [
+      "Add questions that target the higher levels of Bloom's taxonomy (Analyze, Evaluate, Create) to enhance cognitive depth",
+      "Include more questions that map to CO2 and potentially other course outcomes to ensure comprehensive coverage",
+      "Consider revising the difficulty distribution to achieve a more balanced mix of easy, medium, and hard questions"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment demonstrates a good foundation but requires expansion in terms of Bloom's taxonomy coverage and course outcome mapping to achieve a more comprehensive evaluation of student learning outcomes.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 3692,
+    "docx": 39591,
+    "pdf": 5348
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.7593,
+      "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 40,
+      "relevance_score": 0.7472,
+      "excerpt": "Sl. No Course  Objectives  \n1 Understand the need for Parallel Computing basics ,algorithms and Classification of Parallel Computers  \n2 Apply the suitable parallel programming techniques for efficien"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 42,
+      "relevance_score": 0.7056,
+      "excerpt": "CO4 Design Message Passing Interface and OpenMP interface programs for various \ntypes of parallel computers  L4 \n An \nCO5 Evaluate the study of distributed, shared memory organizations using suitable "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 42,
+      "relevance_score": 0.6907,
+      "excerpt": "Engineering Computation  \n \nCO  \nCourse  Outcomes  RBT \nLevel  RBT \nLevel \nIndicator  \nCO1 Understand the need for Parallel Computing basics ,algorithms and Classification of \nParallel Computers  L2 U"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.6732,
+      "excerpt": "DSATM   \nScheme of Teaching and Examinations for BE Program -2026 -27 Outcome  Based  Education  and \nChoice  Based  Credit  System  (CBCS) (Effective from the Academic Year 202 6-27) \nCOURSE  CURRICU"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 19,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 5934,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2812,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1313,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 655,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

@@ -1,0 +1,415 @@
+{
+  "run_id": "ac265085-8077-4871-9440-984c2dbab868",
+  "started_at": "2026-08-05T06:50:45.924932+00:00",
+  "completed_at": "2026-08-05T06:50:50.219367+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Deep Learning",
+    "course_code": "BCS702",
+    "topics": "Unit 1 to unit 5 from the scheme and syllabus document.",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 10,
+    "marks_per_question": 20,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "Computer Science & Engineering",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "Create 10 questions with option A and B for each question",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Mid-Semester Internal Assessment",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Internal Assessment",
+      "semester": "7th",
+      "duration_minutes": 90,
+      "total_marks": 200,
+      "department": "Computer Science & Engineering",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer all questions to the best of your ability. Choose either option A or B for each question.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Explain the difference between machine learning and deep learning. (Option A) OR Describe the biological neuron vs artificial neuron. (Option B)",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 20,
+        "answer_key": "Option A: Machine learning is a subset of artificial intelligence that involves training algorithms to make predictions or decisions based on data. Deep learning is a subset of machine learning that involves the use of neural networks with multiple layers to analyze data. Option B: Biological neurons are the basic units of the brain, responsible for transmitting and processing information. Artificial neurons are the basic units of a neural network, designed to mimic the behavior of biological neurons.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.6969,
+            "excerpt": "1. Classroom lectures supported by visual illustrations, neural network architecture diagrams, and mathematical derivations to s trengthen the \ntheoretical understanding of deep learning concepts.  \n2"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 27"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "What are the limitations of the Perceptron model? (Option A) OR Explain the Perceptron Convergence Theorem. (Option B)",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 20,
+        "answer_key": "Option A: The Perceptron model is limited in its ability to learn complex patterns and relationships in data. Option B: The Perceptron Convergence Theorem states that the Perceptron model will converge to a solution if the data is linearly separable.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6911,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Explain the working of deep forward networks. (Option A) OR Describe the architecture of a Multilayer Perceptron (MLP). (Option B)",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 20,
+        "answer_key": "Option A: Deep forward networks are a type of neural network that consists of multiple layers of artificial neurons, where each layer processes the input data and passes the output to the next layer. Option B: The architecture of an MLP consists of an input layer, one or more hidden layers, and an output layer, where each layer is fully connected to the next layer.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.6795,
+            "excerpt": "sequential and temporal data.  \n5 To apply advanced deep learning models and frameworks  for solving real -world problems in domains \nsuch as computer vision, natural language processing, and healthca"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 28"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "What is the purpose of activation functions in a neural network? (Option A) OR Explain the difference between sequential and temporal data. (Option B)",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 20,
+        "answer_key": "Option A: Activation functions are used to introduce non-linearity into the neural network, allowing it to learn complex patterns and relationships in data. Option B: Sequential data refers to data that has a sequential or temporal structure, such as time series data or text data. Temporal data refers to data that has a temporal structure, such as data that is measured at regular time intervals.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "21CS743.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6786,
+            "excerpt": "Module  -1 *Bloom’s \nTaxonomy \nLevel   \n                 \nCOs  Marks  \nQ.01  a Explain the historical trends in deep learning.  L2 1 10 \n b Define machine learning. Explain different types of ML algor"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 27"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Explain the concept of supervised learning. (Option A) OR Describe the working of a support vector machine. (Option B)",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 20,
+        "answer_key": "Option A: Supervised learning is a type of machine learning where the algorithm is trained on labeled data, and the goal is to learn a mapping between input data and output labels. Option B: A support vector machine is a type of supervised learning algorithm that uses a hyperplane to separate the data into different classes.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6755,
+            "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1"
+      },
+      {
+        "question_id": "Q6",
+        "question_text": "What is the purpose of autoencoders in deep learning? (Option A) OR Explain the concept of generative models. (Option B)",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 20,
+        "answer_key": "Option A: Autoencoders are used to learn a compact representation of the input data, and can be used for dimensionality reduction or anomaly detection. Option B: Generative models are a type of deep learning model that is used to generate new data samples that are similar to the training data.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.6969,
+            "excerpt": "1. Classroom lectures supported by visual illustrations, neural network architecture diagrams, and mathematical derivations to s trengthen the \ntheoretical understanding of deep learning concepts.  \n2"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 29"
+      },
+      {
+        "question_id": "Q7",
+        "question_text": "Explain the concept of transformers and attention mechanisms. (Option A) OR Describe the architecture of a Variational Autoencoder (VAE). (Option B)",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 20,
+        "answer_key": "Option A: Transformers are a type of neural network that uses self-attention mechanisms to process sequential data. Option B: A VAE is a type of generative model that consists of an encoder and a decoder, where the encoder maps the input data to a latent space, and the decoder maps the latent space back to the input data.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.6911,
+            "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 29"
+      },
+      {
+        "question_id": "Q8",
+        "question_text": "What is the purpose of deep learning frameworks such as TensorFlow and PyTorch? (Option A) OR Explain the applications of deep learning in healthcare. (Option B)",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 20,
+        "answer_key": "Option A: Deep learning frameworks such as TensorFlow and PyTorch provide a set of tools and libraries for building and training deep learning models. Option B: Deep learning has a wide range of applications in healthcare, including medical image analysis, disease diagnosis, and personalized medicine.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.6795,
+            "excerpt": "sequential and temporal data.  \n5 To apply advanced deep learning models and frameworks  for solving real -world problems in domains \nsuch as computer vision, natural language processing, and healthca"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 29"
+      },
+      {
+        "question_id": "Q9",
+        "question_text": "Explain the concept of self-attention mechanisms in transformers. (Option A) OR Describe the architecture of a Generative Adversarial Network (GAN). (Option B)",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 20,
+        "answer_key": "Option A: Self-attention mechanisms are used in transformers to allow the model to attend to different parts of the input sequence simultaneously. Option B: A GAN consists of a generator and a discriminator, where the generator generates new data samples, and the discriminator evaluates the generated samples and tells the generator whether they are realistic or not.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "21CS743.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6786,
+            "excerpt": "Module  -1 *Bloom’s \nTaxonomy \nLevel   \n                 \nCOs  Marks  \nQ.01  a Explain the historical trends in deep learning.  L2 1 10 \n b Define machine learning. Explain different types of ML algor"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 29"
+      },
+      {
+        "question_id": "Q10",
+        "question_text": "Explain the concept of sparse autoencoders. (Option A) OR Describe the applications of deep learning in autonomous systems. (Option B)",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 20,
+        "answer_key": "Option A: Sparse autoencoders are a type of autoencoder that uses a sparsity penalty to encourage the model to learn a compact representation of the input data. Option B: Deep learning has a wide range of applications in autonomous systems, including self-driving cars, robotics, and drone navigation.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6755,
+            "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 29"
+      }
+    ],
+    "generation_notes": "Questions are based on the provided knowledge-base context, strictly adhering to the given topics and Bloom levels."
+  },
+  "analytics": {
+    "question_count": 10,
+    "total_marks": 200,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 5,
+        "Understand": 4,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 50.0,
+        "Understand": 40.0,
+        "Apply": 10.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 6,
+      "CO2": 4
+    },
+    "difficulty_distribution": {
+      "Easy": 6,
+      "Medium": 3,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "21CS743.pdf",
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 40,
+    "quality_score": 57.1,
+    "marks_distribution": {
+      "Q1": 20,
+      "Q2": 20,
+      "Q3": 20,
+      "Q4": 20,
+      "Q5": 20,
+      "Q6": 20,
+      "Q7": 20,
+      "Q8": 20,
+      "Q9": 20,
+      "Q10": 20
+    },
+    "reviewer_result": {
+      "quality_score": 0.0,
+      "strengths": [],
+      "weaknesses": [],
+      "suggestions": [],
+      "duplicate_question_ids": [
+        "Q7",
+        "Q9"
+      ],
+      "bloom_coverage": {},
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "",
+      "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 100000, Requested 6024. Please try again in 1h26m44.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    }
+  },
+  "reviewer": {
+    "quality_score": 0.0,
+    "strengths": [],
+    "weaknesses": [],
+    "suggestions": [],
+    "duplicate_question_ids": [
+      "Q7",
+      "Q9"
+    ],
+    "bloom_coverage": {},
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "",
+    "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 100000, Requested 6024. Please try again in 1h26m44.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 8380,
+    "docx": 40662,
+    "pdf": 8375
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.6969,
+      "excerpt": "1. Classroom lectures supported by visual illustrations, neural network architecture diagrams, and mathematical derivations to s trengthen the \ntheoretical understanding of deep learning concepts.  \n2"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.6911,
+      "excerpt": "COURSE CURRICULUM  \nModule  \nNo. Topics  Hours  \n1 UNIT – 1: Foundations of Deep Learning: Introduction to Deep Learning, Difference \nbetween Machine Learning and Deep Learning, Biological Neuron vs A"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.6795,
+      "excerpt": "sequential and temporal data.  \n5 To apply advanced deep learning models and frameworks  for solving real -world problems in domains \nsuch as computer vision, natural language processing, and healthca"
+    },
+    {
+      "document_name": "21CS743.pdf",
+      "page_number": 1,
+      "relevance_score": 0.6786,
+      "excerpt": "Module  -1 *Bloom’s \nTaxonomy \nLevel   \n                 \nCOs  Marks  \nQ.01  a Explain the historical trends in deep learning.  L2 1 10 \n b Define machine learning. Explain different types of ML algor"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.6755,
+      "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 3,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 61,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 4003,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "error",
+      "duration_ms": 71,
+      "error": "Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 100000, Requested 6024. Please try again in 1h26m44.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}",
+      "warning": "Reviewer LLM degraded: Reviewer LLM failed after 2 attempts: Groq LLM call failed: Error code: 429 - {'error': {'message': 'Rate limit reached for model `llama-3.3-70b-versatile` in organization `org_01kyh43nqtffd93h7mqvmewv06` service tier `on_demand` on tokens per day (TPD): Limit 100000, Used 100000, Requested 6024. Please try again in 1h26m44.736s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 150,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

@@ -1,0 +1,281 @@
+{
+  "run_id": "44c5ed7e-6605-4e06-a13c-e3a5a3a94aea",
+  "started_at": "2026-08-05T07:05:06.726372+00:00",
+  "completed_at": "2026-08-05T07:05:37.905768+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Model Switch Smoke Test",
+    "course_code": "TST101",
+    "topics": "Basic arithmetic",
+    "bloom_targets": "Remember",
+    "co_mapping": "CO1",
+    "question_count": 2,
+    "marks_per_question": 1,
+    "difficulty": "Easy",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Basic Arithmetic Recall Quiz – Model Switch Smoke Test (TST101)",
+      "course_code": "TST101",
+      "course_name": "Model Switch Smoke Test",
+      "assessment_type": "Quiz",
+      "semester": "7th",
+      "duration_minutes": 20,
+      "total_marks": 2,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer each question in 1–3 sentences. Each question carries 1 mark. Write your answer clearly; no calculations need to be shown.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "According to the syllabus, what is the combined percentage for the activity labeled \"Analyze\"?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "44% (the sum of 40% and 4%).",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 30,
+            "relevance_score": 0.6071,
+            "excerpt": "interpreting model results  E L5 \nCO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 3                \nCO2 3            1    \nCO3  3            1   \nCO4   3  2  "
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 47 (Source 2)."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "According to the syllabus, what is the combined percentage for the activity labeled \"Apply\"?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 1,
+        "answer_key": "22% (the sum of 20% and 2%).",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 47,
+            "relevance_score": 0.5966,
+            "excerpt": "Analyze  40% + 4% \nEvaluate  20% + 2% \nCreate"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 22 (Source 4)."
+      }
+    ],
+    "generation_notes": "Questions are derived directly from the percentage data in Source 2 and Source 4 of the provided syllabus document, ensuring alignment with CO1 and the Remember Bloom level."
+  },
+  "analytics": {
+    "question_count": 2,
+    "total_marks": 2,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 0,
+        "Apply": 0,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 100.0,
+        "Understand": 0.0,
+        "Apply": 0.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 0,
+      "Hard": 0
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 10,
+    "quality_score": 34.2,
+    "marks_distribution": {
+      "Q1": 1,
+      "Q2": 1
+    },
+    "reviewer_result": {
+      "quality_score": 48.0,
+      "strengths": [
+        "Both questions have clear, concise wording and are directly answerable from the syllabus.",
+        "Answer keys are indicated as present for each question.",
+        "Each question is mapped to a specific Course Outcome (CO1) and marks are evenly allocated."
+      ],
+      "weaknesses": [
+        "All items are at the Remember level; no higher-order Bloom levels (Understand, Apply, Analyze, Evaluate, Create) are represented.",
+        "Both questions are Easy difficulty, providing no challenge variation for learners.",
+        "The assessment covers only CO1, leaving other potential Course Outcomes unassessed.",
+        "Total marks (2) are extremely low for a 20‑minute quiz, limiting the ability to differentiate student performance."
+      ],
+      "suggestions": [
+        "Introduce at least one Apply‑level scenario question to move beyond simple recall.",
+        "Add an Analyze or Evaluate question that requires students to interpret or critique the syllabus percentages.",
+        "Include a Create‑level task (e.g., design a mini‑assessment plan) to achieve full Bloom coverage.",
+        "Diversify difficulty by adding a Medium or Hard question to better gauge depth of understanding.",
+        "Consider incorporating items mapped to additional COs to ensure broader curriculum alignment."
+      ],
+      "duplicate_question_ids": [
+        "Q1",
+        "Q2"
+      ],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": false,
+        "Apply": false,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The quiz functions as a basic factual check but does not fulfill OBE principles of assessing varied cognitive levels or multiple outcomes. Substantial redesign is recommended to improve academic rigor and alignment.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 48.0,
+    "strengths": [
+      "Both questions have clear, concise wording and are directly answerable from the syllabus.",
+      "Answer keys are indicated as present for each question.",
+      "Each question is mapped to a specific Course Outcome (CO1) and marks are evenly allocated."
+    ],
+    "weaknesses": [
+      "All items are at the Remember level; no higher-order Bloom levels (Understand, Apply, Analyze, Evaluate, Create) are represented.",
+      "Both questions are Easy difficulty, providing no challenge variation for learners.",
+      "The assessment covers only CO1, leaving other potential Course Outcomes unassessed.",
+      "Total marks (2) are extremely low for a 20‑minute quiz, limiting the ability to differentiate student performance."
+    ],
+    "suggestions": [
+      "Introduce at least one Apply‑level scenario question to move beyond simple recall.",
+      "Add an Analyze or Evaluate question that requires students to interpret or critique the syllabus percentages.",
+      "Include a Create‑level task (e.g., design a mini‑assessment plan) to achieve full Bloom coverage.",
+      "Diversify difficulty by adding a Medium or Hard question to better gauge depth of understanding.",
+      "Consider incorporating items mapped to additional COs to ensure broader curriculum alignment."
+    ],
+    "duplicate_question_ids": [
+      "Q1",
+      "Q2"
+    ],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": false,
+      "Apply": false,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The quiz functions as a basic factual check but does not fulfill OBE principles of assessing varied cognitive levels or multiple outcomes. Substantial redesign is recommended to improve academic rigor and alignment.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 1782,
+    "docx": 39051,
+    "pdf": 3609
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 30,
+      "relevance_score": 0.6071,
+      "excerpt": "interpreting model results  E L5 \nCO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 3                \nCO2 3            1    \nCO3  3            1   \nCO4   3  2  "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 47,
+      "relevance_score": 0.5966,
+      "excerpt": "Analyze  40% + 4% \nEvaluate  20% + 2% \nCreate"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 21,
+      "relevance_score": 0.5901,
+      "excerpt": "Evaluate  \n - - 10 10  \nCreate  \n - -  15 10 \n \n \n CO/PO  PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10  PO11  PO12  PSO1  PSO2  PSO3  PSO4  \nCO1 2 2           2    \nCO2 2 3   2    2    2    \nCO3 2 3      "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 22,
+      "relevance_score": 0.5855,
+      "excerpt": "Apply  20%+2%  \nAnalyse  40%+4%  \nEvaluate  20%+2%  \nCreate   \n  \n \nSEE Course Plan  \n \n \nCO’s  Marks Distribution   \nTotal \nMarks   \nWeightage  \nModule -1 Module -2 Module - 3 Module -4 Module -5 \nCO"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 37,
+      "relevance_score": 0.5842,
+      "excerpt": "T1 – Chapter 6 (6.2 – 6.7), Chapter 7(7.7 – 7.10)  08 \nPedagogy  Demonstration of algorithms.  \n \n \n4 Model -Based Decision Making, Decision Support Systems modeling, Structure of \nmathematical models"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 1529,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2367,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 27090,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 189,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

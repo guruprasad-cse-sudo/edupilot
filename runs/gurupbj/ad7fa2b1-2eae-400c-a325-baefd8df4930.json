@@ -1,0 +1,276 @@
+{
+  "run_id": "ad7fa2b1-2eae-400c-a325-baefd8df4930",
+  "started_at": "2026-08-05T07:32:24.600359+00:00",
+  "completed_at": "2026-08-05T07:33:04.305088+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Parallel Computing",
+    "course_code": "BCS703B",
+    "topics": "Distributed memory programming with MPI – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI-derived datatypes, Performance evaluation \nof MPI programs, A parallel sorting algorithm",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 2,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Mid-Semester Internal Assessment – Distributed Memory Programming with MPI",
+      "course_code": "BCS703B",
+      "course_name": "Parallel Computing",
+      "assessment_type": "Internal Assessment",
+      "semester": "7th",
+      "duration_minutes": 90,
+      "total_marks": 10,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer all questions. Write clearly and show any required steps. Marks are allocated as indicated. Use only concepts covered in the course syllabus and lecture material.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "List three MPI functions that are typically used for collective communication in distributed‑memory programs. Briefly state the purpose of each function.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "1. MPI_Bcast – broadcasts a message from one process to all other processes in a communicator.\n2. MPI_Reduce – combines values from all processes using a specified operation (e.g., sum, max) and returns the result to the root process.\n3. MPI_Gather – collects data from all processes and assembles it in order at the root process.\n(Each function description worth 1.5 marks; correct identification of three functions worth 0.5 mark.)",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.8345,
+            "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+          }
+        ],
+        "notes": "Source: Topic list – ‘Collective communication’ (Source 1)."
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "You are required to compute the definite integral of a function f(x) over the interval [a, b] using the trapezoidal rule on a distributed‑memory system with MPI. Outline a step‑by‑step algorithm that (a) partitions the interval among processes, (b) uses an appropriate MPI collective operation to combine the partial results, and (c) describes how you would evaluate the performance of your implementation (mention at least two metrics).",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Algorithm (≈3 marks):\n1. Each process computes its local sub‑interval: \n   - Determine the number of trapezoids n per process (e.g., total N divided by number of processes).\n   - Compute local start = a + rank * (b‑a)/size and local end = start + (b‑a)/size.\n2. Each process applies the trapezoidal rule on its sub‑interval to obtain a local integral value.\n3. Use MPI_Reduce with MPI_SUM (or MPI_Allreduce) to combine all local integrals into the global integral at the root process.\n4. Root process outputs the final integral.\n\nPerformance evaluation (≈2 marks):\n- Measure execution time for varying numbers of processes and compute speedup = T_serial / T_parallel.\n- Compute efficiency = speedup / number_of_processes.\n(Additional acceptable metrics: communication overhead, scalability.)\n\nMarking scheme: correct partitioning (1 mark), correct use of MPI_Reduce/Allreduce (1 mark), clear description of performance metrics (1 mark), overall clarity and completeness (2 marks).",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.71,
+            "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+          }
+        ],
+        "notes": "Sources: MPI functions and collective communication (Source 1); performance evaluation, speedup and efficiency in MIMD systems (Source 2); CO2 – Apply parallel programming techniques (Source 5)."
+      }
+    ],
+    "generation_notes": "Questions are derived exclusively from the provided syllabus excerpts. Bloom levels are balanced (Remember and Apply) and mapped to CO1 and CO2. Difficulty is mixed (Easy and Medium)."
+  },
+  "analytics": {
+    "question_count": 2,
+    "total_marks": 10,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 0,
+        "Apply": 1,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 50.0,
+        "Understand": 0.0,
+        "Apply": 50.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 1,
+      "CO2": 1
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 1,
+      "Hard": 0
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 10,
+    "quality_score": 50.6,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5
+    },
+    "reviewer_result": {
+      "quality_score": 58.0,
+      "strengths": [
+        "Both course outcomes (CO1 and CO2) are explicitly mapped to questions.",
+        "Question types vary (short answer and long answer) providing both recall and applied problem solving.",
+        "Answer keys are indicated as present for both questions."
+      ],
+      "weaknesses": [
+        "Only two Bloom levels are covered (Remember and Apply); higher-order levels (Understand, Analyze, Evaluate, Create) are absent.",
+        "The assessment provides only Easy and Medium difficulty items; no Hard or challenging tasks are present.",
+        "Total marks (10) are unusually low for a 90‑minute internal assessment, suggesting insufficient workload.",
+        "Only two questions may not adequately sample the breadth of the Parallel Computing syllabus."
+      ],
+      "suggestions": [
+        "Add at least one question targeting Analyze or Evaluate level (e.g., compare performance of different collective communication strategies).",
+        "Introduce a Create-level task where students design and pseudo‑code a parallel algorithm for a non‑trivial problem.",
+        "Include a Hard‑difficulty question to balance the cognitive load across the 90‑minute period.",
+        "Consider increasing total marks or adding more questions to align workload with exam duration.",
+        "Provide a detailed marking rubric for the long‑answer question to ensure consistent grading."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": false,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment aligns with the stated COs but needs richer cognitive depth and a more appropriate mark‑to‑time ratio for a 90‑minute internal test.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 58.0,
+    "strengths": [
+      "Both course outcomes (CO1 and CO2) are explicitly mapped to questions.",
+      "Question types vary (short answer and long answer) providing both recall and applied problem solving.",
+      "Answer keys are indicated as present for both questions."
+    ],
+    "weaknesses": [
+      "Only two Bloom levels are covered (Remember and Apply); higher-order levels (Understand, Analyze, Evaluate, Create) are absent.",
+      "The assessment provides only Easy and Medium difficulty items; no Hard or challenging tasks are present.",
+      "Total marks (10) are unusually low for a 90‑minute internal assessment, suggesting insufficient workload.",
+      "Only two questions may not adequately sample the breadth of the Parallel Computing syllabus."
+    ],
+    "suggestions": [
+      "Add at least one question targeting Analyze or Evaluate level (e.g., compare performance of different collective communication strategies).",
+      "Introduce a Create-level task where students design and pseudo‑code a parallel algorithm for a non‑trivial problem.",
+      "Include a Hard‑difficulty question to balance the cognitive load across the 90‑minute period.",
+      "Consider increasing total marks or adding more questions to align workload with exam duration.",
+      "Provide a detailed marking rubric for the long‑answer question to ensure consistent grading."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": false,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment aligns with the stated COs but needs richer cognitive depth and a more appropriate mark‑to‑time ratio for a 90‑minute internal test.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 3775,
+    "docx": 40015,
+    "pdf": 6182
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.8345,
+      "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.71,
+      "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 42,
+      "relevance_score": 0.7078,
+      "excerpt": "CO4 Design Message Passing Interface and OpenMP interface programs for various \ntypes of parallel computers  L4 \n An \nCO5 Evaluate the study of distributed, shared memory organizations using suitable "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 40,
+      "relevance_score": 0.7008,
+      "excerpt": "Sl. No Course  Objectives  \n1 Understand the need for Parallel Computing basics ,algorithms and Classification of Parallel Computers  \n2 Apply the suitable parallel programming techniques for efficien"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 42,
+      "relevance_score": 0.658,
+      "excerpt": "Engineering Computation  \n \nCO  \nCourse  Outcomes  RBT \nLevel  RBT \nLevel \nIndicator  \nCO1 Understand the need for Parallel Computing basics ,algorithms and Classification of \nParallel Computers  L2 U"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 171,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 6481,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 3548,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 28842,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 659,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

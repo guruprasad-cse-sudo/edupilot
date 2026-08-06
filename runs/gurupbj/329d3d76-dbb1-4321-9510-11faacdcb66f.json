@@ -1,0 +1,319 @@
+{
+  "run_id": "329d3d76-dbb1-4321-9510-11faacdcb66f",
+  "started_at": "2026-08-05T13:48:23.511843+00:00",
+  "completed_at": "2026-08-05T13:49:02.592654+00:00",
+  "plan": {
+    "assessment_type": "Question Bank",
+    "course_name": "Data Structures",
+    "course_code": "TST105",
+    "topics": "Stacks, Queues",
+    "bloom_targets": "Remember, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 4,
+    "marks_per_question": 2,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Data Structures (TST105) – Stacks and Queues Question Bank",
+      "course_code": "TST105",
+      "course_name": "Data Structures",
+      "assessment_type": "Question Bank",
+      "semester": "7th",
+      "duration_minutes": 60,
+      "total_marks": 8,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Answer each question in the space provided. Use clear, concise language and show any required steps. Each question carries 2 marks.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "**Stacks** Define a stack data structure. List its fundamental operations and state the principle that governs the order of element removal.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 2,
+        "answer_key": "A stack is a linear data structure that stores elements in a Last‑In‑First‑Out (LIFO) order. Fundamental operations are:\n1. push(x) – insert element x on the top of the stack.\n2. pop() – remove and return the top element.\n3. top() or peek() – view the top element without removing it.\n4. isEmpty() – test whether the stack contains no elements.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 1,
+            "relevance_score": 0.6426,
+            "excerpt": "CS3001 - Data Structures and Algorithms\nCourse Syllabus | Semester 5, 2024-25\nCourse Objectives:\n1. Understand classical data structures: arrays, linked lists, stacks, queues, trees, graphs.\n2. Analyz"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "**Stacks** Given the following sequence of operations on an initially empty stack, show the content of the stack after each operation and state the final stack (top shown on the right):\n1. push(5)\n2. push(8)\n3. pop()\n4. push(3)\n5. push(7)\n6. pop()",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 2,
+        "answer_key": "Step‑by‑step stack content (top on the right):\n1. push(5) → [5]\n2. push(8) → [5, 8]\n3. pop()   → removes 8 → [5]\n4. push(3) → [5, 3]\n5. push(7) → [5, 3, 7]\n6. pop()   → removes 7 → [5, 3]\nFinal stack (top on right): [5, 3] (3 is the top element).",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.627,
+            "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "**Queues** Define a queue data structure. Identify its basic operations and describe the ordering rule for element removal.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 2,
+        "answer_key": "A queue is a linear data structure that stores elements in a First‑In‑First‑Out (FIFO) order. Basic operations are:\n1. enqueue(x) – insert element x at the rear of the queue.\n2. dequeue() – remove and return the front element.\n3. front() – view the front element without removing it.\n4. isEmpty() – test whether the queue is empty.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.6235,
+            "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "**Queues** A bank teller uses a queue to manage customers. Initially the queue is empty. The following events occur in order: Customer A arrives, Customer B arrives, Customer A is served, Customer C arrives, Customer D arrives, Customer B is served, Customer C is served. List the order of customers remaining in the queue after all events, from front to rear.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 2,
+        "answer_key": "Process the events using FIFO:\n- Enqueue A → [A]\n- Enqueue B → [A, B]\n- Dequeue A (served) → [B]\n- Enqueue C → [B, C]\n- Enqueue D → [B, C, D]\n- Dequeue B (served) → [C, D]\n- Dequeue C (served) → [D]\nFinal queue (front → rear): D.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "sample_syllabus.pdf",
+            "page_number": 2,
+            "relevance_score": 0.6217,
+            "excerpt": "Reference Books:\n  1. CLRS - Introduction to Algorithms, 4th Edition.\n  2. Data Structures Using C - Reema Thareja.\n  3. The Algorithm Design Manual - Skiena."
+          }
+        ],
+        "notes": "Source: sample_syllabus.pdf, page 1",
+        "options": []
+      }
+    ],
+    "generation_notes": "Questions cover Stacks and Queues, map to CO1 (understanding) and CO2 (application), and target Remember and Apply Bloom levels. Content is grounded in the syllabus where Stacks and Queues are listed as linear data structures (Source: sample_syllabus.pdf, page 1)."
+  },
+  "analytics": {
+    "question_count": 4,
+    "total_marks": 8,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 0,
+        "Apply": 2,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 50.0,
+        "Understand": 0.0,
+        "Apply": 50.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 2,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 1,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "sample_syllabus.pdf"
+    ],
+    "estimated_time_saved_minutes": 16,
+    "quality_score": 59.5,
+    "marks_distribution": {
+      "Q1": 2,
+      "Q2": 2,
+      "Q3": 2,
+      "Q4": 2
+    },
+    "reviewer_result": {
+      "quality_score": 66.0,
+      "strengths": [
+        "Both fundamental data structures (stack and queue) are addressed with definition (Remember) and operational (Apply) questions.",
+        "Each question is explicitly mapped to a Course Outcome (CO1 or CO2) and includes an answer key."
+      ],
+      "weaknesses": [
+        "Higher-order Bloom levels (Analyze, Evaluate, Create) are completely absent, limiting cognitive depth.",
+        "No question targets the 'Understand' level, so conceptual comprehension is not explicitly assessed.",
+        "Only four questions provide limited breadth; additional topics (e.g., linked lists, trees) are omitted."
+      ],
+      "suggestions": [
+        "Introduce at least one Analyze-level question, such as comparing stack and queue performance for different operations.",
+        "Add an Evaluate or Create question that requires students to design or implement a simple data structure (e.g., implement a queue using two stacks).",
+        "Include an Understand-level item that asks students to explain why a stack follows LIFO or a queue follows FIFO in real-world scenarios.",
+        "Consider expanding the question bank to cover other core data structures to improve overall coverage."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": false,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The assessment is clear and well‑aligned with COs, but to meet OBE standards it should incorporate higher-order cognitive tasks and a broader range of data‑structure topics.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 66.0,
+    "strengths": [
+      "Both fundamental data structures (stack and queue) are addressed with definition (Remember) and operational (Apply) questions.",
+      "Each question is explicitly mapped to a Course Outcome (CO1 or CO2) and includes an answer key."
+    ],
+    "weaknesses": [
+      "Higher-order Bloom levels (Analyze, Evaluate, Create) are completely absent, limiting cognitive depth.",
+      "No question targets the 'Understand' level, so conceptual comprehension is not explicitly assessed.",
+      "Only four questions provide limited breadth; additional topics (e.g., linked lists, trees) are omitted."
+    ],
+    "suggestions": [
+      "Introduce at least one Analyze-level question, such as comparing stack and queue performance for different operations.",
+      "Add an Evaluate or Create question that requires students to design or implement a simple data structure (e.g., implement a queue using two stacks).",
+      "Include an Understand-level item that asks students to explain why a stack follows LIFO or a queue follows FIFO in real-world scenarios.",
+      "Consider expanding the question bank to cover other core data structures to improve overall coverage."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": false,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The assessment is clear and well‑aligned with COs, but to meet OBE standards it should incorporate higher-order cognitive tasks and a broader range of data‑structure topics.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4123,
+    "docx": 39811,
+    "pdf": 5852
+  },
+  "rag_sources": [
+    {
+      "document_name": "sample_syllabus.pdf",
+      "page_number": 1,
+      "relevance_score": 0.6426,
+      "excerpt": "CS3001 - Data Structures and Algorithms\nCourse Syllabus | Semester 5, 2024-25\nCourse Objectives:\n1. Understand classical data structures: arrays, linked lists, stacks, queues, trees, graphs.\n2. Analyz"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.627,
+      "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.6235,
+      "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+    },
+    {
+      "document_name": "sample_syllabus.pdf",
+      "page_number": 2,
+      "relevance_score": 0.6217,
+      "excerpt": "Reference Books:\n  1. CLRS - Introduction to Algorithms, 4th Edition.\n  2. Data Structures Using C - Reema Thareja.\n  3. The Algorithm Design Manual - Skiena."
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 42,
+      "relevance_score": 0.6173,
+      "excerpt": "CO4 Design Message Passing Interface and OpenMP interface programs for various \ntypes of parallel computers  L4 \n An \nCO5 Evaluate the study of distributed, shared memory organizations using suitable "
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 3,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 1789,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 4013,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 33036,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 237,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

@@ -1,0 +1,337 @@
+{
+  "run_id": "4c6089bb-7ae3-4ef3-a2bc-e4e8be700940",
+  "started_at": "2026-08-05T05:45:59.091266+00:00",
+  "completed_at": "2026-08-05T05:46:04.425350+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Parallel Computing",
+    "course_code": "BCS702",
+    "topics": "Flynn's taxonomy, shared memory, MPI, OpenMP, GPU basics",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Parallel Computing Internal Assessment",
+      "course_code": "BCS702",
+      "course_name": "Parallel Computing",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Please ensure you clearly label each question with its corresponding question ID.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Describe Flynn's taxonomy and its relevance to parallel computing. Be sure to include the types of systems it categorizes.",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Flynn's taxonomy categorizes parallel systems into SISD, SIMD, MISD, and MIMD. It is crucial for understanding the architecture of parallel computers.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.7605,
+            "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Explain the difference between shared-memory and distributed-memory systems in the context of parallel computing. Provide examples of each.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Shared-memory systems have a common memory space accessible by all processors, whereas distributed-memory systems have private memory for each processor, requiring data exchange for communication. Examples include OpenMP for shared-memory and MPI for distributed-memory.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 42,
+            "relevance_score": 0.7432,
+            "excerpt": "CO4 Design Message Passing Interface and OpenMP interface programs for various \ntypes of parallel computers  L4 \n An \nCO5 Evaluate the study of distributed, shared memory organizations using suitable "
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "Discuss the role of OpenMP in parallel programming, including its pragmas, directives, and how it handles loop carried dependencies.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "OpenMP is a parallel programming model for shared-memory systems. It uses pragmas and directives to parallelize loops and handle data dependencies. Loop carried dependencies are managed through the reduction clause and by specifying the scope of variables.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.7307,
+            "excerpt": "scheduling, producers and consumers, Caches, cache coherence and false sharing in \nopenmp, tasking, tasking, thread safety.  08 \nPedagogy  Presentation and poster presentation.  \n5 GPU programming wit"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "What are the key aspects of GPU programming with CUDA, including threads, blocks, and grids? How does Nvidia's compute capability impact programming?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "CUDA programming involves organizing threads into blocks and grids. Nvidia's compute capability affects the number of threads and blocks that can be executed, influencing program performance and efficiency.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 40,
+            "relevance_score": 0.7291,
+            "excerpt": "Sl. No Course  Objectives  \n1 Understand the need for Parallel Computing basics ,algorithms and Classification of Parallel Computers  \n2 Apply the suitable parallel programming techniques for efficien"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 41"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Apply the concept of Amdahl’s law to evaluate the potential speedup of a parallel program. Consider the impact of sequential portions on overall performance.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1",
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Amdahl’s law states that the maximum theoretical speedup that can be achieved by a program is limited by the fraction of the program that cannot be parallelized. As the sequential portion of a program increases, the potential speedup decreases, highlighting the importance of minimizing sequential code for optimal parallel performance.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 41,
+            "relevance_score": 0.7254,
+            "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 42"
+      }
+    ],
+    "generation_notes": "Questions generated based on the provided knowledge-base context, strictly adhering to the specified topics and Bloom levels."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 1,
+        "Apply": 2,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 40.0,
+        "Understand": 20.0,
+        "Apply": 40.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 3
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 2,
+      "Hard": 2
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 82.5,
+      "strengths": [
+        "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+        "A mix of short and long answer questions to cater to different types of knowledge assessment",
+        "All questions have answer keys present, which is a good practice for assessment"
+      ],
+      "weaknesses": [
+        "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+        "Only two course outcomes (CO1 and CO2) are covered, which might not be comprehensive enough for the course",
+        "The difficulty levels of the questions are not evenly distributed, with only one easy question and two hard questions"
+      ],
+      "suggestions": [
+        "Add questions at the Analyze, Evaluate, and Create levels to improve the cognitive depth of the assessment",
+        "Consider adding more course outcomes to ensure comprehensive coverage of the course material",
+        "Balance the difficulty levels of the questions to provide a more even distribution of easy, medium, and hard questions"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment has a good foundation, but needs to be expanded to cover more course outcomes and Bloom's taxonomy levels to provide a comprehensive evaluation of student learning.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 82.5,
+    "strengths": [
+      "All questions have a clear mapping to course outcomes (CO1 and CO2)",
+      "A mix of short and long answer questions to cater to different types of knowledge assessment",
+      "All questions have answer keys present, which is a good practice for assessment"
+    ],
+    "weaknesses": [
+      "No questions are present at the Analyze, Evaluate, or Create levels of Bloom's taxonomy",
+      "Only two course outcomes (CO1 and CO2) are covered, which might not be comprehensive enough for the course",
+      "The difficulty levels of the questions are not evenly distributed, with only one easy question and two hard questions"
+    ],
+    "suggestions": [
+      "Add questions at the Analyze, Evaluate, and Create levels to improve the cognitive depth of the assessment",
+      "Consider adding more course outcomes to ensure comprehensive coverage of the course material",
+      "Balance the difficulty levels of the questions to provide a more even distribution of easy, medium, and hard questions"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment has a good foundation, but needs to be expanded to cover more course outcomes and Bloom's taxonomy levels to provide a comprehensive evaluation of student learning.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4213,
+    "docx": 39843,
+    "pdf": 5707
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.7605,
+      "excerpt": "systems, MIMD systems, Interconnection networks, Cache coherence, Shared -memory vs. \ndistributed -memory, Coordinating the processes/threads, Shared -memory, Distributed -\nmemory.  08 \nPedagogy  Vide"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 42,
+      "relevance_score": 0.7432,
+      "excerpt": "CO4 Design Message Passing Interface and OpenMP interface programs for various \ntypes of parallel computers  L4 \n An \nCO5 Evaluate the study of distributed, shared memory organizations using suitable "
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.7307,
+      "excerpt": "scheduling, producers and consumers, Caches, cache coherence and false sharing in \nopenmp, tasking, tasking, thread safety.  08 \nPedagogy  Presentation and poster presentation.  \n5 GPU programming wit"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 40,
+      "relevance_score": 0.7291,
+      "excerpt": "Sl. No Course  Objectives  \n1 Understand the need for Parallel Computing basics ,algorithms and Classification of Parallel Computers  \n2 Apply the suitable parallel programming techniques for efficien"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 41,
+      "relevance_score": 0.7254,
+      "excerpt": "Pedagogy  Simulation of network models.  \n \n \n3 Distributed memory programming with MPI  – MPI functions, The trapezoidal rule in MPI, \nDealing with I/O, Collective communication, MPI -derived datatyp"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 1,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 1123,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 2640,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1414,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 154,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

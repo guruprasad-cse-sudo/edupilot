@@ -1,0 +1,333 @@
+{
+  "run_id": "e25dbc40-7f19-4cd4-828e-2647f4290a8b",
+  "started_at": "2026-08-05T04:58:40.716403+00:00",
+  "completed_at": "2026-08-05T04:58:52.567775+00:00",
+  "plan": {
+    "assessment_type": "Internal Assessment",
+    "course_name": "Intelligent Language processing",
+    "course_code": "BCS701",
+    "topics": "Introduction: What is Natural Language Processing? Origins of NLP, Language \nand Knowledge, The Challenges of NLP, Language and Grammar, Processing Indian \nLanguages, NLP Applications.  \nWord Level Analysis: Morphological Parsing, Spelling Error Detection and Correction, \nWords and Word Classes, Part-of Speech Tagging.  \nSyntactic Analysis: Context-Free Grammar, Constituency, Top-down and Bottom-up \nParsing, CYK Parsing. \nTransformers: Motivation behind transformers, self-attention mechanism, architecture, \nBERT basics and pretrained models.",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": "Refer to the scheme and syllabus document and generate for - Inteeligent language processing"
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Intelligent Language Processing Mid-Semester Internal Assessment",
+      "course_code": "BCS701",
+      "course_name": "Intelligent Language Processing",
+      "assessment_type": "Internal Assessment",
+      "semester": "",
+      "duration_minutes": 90,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Answer all questions to the best of your ability. Ensure you clearly label each question with its corresponding number. Use additional sheets if necessary."
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "Explain the fundamental concepts of Natural Language Processing (NLP), including language models and grammar structures. How do these concepts relate to transformer-based architectures?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "The answer should cover the basics of NLP, language models, grammar structures, and how these are utilized or enhanced by transformer-based architectures. Reference to Textbook 1: Ch 1, Ch 2, Ch 3, Ch 4 and the importance of understanding these concepts as per CO1.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 18,
+            "relevance_score": 0.8739,
+            "excerpt": "Languages, NLP Applications.  \nWord Level Analysis: Morphological Parsing, Spelling Error Detection and Correction, \nWords and Word Classes, Part -of Speech Tagging.  \nSyntactic Analysis:  Context -Fr"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 18, score 0.87"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Describe the challenges of NLP and how they are addressed by different parsing techniques such as Context-Free Grammar, Constituency, Top-down and Bottom-up Parsing, and CYK Parsing.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "The answer should outline the challenges of NLP, such as ambiguity and complexity, and explain how different parsing techniques are used to address these challenges. Reference to Syntactic Analysis topics and CO1.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 20,
+            "relevance_score": 0.7085,
+            "excerpt": "2 T.V. Geetha  – Understanding Natural Language Processing – Machine Learning and Deep Learning \nPerspectives , Pearson, 2024.  \n3 Gerald J. Kowalski, Mark T. Maybury  – Information Storage and Retrie"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 20, score 0.71"
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "What is the motivation behind transformers in NLP? Explain the self-attention mechanism and the architecture of transformers, including BERT basics.",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "The answer should discuss the motivation for developing transformers, describe the self-attention mechanism, and outline the architecture of transformers, including an introduction to BERT. Reference to Transformers topic and CO1.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 20,
+            "relevance_score": 0.7,
+            "excerpt": "University Press.  \n2 Daniel Jurafsky, James H. Martin  – Speech and Language Processing: An Introduction to Natural \nLanguage Processing, Computational Linguistics, and Speech Recognition , Pearson E"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 18, score 0.87"
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "List and briefly describe the applications of NLP mentioned in the course. How do these applications utilize the concepts learned in the course?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "The answer should list NLP applications such as language translation, text classification, and sentiment analysis, and briefly describe how these applications use NLP concepts. Reference to NLP Applications topic.",
+        "question_type": "Short Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 17,
+            "relevance_score": 0.6995,
+            "excerpt": "Sl. No  Course Objectives  \n1 Learn the importance of natural language modelling, grammar structures, and transformer \narchitectures.  \n2 Understand applications of NLP and modern Large Language Model"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 20, score 0.71"
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "Apply your understanding of NLP concepts to propose a simple NLP task that could be solved using transformer-based architectures. Explain how the task would be approached and what benefits the use of transformers would bring.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "The answer should propose an NLP task, explain how it would be approached using transformer-based architectures, and discuss the benefits of using transformers for this task. Reference to CO1 and the ability to apply NLP concepts to real-world scenarios.",
+        "question_type": "Long Answer",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 18,
+            "relevance_score": 0.6993,
+            "excerpt": "Textbook 2: Ch 1, Ch 3  \nReference Book 1: Practical text classification and sentiment analysis   \n8 \n Pedagogy  Demonstration and problem -solving sessions.  \n \n \n3 \n Advanced Parsing & Optimizing LL"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th _ 8th _1_.pdf, page 18, score 0.87"
+      }
+    ],
+    "generation_notes": "Questions generated based on the provided knowledge-base context, strictly adhering to the specified topics and Bloom levels."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 1,
+        "Understand": 2,
+        "Apply": 2,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 20.0,
+        "Understand": 40.0,
+        "Apply": 40.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 5
+    },
+    "difficulty_distribution": {
+      "Easy": 1,
+      "Medium": 2,
+      "Hard": 2
+    },
+    "knowledge_sources_used": [
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 60.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 82.5,
+      "strengths": [
+        "All questions are well-aligned with CO1, ensuring comprehensive coverage of the course learning objectives",
+        "The assessment includes a mix of question types, including long answer and short answer questions, to cater to different learning styles",
+        "All questions have answer keys present, which is essential for accurate grading and feedback"
+      ],
+      "weaknesses": [
+        "The assessment lacks questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy, which are essential for developing critical thinking and problem-solving skills",
+        "The difficulty level of the questions is not well-balanced, with only two questions marked as Hard and one as Easy, which may not provide an accurate assessment of students' knowledge and skills",
+        "The assessment only covers CO1, which may not provide a comprehensive assessment of students' knowledge and skills in the course"
+      ],
+      "suggestions": [
+        "Add questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy to provide a more comprehensive assessment of students' knowledge and skills",
+        "Revise the difficulty level of the questions to provide a better balance of Easy, Medium, and Hard questions, which will help to assess students' knowledge and skills more accurately",
+        "Consider adding questions that cover other course learning objectives, such as CO2, CO3, etc., to provide a more comprehensive assessment of students' knowledge and skills"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment has a good foundation, but it needs to be revised to include a more comprehensive coverage of Bloom's taxonomy and a better balance of difficulty levels. Additionally, the assessment should cover more course learning objectives to provide a more accurate assessment of students' knowledge and skills.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 82.5,
+    "strengths": [
+      "All questions are well-aligned with CO1, ensuring comprehensive coverage of the course learning objectives",
+      "The assessment includes a mix of question types, including long answer and short answer questions, to cater to different learning styles",
+      "All questions have answer keys present, which is essential for accurate grading and feedback"
+    ],
+    "weaknesses": [
+      "The assessment lacks questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy, which are essential for developing critical thinking and problem-solving skills",
+      "The difficulty level of the questions is not well-balanced, with only two questions marked as Hard and one as Easy, which may not provide an accurate assessment of students' knowledge and skills",
+      "The assessment only covers CO1, which may not provide a comprehensive assessment of students' knowledge and skills in the course"
+    ],
+    "suggestions": [
+      "Add questions that target the Analyze, Evaluate, and Create levels of Bloom's taxonomy to provide a more comprehensive assessment of students' knowledge and skills",
+      "Revise the difficulty level of the questions to provide a better balance of Easy, Medium, and Hard questions, which will help to assess students' knowledge and skills more accurately",
+      "Consider adding questions that cover other course learning objectives, such as CO2, CO3, etc., to provide a more comprehensive assessment of students' knowledge and skills"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment has a good foundation, but it needs to be revised to include a more comprehensive coverage of Bloom's taxonomy and a better balance of difficulty levels. Additionally, the assessment should cover more course learning objectives to provide a more accurate assessment of students' knowledge and skills.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4420,
+    "docx": 39784,
+    "pdf": 5701
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 18,
+      "relevance_score": 0.8739,
+      "excerpt": "Languages, NLP Applications.  \nWord Level Analysis: Morphological Parsing, Spelling Error Detection and Correction, \nWords and Word Classes, Part -of Speech Tagging.  \nSyntactic Analysis:  Context -Fr"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 20,
+      "relevance_score": 0.7085,
+      "excerpt": "2 T.V. Geetha  – Understanding Natural Language Processing – Machine Learning and Deep Learning \nPerspectives , Pearson, 2024.  \n3 Gerald J. Kowalski, Mark T. Maybury  – Information Storage and Retrie"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 20,
+      "relevance_score": 0.7,
+      "excerpt": "University Press.  \n2 Daniel Jurafsky, James H. Martin  – Speech and Language Processing: An Introduction to Natural \nLanguage Processing, Computational Linguistics, and Speech Recognition , Pearson E"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 17,
+      "relevance_score": 0.6995,
+      "excerpt": "Sl. No  Course Objectives  \n1 Learn the importance of natural language modelling, grammar structures, and transformer \narchitectures.  \n2 Understand applications of NLP and modern Large Language Model"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 18,
+      "relevance_score": 0.6993,
+      "excerpt": "Textbook 2: Ch 1, Ch 3  \nReference Book 1: Practical text classification and sentiment analysis   \n8 \n Pedagogy  Demonstration and problem -solving sessions.  \n \n \n3 \n Advanced Parsing & Optimizing LL"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 38,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 6162,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 3357,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1498,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 794,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

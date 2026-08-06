@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/edupilot"
+title = "EduPilot AI Faculty Assistant"
+version = "1.0.0"
+id = "artifacts/edupilot"
+router = "path"
+
+[[services]]
+name = "web"
+paths = ["/edupilot"]
+localPort = 8000
+
+[services.development]
+# run.sh resolves its own directory, supervises streamlit, and restarts it on
+# crash. Works regardless of the workflow's working directory.
+run = "bash -c 'if [ -f run.sh ]; then exec bash run.sh; else exec bash artifacts/edupilot/run.sh; fi'"
+
+[services.production]
+
+[services.production.run]
+args = ["bash", "-c", "if [ -f run.sh ]; then exec bash run.sh; else exec bash artifacts/edupilot/run.sh; fi"]
+
+[services.production.run.env]
+PORT = "8000"
+
+[services.env]
+PORT = "8000"
+BASE_PATH = "/edupilot"

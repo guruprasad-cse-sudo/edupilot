@@ -1,0 +1,369 @@
+{
+  "run_id": "c0a58ae0-ed70-44aa-968c-cc325232a7ea",
+  "started_at": "2026-08-05T11:03:20.261487+00:00",
+  "completed_at": "2026-08-05T11:04:07.361593+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Deep learning",
+    "course_code": "BCS702",
+    "topics": "Optimization and Regularization in Deep Learning Challenges in training \ndeep neural networks: Vanishing gradients, Exploding gradients, Overfitting. \nOptimization techniques: Stochastic Gradient Descent (SGD), Momentum, Nesterov \nAccelerated Gradient, AdaGrad, RMSProp, Adam. \nRegularization techniques: L1 and L2 Regularization, Dropout, Early Stopping, Batch \nNormalization, Weight Initialization methods.",
+    "bloom_targets": "Remember, Understand, Apply",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "CSE",
+    "semester": "7th",
+    "faculty_name": "Guruprasad BJ",
+    "extra_instructions": "",
+    "test_date": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Deep Learning Optimization and Regularization Quiz",
+      "course_code": "BCS702",
+      "course_name": "Deep Learning",
+      "assessment_type": "Quiz",
+      "semester": "7th",
+      "duration_minutes": 25,
+      "total_marks": 25,
+      "department": "CSE",
+      "faculty_name": "Guruprasad BJ",
+      "instructions": "Select the best answer for each of the following multiple‑choice questions. Each question carries 5 marks.",
+      "test_date": ""
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What is the primary purpose of regularization in training deep neural networks?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "To reduce overfitting by adding a penalty term to the loss function.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.9017,
+            "excerpt": "Pearson – Chapters 1 & 4   \n8 \nPedagogy  Conceptual lectures, visualization, coding exercises, quizzes  \n2 UNIT – 2: Optimization and Regularization in Deep Learning Challenges in training \ndeep neura"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1 – question on regularization and its role in reducing overfitting.",
+        "options": [
+          "To increase the size of the training dataset",
+          "To reduce overfitting by adding a penalty term to the loss function",
+          "To accelerate the forward pass computation",
+          "To convert a classification problem into a regression problem"
+        ]
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Which statement correctly distinguishes L1 regularization from L2 regularization?",
+        "bloom_level": "Understand",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "L1 adds the absolute value of weights to the loss, encouraging sparsity; L2 adds the squared value, encouraging small but non‑zero weights.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "21CS743.pdf",
+            "page_number": 1,
+            "relevance_score": 0.7577,
+            "excerpt": "b What is regularization? How does regularization help in reducing overfitting.  L3 2 10 \nOR    \nQ.04  a Explain briefly about gradient descent algorithm.  L2 2 10 \n b Discuss the working of Backpropo"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th_8th_1.pdf, page 28 – lists L1 and L2 regularization as techniques.",
+        "options": [
+          "L1 adds the absolute value of weights to the loss, encouraging sparsity; L2 adds the squared value, encouraging small but non‑zero weights.",
+          "L1 adds the squared value of weights to the loss, encouraging sparsity; L2 adds the absolute value, encouraging dense weights.",
+          "Both L1 and L2 add the same penalty term; the difference is only in computational cost.",
+          "L1 is used only for convolutional layers, while L2 is used only for fully‑connected layers."
+        ]
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "A deep network shows high training accuracy but low validation accuracy, indicating overfitting. Which regularization technique is most appropriate to address this problem?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Early Stopping – it halts training before the model overfits the training data.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 28,
+            "relevance_score": 0.7043,
+            "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1 – discusses regularization methods for reducing overfitting.",
+        "options": [
+          "Early Stopping",
+          "Momentum optimizer",
+          "Weight Initialization with zeros",
+          "Increasing the learning rate"
+        ]
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Which optimizer adapts the learning rate for each parameter based on the accumulated sum of squared past gradients?",
+        "bloom_level": "Remember",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "AdaGrad – it scales the learning rate by the inverse square root of the sum of squared gradients.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 27,
+            "relevance_score": 0.704,
+            "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+          }
+        ],
+        "notes": "Source: 21CS743.pdf, page 1 – includes a question to explain AdaGrad.",
+        "options": [
+          "AdaGrad",
+          "RMSProp",
+          "Nesterov Accelerated Gradient",
+          "Stochastic Gradient Descent"
+        ]
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "During training of a very deep network, which technique helps alleviate vanishing gradients by normalizing the inputs of each layer?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "Batch Normalization – it normalizes layer inputs, stabilizing gradients across layers.",
+        "question_type": "MCQ",
+        "sources": [
+          {
+            "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+            "page_number": 29,
+            "relevance_score": 0.6932,
+            "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+          }
+        ],
+        "notes": "Source: CSE Scheme and Syllabus 7th_8th_1.pdf, page 28 – lists Batch Normalization among regularization techniques.",
+        "options": [
+          "Batch Normalization",
+          "Dropout",
+          "L1 Regularization",
+          "AdaGrad"
+        ]
+      }
+    ],
+    "generation_notes": "Questions are based exclusively on the provided syllabus and lecture sources. Bloom levels are mixed (Remember, Understand, Apply) and difficulty is varied across Easy, Medium, Hard. CO mappings follow the syllabus objectives."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 2,
+        "Understand": 1,
+        "Apply": 2,
+        "Analyze": 0,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 40.0,
+        "Understand": 20.0,
+        "Apply": 40.0,
+        "Analyze": 0.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [
+      "21CS743.pdf",
+      "CSE Scheme and Syllabus 7th _ 8th _1_.pdf"
+    ],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 65.4,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 68.0,
+      "strengths": [
+        "All five questions include an answer key, ensuring objective grading.",
+        "Difficulty distribution is balanced (2 Easy, 2 Medium, 1 Hard) for a 25‑mark quiz."
+      ],
+      "weaknesses": [
+        "Higher-order Bloom levels (Analyze, Evaluate, Create) are completely absent.",
+        "Only two of the six Bloom levels are represented beyond Remember, limiting cognitive depth.",
+        "The assessment relies exclusively on MCQs; no variety of question formats is present.",
+        "Topic coverage is narrow, focusing almost entirely on regularization and a single optimizer."
+      ],
+      "suggestions": [
+        "Add at least one Analyze‑level question (e.g., compare the impact of dropout versus L2 regularization on model generalization).",
+        "Introduce an Evaluate‑level scenario where students must critique a given regularization strategy for a specific dataset.",
+        "Include a Create‑level task such as designing a regularization plan for a deep network with specified constraints.",
+        "Incorporate at least one short‑answer or problem‑solving question to diversify assessment formats and assess deeper reasoning."
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": true,
+        "Understand": true,
+        "Apply": true,
+        "Analyze": false,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": true,
+      "reviewer_notes": "The quiz meets basic OBE requirements but needs higher-order cognitive items and broader topic coverage to fully align with deep learning learning outcomes.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 68.0,
+    "strengths": [
+      "All five questions include an answer key, ensuring objective grading.",
+      "Difficulty distribution is balanced (2 Easy, 2 Medium, 1 Hard) for a 25‑mark quiz."
+    ],
+    "weaknesses": [
+      "Higher-order Bloom levels (Analyze, Evaluate, Create) are completely absent.",
+      "Only two of the six Bloom levels are represented beyond Remember, limiting cognitive depth.",
+      "The assessment relies exclusively on MCQs; no variety of question formats is present.",
+      "Topic coverage is narrow, focusing almost entirely on regularization and a single optimizer."
+    ],
+    "suggestions": [
+      "Add at least one Analyze‑level question (e.g., compare the impact of dropout versus L2 regularization on model generalization).",
+      "Introduce an Evaluate‑level scenario where students must critique a given regularization strategy for a specific dataset.",
+      "Include a Create‑level task such as designing a regularization plan for a deep network with specified constraints.",
+      "Incorporate at least one short‑answer or problem‑solving question to diversify assessment formats and assess deeper reasoning."
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": true,
+      "Understand": true,
+      "Apply": true,
+      "Analyze": false,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": true,
+    "reviewer_notes": "The quiz meets basic OBE requirements but needs higher-order cognitive items and broader topic coverage to fully align with deep learning learning outcomes.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 4680,
+    "docx": 39999,
+    "pdf": 7069
+  },
+  "rag_sources": [
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.9017,
+      "excerpt": "Pearson – Chapters 1 & 4   \n8 \nPedagogy  Conceptual lectures, visualization, coding exercises, quizzes  \n2 UNIT – 2: Optimization and Regularization in Deep Learning Challenges in training \ndeep neura"
+    },
+    {
+      "document_name": "21CS743.pdf",
+      "page_number": 1,
+      "relevance_score": 0.7577,
+      "excerpt": "b What is regularization? How does regularization help in reducing overfitting.  L3 2 10 \nOR    \nQ.04  a Explain briefly about gradient descent algorithm.  L2 2 10 \n b Discuss the working of Backpropo"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 28,
+      "relevance_score": 0.7043,
+      "excerpt": "Normalization, Weight Initialization methods.  \nText book 1 :  Ian Goodfellow, Yoshua Bengio, Aaron Courville, Deep Learning, MIT \nPress – Chapter 8 (Optimization for Training Deep Models)  \nText book"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 27,
+      "relevance_score": 0.704,
+      "excerpt": "including perceptrons, multilayer neural networks, and back  propagation learning.  \n2 To study optimization techniques and regularization methods  used for efficient training of deep \nneural networks"
+    },
+    {
+      "document_name": "CSE Scheme and Syllabus 7th _ 8th _1_.pdf",
+      "page_number": 29,
+      "relevance_score": 0.6932,
+      "excerpt": "5 UNIT – 5: Advanced Deep Learning Architectures and Applications  \nAutoencoders: Basic Autoencoder, Sparse Autoencoder, Denoising Autoencoder.  \nGenerative Models: Variational Autoencoders (VAE), Gen"
+    }
+  ],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 21,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "ok",
+      "duration_ms": 5123,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 5159,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 36223,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 569,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}

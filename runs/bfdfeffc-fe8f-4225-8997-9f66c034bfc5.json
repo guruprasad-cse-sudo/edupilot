@@ -1,0 +1,266 @@
+{
+  "run_id": "bfdfeffc-fe8f-4225-8997-9f66c034bfc5",
+  "started_at": "2026-08-04T10:51:07.081692+00:00",
+  "completed_at": "2026-08-04T10:51:13.640404+00:00",
+  "plan": {
+    "assessment_type": "Quiz",
+    "course_name": "Data Structures and Algorithms",
+    "course_code": "CS3001",
+    "topics": "Binary Search Trees",
+    "bloom_targets": "Apply, Analyze",
+    "co_mapping": "CO1, CO2",
+    "question_count": 5,
+    "marks_per_question": 5,
+    "difficulty": "Mixed",
+    "duration_minutes": 0,
+    "department": "",
+    "semester": "",
+    "faculty_name": "",
+    "extra_instructions": ""
+  },
+  "assessment": {
+    "metadata": {
+      "title": "Data Structures and Algorithms Quiz: Binary Search Trees",
+      "course_code": "CS3001",
+      "course_name": "Data Structures and Algorithms",
+      "assessment_type": "Quiz",
+      "semester": "",
+      "duration_minutes": 25,
+      "total_marks": 25,
+      "department": "",
+      "faculty_name": "",
+      "instructions": "Choose the correct answer for each question. This quiz assesses your understanding and application of Binary Search Trees."
+    },
+    "questions": [
+      {
+        "question_id": "Q1",
+        "question_text": "What is the primary advantage of using a Binary Search Tree (BST) for data storage?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "Efficient search, insertion, and deletion operations",
+        "question_type": "MCQ",
+        "sources": [],
+        "notes": "Source: general academic knowledge"
+      },
+      {
+        "question_id": "Q2",
+        "question_text": "Describe the process of inserting a new node into a BST, ensuring the tree remains balanced.",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "Start at the root, compare the new node's value to the current node, move left or right based on comparison, and insert when an empty spot is found. Rebalancing may be necessary to maintain the BST property.",
+        "question_type": "Short Answer",
+        "sources": [],
+        "notes": ""
+      },
+      {
+        "question_id": "Q3",
+        "question_text": "How does the height of a BST affect its search efficiency?",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Medium",
+        "marks": 5,
+        "answer_key": "A taller tree results in less efficient search, as more nodes need to be traversed",
+        "question_type": "MCQ",
+        "sources": [],
+        "notes": ""
+      },
+      {
+        "question_id": "Q4",
+        "question_text": "Explain the difference between a BST and an AVL tree.",
+        "bloom_level": "Analyze",
+        "co_mapping": [
+          "CO2"
+        ],
+        "difficulty": "Hard",
+        "marks": 5,
+        "answer_key": "A BST is a basic tree where each node has at most two children, while an AVL tree is a self-balancing BST that ensures the height of the tree remains relatively small by rotating nodes when the balance factor becomes too large.",
+        "question_type": "Short Answer",
+        "sources": [],
+        "notes": ""
+      },
+      {
+        "question_id": "Q5",
+        "question_text": "What is the average time complexity of searching for an element in a balanced BST?",
+        "bloom_level": "Apply",
+        "co_mapping": [
+          "CO1"
+        ],
+        "difficulty": "Easy",
+        "marks": 5,
+        "answer_key": "O(log n)",
+        "question_type": "MCQ",
+        "sources": [],
+        "notes": ""
+      }
+    ],
+    "generation_notes": "Questions are designed to test Apply and Analyze levels of Bloom's Taxonomy, mapping to CO1 and CO2."
+  },
+  "analytics": {
+    "question_count": 5,
+    "total_marks": 25,
+    "bloom_distribution": {
+      "counts": {
+        "Remember": 0,
+        "Understand": 0,
+        "Apply": 3,
+        "Analyze": 2,
+        "Evaluate": 0,
+        "Create": 0
+      },
+      "coverage_percent": {
+        "Remember": 0.0,
+        "Understand": 0.0,
+        "Apply": 60.0,
+        "Analyze": 40.0,
+        "Evaluate": 0.0,
+        "Create": 0.0
+      }
+    },
+    "co_coverage": {
+      "CO1": 3,
+      "CO2": 2
+    },
+    "difficulty_distribution": {
+      "Easy": 2,
+      "Medium": 2,
+      "Hard": 1
+    },
+    "knowledge_sources_used": [],
+    "estimated_time_saved_minutes": 20,
+    "quality_score": 61.3,
+    "marks_distribution": {
+      "Q1": 5,
+      "Q2": 5,
+      "Q3": 5,
+      "Q4": 5,
+      "Q5": 5
+    },
+    "reviewer_result": {
+      "quality_score": 82.5,
+      "strengths": [
+        "All questions have answer keys present, ensuring clarity and ease of grading",
+        "CO1 and CO2 are well-covered with multiple questions",
+        "A mix of MCQ and Short Answer questions caters to different learning styles"
+      ],
+      "weaknesses": [
+        "No questions cover the Remember or Understand Bloom levels",
+        "No questions require Evaluate or Create-level thinking",
+        "The difficulty balance is skewed towards Easy and Medium, with only one Hard question"
+      ],
+      "suggestions": [
+        "Add questions that cover the Remember and Understand Bloom levels to ensure comprehensive coverage",
+        "Replace Q1 or Q5 with an Evaluate-level scenario question to improve cognitive depth",
+        "Add more Hard questions to balance the difficulty level"
+      ],
+      "duplicate_question_ids": [],
+      "bloom_coverage": {
+        "Remember": false,
+        "Understand": false,
+        "Apply": true,
+        "Analyze": true,
+        "Evaluate": false,
+        "Create": false
+      },
+      "difficulty_balance_ok": false,
+      "reviewer_notes": "The assessment has a good foundation, but needs to address the gaps in Bloom coverage and difficulty balance to ensure a comprehensive evaluation of student learning outcomes.",
+      "error": null
+    }
+  },
+  "reviewer": {
+    "quality_score": 82.5,
+    "strengths": [
+      "All questions have answer keys present, ensuring clarity and ease of grading",
+      "CO1 and CO2 are well-covered with multiple questions",
+      "A mix of MCQ and Short Answer questions caters to different learning styles"
+    ],
+    "weaknesses": [
+      "No questions cover the Remember or Understand Bloom levels",
+      "No questions require Evaluate or Create-level thinking",
+      "The difficulty balance is skewed towards Easy and Medium, with only one Hard question"
+    ],
+    "suggestions": [
+      "Add questions that cover the Remember and Understand Bloom levels to ensure comprehensive coverage",
+      "Replace Q1 or Q5 with an Evaluate-level scenario question to improve cognitive depth",
+      "Add more Hard questions to balance the difficulty level"
+    ],
+    "duplicate_question_ids": [],
+    "bloom_coverage": {
+      "Remember": false,
+      "Understand": false,
+      "Apply": true,
+      "Analyze": true,
+      "Evaluate": false,
+      "Create": false
+    },
+    "difficulty_balance_ok": false,
+    "reviewer_notes": "The assessment has a good foundation, but needs to address the gaps in Bloom coverage and difficulty balance to ensure a comprehensive evaluation of student learning outcomes.",
+    "error": null
+  },
+  "export_formats": [
+    "markdown",
+    "docx",
+    "pdf"
+  ],
+  "export_sizes": {
+    "markdown": 2819,
+    "docx": 39425,
+    "pdf": 4954
+  },
+  "rag_sources": [],
+  "stages": [
+    {
+      "stage": "planning",
+      "status": "ok",
+      "duration_ms": 1377,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "rag",
+      "status": "error",
+      "duration_ms": 1777,
+      "error": "No module named 'langchain_huggingface'",
+      "warning": "RAG retrieval failed; proceeding without knowledge context."
+    },
+    {
+      "stage": "generation",
+      "status": "ok",
+      "duration_ms": 1761,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "analytics",
+      "status": "ok",
+      "duration_ms": 0,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "reviewer",
+      "status": "ok",
+      "duration_ms": 1090,
+      "error": null,
+      "warning": null
+    },
+    {
+      "stage": "export_prep",
+      "status": "ok",
+      "duration_ms": 553,
+      "error": null,
+      "warning": null
+    }
+  ],
+  "success": true,
+  "fatal_error": null
+}
