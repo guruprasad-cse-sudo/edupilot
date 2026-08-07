@@ -409,7 +409,16 @@ class RAGModule:
             "Loading embedding model '%s' (may download on first run)…",
             self._embedding_model_name,
         )
-        emb = FastEmbedEmbeddings(model_name=self._embedding_model_name)
+        # Use an explicit, absolute cache directory (not the library default,
+        # which is a *relative* "local_cache" resolved against whatever the
+        # current working directory happens to be at call time). This
+        # guarantees the build step and the running app process always
+        # agree on where the cached model lives, regardless of CWD
+        # differences between build and runtime on the host.
+        cache_dir = str(Path(__file__).resolve().parent / "model_cache")
+        emb = FastEmbedEmbeddings(
+            model_name=self._embedding_model_name, cache_dir=cache_dir
+        )
         _EMBEDDINGS_CACHE[self._embedding_model_name] = emb
         return emb
 
