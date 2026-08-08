@@ -122,6 +122,10 @@ class Question:
     sources: List[SourceAttribution] = field(default_factory=list)
     notes: str = ""
     options: List[str] = field(default_factory=list)
+    topic: str = ""
+    """Syllabus topic/module this question was generated for — used to
+    group questions into VTU-style exam paper Modules on export. Empty
+    string for older saved runs predating this field."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -141,6 +145,7 @@ class Question:
             "sources": [s.to_dict() for s in self.sources],
             "notes": self.notes,
             "options": list(self.options),
+            "topic": self.topic,
         }
 
 

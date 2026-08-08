@@ -45,7 +45,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 from logging_utils import get_logger
-from models import Assessment, Question
+from models import Assessment, AssessmentType, Question
 
 logger = get_logger(__name__)
 
@@ -54,6 +54,7 @@ logger = get_logger(__name__)
 # ---------------------------------------------------------------------------
 
 _UNIVERSITY_NAME = "Dayananda Sagar Academy of Technology and Management"
+_UNIVERSITY_AFFILIATION = "(An Autonomous Institute under VTU, Belagavi)"
 _UNIVERSITY_TAGLINE = "Department of Academic Excellence"
 _DATE_FMT = "%d %B %Y"
 
@@ -81,6 +82,7 @@ class ParsedQuestion:
     answer_key: str
     notes: str
     options: List[str] = field(default_factory=list)  # MCQ answer options
+    topic: str = ""  # syllabus topic/module this question targets
 
 
 @dataclass
@@ -192,6 +194,7 @@ class AssessmentParser:
                         cls._safe(o) for o in getattr(q, "options", []) or []
                         if cls._safe(o)
                     ],
+                    topic=cls._safe(getattr(q, "topic", "")),
                 )
             )
 
@@ -233,6 +236,137 @@ class AssessmentParser:
     def _clean(cls, text: str) -> str:
         """Strip, collapse internal whitespace runs, and return the result."""
         return cls._WS_RE.sub(" ", text.strip()) if text else ""
+
+
+# ===========================================================================
+# VTU-style Semester Examination paper layout
+# ===========================================================================
+#
+# The Semester Examination export follows the standard VTU (Visvesvaraya
+# Technological University) semester-end exam paper convention: questions
+# are grouped into numbered Modules (one per syllabus topic), each Module
+# offers exactly one pair of alternative full questions ("Q1 OR Q2"), and
+# each full question is broken into lettered sub-parts (a, b, c...) — each
+# sub-part being one AI-generated question. This section builds that
+# grouped structure from the flat ParsedQuestion list; WordExporter and
+# PDFExporter both consume it identically.
+
+
+@dataclass
+class VTUSubQuestion:
+    """One lettered sub-part (a, b, c…) of a VTU-style full question."""
+
+    letter: str
+    question: ParsedQuestion
+
+
+@dataclass
+class VTUQuestionGroup:
+    """One full numbered question (e.g. "Q1"), made up of 1+ sub-parts."""
+
+    q_number: int
+    subparts: List[VTUSubQuestion] = field(default_factory=list)
+
+    @property
+    def total_marks(self) -> int:
+        """Sum of marks across this question's sub-parts."""
+        total = 0
+        for sp in self.subparts:
+            try:
+                total += int(sp.question.marks)
+            except (TypeError, ValueError):
+                continue
+        return total
+
+
+@dataclass
+class VTUModule:
+    """One syllabus Module, containing one or more OR-alternative pairs."""
+
+    module_number: int
+    label: str
+    pairs: List[List[VTUQuestionGroup]] = field(default_factory=list)
+    """Each entry is a list of 1 or 2 VTUQuestionGroup — 2 means a genuine
+    "Q(n) OR Q(n+1)" alternative pair; 1 means a lone question with no
+    alternative (only occurs when a Module has just a single question)."""
+
+
+def _split_sizes_for_pairing(n: int, max_subparts: int = 3) -> List[int]:
+    """Split *n* questions into exactly one OR-alternative pair of groups.
+
+    Real VTU exam papers give each Module exactly one choice: two
+    alternative full questions (e.g. "Q1 OR Q2"), each broken into as
+    many lettered sub-parts as needed to use up that module's questions —
+    not multiple separate pairs within one module. Groups are split as
+    evenly as possible between the two alternatives.
+
+    Args:
+        n: Total number of questions available for this module.
+        max_subparts: Unused; kept for signature stability — real papers
+            do not cap sub-parts per question, they flex to fit.
+
+    Returns:
+        ``[n]`` when there's only one question (nothing to pair against),
+        otherwise a 2-element list of near-equal sizes summing to *n*
+        (e.g. ``[5, 4]`` for ``n=9``).
+    """
+    if n <= 0:
+        return []
+    if n == 1:
+        return [1]
+    first = (n + 1) // 2
+    second = n - first
+    return [first, second]
+
+
+def build_vtu_paper_layout(
+    questions: List[ParsedQuestion], max_subparts: int = 3
+) -> List[VTUModule]:
+    """Group a flat question list into VTU-style Modules with OR-pairs.
+
+    Questions are grouped by their ``topic`` field, in first-seen order
+    (which — because batched generation processes topics in the plan's
+    original order — reliably matches the syllabus's module order even
+    though no explicit module number is tracked elsewhere in the app).
+    Questions with no topic (e.g. very old saved runs predating the
+    ``topic`` field) are grouped under a single "General" module.
+
+    Args:
+        questions: Flat, already-parsed question list in original order.
+        max_subparts: Maximum lettered sub-parts per full question.
+
+    Returns:
+        List of VTUModule, one per distinct topic, in first-seen order.
+    """
+    groups_by_topic: dict = {}
+    topic_order: List[str] = []
+    for q in questions:
+        key = q.topic.strip() if q.topic and q.topic.strip() else "General"
+        if key not in groups_by_topic:
+            groups_by_topic[key] = []
+            topic_order.append(key)
+        groups_by_topic[key].append(q)
+
+    letters = "abcdefgh"
+    modules: List[VTUModule] = []
+    q_counter = 1
+    for m_idx, topic in enumerate(topic_order, start=1):
+        topic_questions = groups_by_topic[topic]
+        sizes = _split_sizes_for_pairing(len(topic_questions), max_subparts)
+        groups: List[VTUQuestionGroup] = []
+        idx = 0
+        for size in sizes:
+            chunk = topic_questions[idx: idx + size]
+            idx += size
+            subparts = [
+                VTUSubQuestion(letter=letters[i], question=cq)
+                for i, cq in enumerate(chunk)
+            ]
+            groups.append(VTUQuestionGroup(q_number=q_counter, subparts=subparts))
+            q_counter += 1
+        pairs = [groups[i: i + 2] for i in range(0, len(groups), 2)]
+        modules.append(VTUModule(module_number=m_idx, label=topic, pairs=pairs))
+    return modules
 
 
 # ===========================================================================
@@ -429,17 +563,25 @@ class WordExporter:
 
         pa = AssessmentParser.parse(assessment)
         doc = DocxDocument()
+        is_semester_exam = (
+            assessment.metadata.assessment_type == AssessmentType.SEMESTER_EXAM
+        )
 
         self._configure_page(doc)
-        self._add_header(doc, pa)
         self._add_footer(doc, pa)
-        self._add_title_block(doc, pa)
-        self._add_metadata_table(doc, pa)
 
-        if pa.has_instructions:
-            self._add_instructions(doc, pa)
+        if is_semester_exam:
+            self._add_vtu_exam_header(doc, pa)
+            self._add_vtu_question_table(doc, pa)
+        else:
+            self._add_header(doc, pa)
+            self._add_title_block(doc, pa)
+            self._add_metadata_table(doc, pa)
 
-        self._add_questions(doc, pa)
+            if pa.has_instructions:
+                self._add_instructions(doc, pa)
+
+            self._add_questions(doc, pa)
 
         if pa.has_answer_key:
             self._add_answer_key(doc, pa)
@@ -606,6 +748,193 @@ class WordExporter:
             row.cells[1].width = Inches(4.0)
 
         doc.add_paragraph()
+
+    # ── VTU-style Semester Examination layout ───────────────────────────────
+
+    def _add_vtu_exam_header(
+        self, doc: DocxDocument, pa: ParsedAssessment
+    ) -> None:
+        """Render the standard VTU semester-exam header block.
+
+        Produces: USN entry box, institution name + affiliation, exam
+        title line, a Course/Code/Marks/Duration meta table, and the
+        standard "answer any N questions" note — matching the layout of
+        official VTU semester-end question papers.
+        """
+        # USN box: label + a row of individual empty boxes for the student
+        # to fill in their University Seat Number.
+        usn_table = doc.add_table(rows=1, cols=11)
+        usn_table.style = "Table Grid"
+        usn_table.autofit = False
+        usn_table.cell(0, 0).text = "USN"
+        usn_table.cell(0, 0).paragraphs[0].runs[0].bold = True
+        usn_table.cell(0, 0).width = Inches(0.6)
+        for c in range(1, 11):
+            usn_table.cell(0, c).width = Inches(0.35)
+        p_spacer = doc.add_paragraph()
+        p_spacer.paragraph_format.space_after = Pt(4)
+
+        # Institution name + affiliation
+        p_uni = doc.add_paragraph()
+        p_uni.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_uni = p_uni.add_run(pa.university.upper())
+        run_uni.bold = True
+        run_uni.font.size = Pt(13)
+        run_uni.font.color.rgb = self._COLOUR_PRIMARY
+
+        p_affil = doc.add_paragraph()
+        p_affil.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run_affil = p_affil.add_run(_UNIVERSITY_AFFILIATION)
+        run_affil.font.size = Pt(10)
+        run_affil.italic = True
+
+        # Exam title line
+        p_title = doc.add_paragraph()
+        p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        title_bits = [pa.semester, pa.assessment_type]
+        if pa.test_date:
+            title_bits.append(f"— {pa.test_date}")
+        run_title = p_title.add_run("  ".join(b for b in title_bits if b))
+        run_title.bold = True
+        run_title.font.size = Pt(11)
+        doc.add_paragraph()
+
+        # Course / Code / Marks / Duration meta table (4 cols, selective merges)
+        meta = doc.add_table(rows=3, cols=4)
+        meta.style = "Table Grid"
+
+        def _set(r: int, c: int, text: str, bold_label: bool = False) -> None:
+            cell = meta.cell(r, c)
+            cell.text = text
+            if cell.paragraphs[0].runs:
+                cell.paragraphs[0].runs[0].bold = bold_label
+                cell.paragraphs[0].runs[0].font.size = Pt(10)
+
+        _set(0, 0, "Course:", bold_label=True)
+        _set(0, 1, pa.course_name or "—")
+        meta.cell(0, 1).merge(meta.cell(0, 3))
+
+        _set(1, 0, "Course Code:", bold_label=True)
+        _set(1, 1, pa.course_code or "—")
+        _set(1, 2, "Duration:", bold_label=True)
+        _set(1, 3, pa.duration)
+
+        _set(2, 0, "Max Marks:", bold_label=True)
+        _set(2, 1, pa.total_marks)
+        meta.cell(2, 1).merge(meta.cell(2, 3))
+
+        doc.add_paragraph()
+
+        # Standard VTU note line — count of modules is filled in by the
+        # caller via the questions themselves (see _add_vtu_question_table),
+        # so we count it here from pa.questions' distinct topics.
+        module_count = len(
+            {q.topic.strip() or "General" for q in pa.questions}
+        ) or 1
+        p_note = doc.add_paragraph()
+        run_note = p_note.add_run(
+            f"Note: Answer any {module_count} full questions, choosing at "
+            f"least ONE question from each MODULE."
+        )
+        run_note.bold = True
+        run_note.font.size = Pt(10)
+        doc.add_paragraph()
+
+    def _add_vtu_question_table(
+        self, doc: DocxDocument, pa: ParsedAssessment
+    ) -> None:
+        """Render the Module / OR-pair / sub-part question table.
+
+        Builds one continuous table for the whole paper: a column-header
+        row, then for each Module a full-width "Module – N" divider row
+        followed by its question groups (with the Q-number cell vertically
+        merged across that question's lettered sub-parts), with a
+        full-width "OR" divider row between the two alternatives in a
+        pair.
+        """
+        modules = build_vtu_paper_layout(pa.questions)
+
+        table = doc.add_table(rows=1, cols=6)
+        table.style = "Table Grid"
+        headers = ["Q.No", "", "Question", "Marks", "BL", "CO"]
+        for c, text in enumerate(headers):
+            cell = table.cell(0, c)
+            cell.text = text
+            if cell.paragraphs[0].runs:
+                cell.paragraphs[0].runs[0].bold = True
+            self._shade_cell(cell, "F0F4F8")
+
+        col_widths = [Inches(w) for w in (0.5, 0.4, 3.6, 0.6, 0.5, 0.6)]
+
+        def _full_width_row(text: str, bold: bool = True) -> None:
+            row_cells = table.add_row().cells
+            row_cells[0].merge(row_cells[-1])
+            row_cells[0].text = text
+            p = row_cells[0].paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            if p.runs:
+                p.runs[0].bold = bold
+            self._shade_cell(row_cells[0], "F0F4F8")
+
+        def _question_group_rows(group: VTUQuestionGroup) -> None:
+            first_row_idx = None
+            for sp in group.subparts:
+                row_cells = table.add_row().cells
+                row_idx = len(table.rows) - 1
+                if first_row_idx is None:
+                    first_row_idx = row_idx
+                    row_cells[0].text = str(group.q_number)
+                    row_cells[0].paragraphs[0].runs[0].bold = True
+                # sub-part letter
+                row_cells[1].text = f"{sp.letter})" if len(group.subparts) > 1 else ""
+                # question text
+                row_cells[2].text = sp.question.text
+                for run in row_cells[2].paragraphs[0].runs:
+                    run.font.size = Pt(10)
+                # marks / bloom / CO
+                row_cells[3].text = sp.question.marks
+                row_cells[4].text = self._bloom_short_code(sp.question.bloom_level)
+                row_cells[5].text = sp.question.co_mapping
+                for idx in (0, 1, 3, 4, 5):
+                    if row_cells[idx].paragraphs[0].runs:
+                        row_cells[idx].paragraphs[0].runs[0].font.size = Pt(10)
+                    row_cells[idx].paragraphs[0].alignment = (
+                        WD_ALIGN_PARAGRAPH.CENTER
+                    )
+            # Vertically merge the Q-number cell across all sub-part rows
+            if first_row_idx is not None and len(group.subparts) > 1:
+                last_row_idx = len(table.rows) - 1
+                table.cell(first_row_idx, 0).merge(
+                    table.cell(last_row_idx, 0)
+                )
+
+        for module in modules:
+            _full_width_row(f"Module – {module.module_number}: {module.label}")
+            for pair_idx, pair in enumerate(module.pairs):
+                if pair_idx > 0:
+                    _full_width_row("OR")
+                _question_group_rows(pair[0])
+                if len(pair) > 1:
+                    _full_width_row("OR")
+                    _question_group_rows(pair[1])
+
+        for row in table.rows:
+            for c, cell in enumerate(row.cells):
+                if c < len(col_widths):
+                    cell.width = col_widths[c]
+
+        doc.add_paragraph()
+
+    @staticmethod
+    def _bloom_short_code(bloom_level: str) -> str:
+        """Map a full Bloom's level name to its short "L1"-"L6" code."""
+        order = [
+            "Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create",
+        ]
+        try:
+            return f"L{order.index(bloom_level) + 1}"
+        except ValueError:
+            return bloom_level[:2] if bloom_level else "—"
 
     def _add_instructions(
         self, doc: DocxDocument, pa: ParsedAssessment
@@ -836,6 +1165,51 @@ class PDFExporter:
                 fontName="Helvetica-Bold",
                 spaceAfter=2,
             ),
+            "vtu_affiliation": ParagraphStyle(
+                "EduVTUAffil",
+                parent=base["Normal"],
+                fontSize=9.5,
+                alignment=TA_CENTER,
+                fontName="Helvetica-Oblique",
+                spaceAfter=6,
+            ),
+            "vtu_exam_title": ParagraphStyle(
+                "EduVTUExamTitle",
+                parent=base["Normal"],
+                fontSize=11,
+                alignment=TA_CENTER,
+                fontName="Helvetica-Bold",
+                spaceAfter=10,
+            ),
+            "vtu_note": ParagraphStyle(
+                "EduVTUNote",
+                parent=base["Normal"],
+                fontSize=9.5,
+                fontName="Helvetica-Bold",
+                spaceAfter=10,
+            ),
+            "vtu_cell_text": ParagraphStyle(
+                "EduVTUCellText",
+                parent=base["Normal"],
+                fontSize=9,
+                leading=12,
+                fontName="Helvetica",
+            ),
+            "vtu_cell_center": ParagraphStyle(
+                "EduVTUCellCenter",
+                parent=base["Normal"],
+                fontSize=9,
+                leading=12,
+                fontName="Helvetica",
+                alignment=TA_CENTER,
+            ),
+            "vtu_module_header": ParagraphStyle(
+                "EduVTUModuleHeader",
+                parent=base["Normal"],
+                fontSize=10,
+                fontName="Helvetica-Bold",
+                alignment=TA_CENTER,
+            ),
             "department": ParagraphStyle(
                 "EduDept",
                 parent=base["Normal"],
@@ -970,94 +1344,99 @@ class PDFExporter:
             list: List of ReportLab Flowable objects.
         """
         story = []
+        is_semester_exam = pa.assessment_type == AssessmentType.SEMESTER_EXAM.value
 
-        # ── Title block ──────────────────────────────────────────────────────
-        story.append(Paragraph(self._esc(pa.university), styles["university"]))
-        story.append(Paragraph(self._esc(pa.department), styles["department"]))
-        story.append(HRFlowable(width="100%", thickness=1.5, color=self._NAVY))
-        story.append(Spacer(1, 8))
-        story.append(Paragraph(self._esc(pa.title), styles["title"]))
-        story.append(Spacer(1, 6))
-
-        # ── Metadata table ───────────────────────────────────────────────────
-        meta_data = [
-            ["Course Code", pa.course_code or "—",
-             "Assessment Type", pa.assessment_type],
-            ["Course Name", pa.course_name or "—",
-             "Semester", pa.semester],
-            ["Duration", pa.duration,
-             "Total Marks", pa.total_marks],
-            ["Faculty", pa.faculty_name,
-             "Test Date", pa.test_date or "—"],
-            ["Generated On", pa.date_generated,
-             "", ""],
-        ]
-        meta_table = Table(
-            meta_data,
-            colWidths=[3.5 * cm, 5.5 * cm, 3.5 * cm, 5.5 * cm],
-        )
-        meta_table.setStyle(
-            TableStyle([
-                ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
-                ("FONTSIZE", (0, 0), (-1, -1), 9),
-                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-                ("FONTNAME", (2, 0), (2, -1), "Helvetica-Bold"),
-                ("TEXTCOLOR", (0, 0), (0, -1), self._NAVY),
-                ("TEXTCOLOR", (2, 0), (2, -1), self._NAVY),
-                ("BACKGROUND", (0, 0), (-1, -1), self._LIGHT_BG),
-                ("ROWBACKGROUNDS", (0, 0), (-1, -1),
-                 [self._LIGHT_BG, colors.white]),
-                ("BOX", (0, 0), (-1, -1), 0.5, self._NAVY),
-                ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.lightgrey),
-                ("TOPPADDING", (0, 0), (-1, -1), 4),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
-                ("LEFTPADDING", (0, 0), (-1, -1), 6),
-            ])
-        )
-        story.append(meta_table)
-        story.append(Spacer(1, 10))
-
-        # ── Instructions ─────────────────────────────────────────────────────
-        if pa.has_instructions:
-            story.append(
-                Paragraph("Instructions", styles["section_heading"])
-            )
-            story.append(
-                Paragraph(self._esc(pa.instructions), styles["normal"])
-            )
+        if is_semester_exam:
+            story.extend(self._build_vtu_header(pa, styles))
+            story.extend(self._build_vtu_question_table(pa, styles))
+        else:
+            # ── Title block ──────────────────────────────────────────────
+            story.append(Paragraph(self._esc(pa.university), styles["university"]))
+            story.append(Paragraph(self._esc(pa.department), styles["department"]))
+            story.append(HRFlowable(width="100%", thickness=1.5, color=self._NAVY))
+            story.append(Spacer(1, 8))
+            story.append(Paragraph(self._esc(pa.title), styles["title"]))
             story.append(Spacer(1, 6))
 
-        story.append(HRFlowable(width="100%", thickness=0.5, color=colors.lightgrey))
-
-        # ── Questions ────────────────────────────────────────────────────────
-        story.append(Paragraph("Questions", styles["section_heading"]))
-
-        for q in pa.questions:
-            meta_line = (
-                f"[{q.question_type}]  •  Bloom: {q.bloom_level}  •  "
-                f"Difficulty: {q.difficulty}  •  CO: {q.co_mapping}  •  "
-                f"Marks: {q.marks}"
-            )
-            block = [
-                Paragraph(
-                    f"{q.number}.  {self._esc(q.text)}",
-                    styles["question_text"],
-                ),
+            # ── Metadata table ───────────────────────────────────────────
+            meta_data = [
+                ["Course Code", pa.course_code or "—",
+                 "Assessment Type", pa.assessment_type],
+                ["Course Name", pa.course_name or "—",
+                 "Semester", pa.semester],
+                ["Duration", pa.duration,
+                 "Total Marks", pa.total_marks],
+                ["Faculty", pa.faculty_name,
+                 "Test Date", pa.test_date or "—"],
+                ["Generated On", pa.date_generated,
+                 "", ""],
             ]
-            for i, opt in enumerate(q.options):
-                block.append(
+            meta_table = Table(
+                meta_data,
+                colWidths=[3.5 * cm, 5.5 * cm, 3.5 * cm, 5.5 * cm],
+            )
+            meta_table.setStyle(
+                TableStyle([
+                    ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+                    ("FONTSIZE", (0, 0), (-1, -1), 9),
+                    ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+                    ("FONTNAME", (2, 0), (2, -1), "Helvetica-Bold"),
+                    ("TEXTCOLOR", (0, 0), (0, -1), self._NAVY),
+                    ("TEXTCOLOR", (2, 0), (2, -1), self._NAVY),
+                    ("BACKGROUND", (0, 0), (-1, -1), self._LIGHT_BG),
+                    ("ROWBACKGROUNDS", (0, 0), (-1, -1),
+                     [self._LIGHT_BG, colors.white]),
+                    ("BOX", (0, 0), (-1, -1), 0.5, self._NAVY),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.lightgrey),
+                    ("TOPPADDING", (0, 0), (-1, -1), 4),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 6),
+                ])
+            )
+            story.append(meta_table)
+            story.append(Spacer(1, 10))
+
+            # ── Instructions ─────────────────────────────────────────────
+            if pa.has_instructions:
+                story.append(
+                    Paragraph("Instructions", styles["section_heading"])
+                )
+                story.append(
+                    Paragraph(self._esc(pa.instructions), styles["normal"])
+                )
+                story.append(Spacer(1, 6))
+
+            story.append(HRFlowable(width="100%", thickness=0.5, color=colors.lightgrey))
+
+            # ── Questions ────────────────────────────────────────────────
+            story.append(Paragraph("Questions", styles["section_heading"]))
+
+            for q in pa.questions:
+                meta_line = (
+                    f"[{q.question_type}]  •  Bloom: {q.bloom_level}  •  "
+                    f"Difficulty: {q.difficulty}  •  CO: {q.co_mapping}  •  "
+                    f"Marks: {q.marks}"
+                )
+                block = [
                     Paragraph(
-                        f"○&nbsp;&nbsp;{chr(65 + i)}.&nbsp;&nbsp;"
-                        f"{self._esc(opt)}",
-                        styles["option_line"],
+                        f"{q.number}.  {self._esc(q.text)}",
+                        styles["question_text"],
+                    ),
+                ]
+                for i, opt in enumerate(q.options):
+                    block.append(
+                        Paragraph(
+                            f"○&nbsp;&nbsp;{chr(65 + i)}.&nbsp;&nbsp;"
+                            f"{self._esc(opt)}",
+                            styles["option_line"],
+                        )
                     )
-                )
-            block.append(Paragraph(self._esc(meta_line), styles["meta_tag"]))
-            if q.notes:
-                block.append(
-                    Paragraph(f"Note: {self._esc(q.notes)}", styles["note_tag"])
-                )
-            story.append(KeepTogether(block))
+                block.append(Paragraph(self._esc(meta_line), styles["meta_tag"]))
+                if q.notes:
+                    block.append(
+                        Paragraph(f"Note: {self._esc(q.notes)}", styles["note_tag"])
+                    )
+                story.append(KeepTogether(block))
 
         # ── Answer key ───────────────────────────────────────────────────────
         if pa.has_answer_key:
@@ -1093,6 +1472,196 @@ class PDFExporter:
             )
 
         return story
+
+    # ── VTU-style Semester Examination layout ───────────────────────────────
+
+    def _build_vtu_header(self, pa: ParsedAssessment, styles: dict) -> list:
+        """Build the USN box, institution header, and course meta table.
+
+        Args:
+            pa: The parsed assessment.
+            styles: Named ParagraphStyle dict.
+
+        Returns:
+            list: Flowables for the exam paper header block.
+        """
+        flow: list = []
+
+        # USN entry box — one wide label cell + 10 individual digit boxes.
+        usn_data = [["USN"] + [""] * 10]
+        usn_table = Table(
+            usn_data, colWidths=[1.6 * cm] + [0.9 * cm] * 10, rowHeights=[0.7 * cm]
+        )
+        usn_table.setStyle(
+            TableStyle([
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+                ("INNERGRID", (0, 0), (-1, -1), 0.75, colors.black),
+                ("FONTNAME", (0, 0), (0, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 10),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("LEFTPADDING", (0, 0), (0, 0), 5),
+            ])
+        )
+        flow.append(usn_table)
+        flow.append(Spacer(1, 12))
+
+        flow.append(Paragraph(self._esc(pa.university.upper()), styles["university"]))
+        flow.append(
+            Paragraph(self._esc(_UNIVERSITY_AFFILIATION), styles["vtu_affiliation"])
+        )
+
+        title_bits = [pa.semester, pa.assessment_type]
+        if pa.test_date:
+            title_bits.append(f"— {pa.test_date}")
+        flow.append(
+            Paragraph(
+                self._esc("  ".join(b for b in title_bits if b)),
+                styles["vtu_exam_title"],
+            )
+        )
+
+        # Course / Code / Duration / Max Marks meta table with selective merges
+        meta_data = [
+            ["Course:", pa.course_name or "—", "", ""],
+            ["Course Code:", pa.course_code or "—", "Duration:", pa.duration],
+            ["Max Marks:", pa.total_marks, "", ""],
+        ]
+        meta_table = Table(
+            meta_data, colWidths=[3.2 * cm, 6.0 * cm, 2.8 * cm, 4.0 * cm]
+        )
+        meta_table.setStyle(
+            TableStyle([
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+                ("FONTNAME", (2, 1), (2, 1), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+                ("SPAN", (1, 0), (3, 0)),
+                ("SPAN", (1, 2), (3, 2)),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 6),
+                ("TOPPADDING", (0, 0), (-1, -1), 3),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+            ])
+        )
+        flow.append(meta_table)
+        flow.append(Spacer(1, 10))
+
+        module_count = len(
+            {q.topic.strip() or "General" for q in pa.questions}
+        ) or 1
+        flow.append(
+            Paragraph(
+                f"Note: Answer any {module_count} full questions, choosing "
+                f"at least ONE question from each MODULE.",
+                styles["vtu_note"],
+            )
+        )
+        flow.append(Spacer(1, 6))
+        return flow
+
+    def _build_vtu_question_table(
+        self, pa: ParsedAssessment, styles: dict
+    ) -> list:
+        """Build the Module / OR-pair / sub-part question table.
+
+        Uses ReportLab ``SPAN`` commands to merge the full-width Module
+        and "OR" divider rows, and to vertically merge the Q-number cell
+        across a question's lettered sub-part rows.
+
+        Args:
+            pa: The parsed assessment.
+            styles: Named ParagraphStyle dict.
+
+        Returns:
+            list: A single-element list containing the assembled Table
+            flowable (wrapped in a list for consistency with other
+            flowable-returning builders).
+        """
+        modules = build_vtu_paper_layout(pa.questions)
+
+        data: list = [["Q.No", "", "Question", "Marks", "BL", "CO"]]
+        style_cmds = [
+            ("BACKGROUND", (0, 0), (-1, 0), self._LIGHT_BG),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ]
+        row = 1
+
+        def _full_width_row(text: str) -> None:
+            nonlocal row
+            data.append([text, "", "", "", "", ""])
+            style_cmds.append(("SPAN", (0, row), (-1, row)))
+            style_cmds.append(("BACKGROUND", (0, row), (-1, row), self._LIGHT_BG))
+            style_cmds.append(("FONTNAME", (0, row), (-1, row), "Helvetica-Bold"))
+            style_cmds.append(("ALIGN", (0, row), (-1, row), "CENTER"))
+            row += 1
+
+        def _group_rows(group: VTUQuestionGroup) -> None:
+            nonlocal row
+            first_row = row
+            for sp_idx, sp in enumerate(group.subparts):
+                letter_text = f"{sp.letter})" if len(group.subparts) > 1 else ""
+                q_num_text = str(group.q_number) if sp_idx == 0 else ""
+                data.append([
+                    q_num_text,
+                    letter_text,
+                    Paragraph(self._esc(sp.question.text), styles["vtu_cell_text"]),
+                    sp.question.marks,
+                    self._bloom_short_code(sp.question.bloom_level),
+                    sp.question.co_mapping,
+                ])
+                row += 1
+            last_row = row - 1
+            if last_row > first_row:
+                style_cmds.append(("SPAN", (0, first_row), (0, last_row)))
+            style_cmds.append(
+                ("VALIGN", (0, first_row), (0, last_row), "MIDDLE")
+            )
+            style_cmds.append(
+                ("ALIGN", (0, first_row), (0, last_row), "CENTER")
+            )
+            for col in (1, 3, 4, 5):
+                style_cmds.append(
+                    ("ALIGN", (col, first_row), (col, last_row), "CENTER")
+                )
+                style_cmds.append(
+                    ("VALIGN", (col, first_row), (col, last_row), "MIDDLE")
+                )
+
+        for module in modules:
+            _full_width_row(f"Module – {module.module_number}: {module.label}")
+            for pair in module.pairs:
+                _group_rows(pair[0])
+                if len(pair) > 1:
+                    _full_width_row("OR")
+                    _group_rows(pair[1])
+
+        col_widths = [
+            1.3 * cm, 1.0 * cm, 9.0 * cm, 1.5 * cm, 1.2 * cm, 1.8 * cm,
+        ]
+        table = Table(data, colWidths=col_widths, repeatRows=1)
+        style_cmds.extend([
+            ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+            ("FONTSIZE", (0, 0), (-1, -1), 9),
+            ("TOPPADDING", (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ("LEFTPADDING", (0, 0), (-1, -1), 4),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+        ])
+        table.setStyle(TableStyle(style_cmds))
+        return [table]
+
+    @staticmethod
+    def _bloom_short_code(bloom_level: str) -> str:
+        """Map a full Bloom's level name to its short "L1"-"L6" code."""
+        order = [
+            "Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create",
+        ]
+        try:
+            return f"L{order.index(bloom_level) + 1}"
+        except ValueError:
+            return bloom_level[:2] if bloom_level else "—"
 
     # ── Page callback ─────────────────────────────────────────────────────────
 

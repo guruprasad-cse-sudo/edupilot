@@ -1639,6 +1639,7 @@ def _reconstruct_assessment(data: Dict[str, Any]) -> Any:
                     str(o) for o in (q_raw.get("options") or [])
                     if str(o).strip()
                 ],
+                topic=q_raw.get("topic", ""),
             )
         )
 

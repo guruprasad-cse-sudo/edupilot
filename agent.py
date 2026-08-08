@@ -949,6 +949,13 @@ class AssessmentAgent:
                     "AssessmentAgent._generate_single(): %d questions OK",
                     assessment.question_count,
                 )
+                # Best-effort topic tagging: the single-call path requests
+                # all topics in one LLM call, so there's no natural
+                # per-question topic boundary the way batching provides.
+                # Assign topics in the same proportional order used for
+                # batch allocation so VTU-style Module grouping on export
+                # still works reasonably for small, non-batched runs.
+                self._tag_topics_best_effort(assessment.questions, plan.topics)
                 return assessment
             except (json.JSONDecodeError, ValueError, KeyError) as exc:
                 last_error = exc
@@ -965,6 +972,43 @@ class AssessmentAgent:
             f"AssessmentAgent failed to produce valid JSON after "
             f"{self.max_retries + 1} attempts.  Last error: {last_error}"
         )
+
+    def _tag_topics_best_effort(
+        self, questions: List[Question], topics_str: str
+    ) -> None:
+        """Assign a topic to each question in proportional order.
+
+        Used only by the single-call generation path, where all topics are
+        requested together in one LLM call and there is no natural
+        per-question topic boundary the way batching provides. Questions
+        are tagged in the same proportional allocation order used for
+        batching (see :meth:`_allocate_per_topic`), so VTU-style Module
+        grouping on export still works reasonably for small, non-batched
+        assessments. This is a best-effort heuristic, not a guarantee that
+        question N is actually about the Nth allocated topic.
+
+        Args:
+            questions: The generated questions, in original order, to tag
+                in place.
+            topics_str: Comma-separated topic string from the plan.
+        """
+        if not questions:
+            return
+        allocations = self._allocate_per_topic(topics_str, len(questions))
+        if not allocations:
+            return
+        idx = 0
+        for topic, count in allocations:
+            for _ in range(count):
+                if idx >= len(questions):
+                    return
+                questions[idx].topic = topic
+                idx += 1
+        # Any leftover questions (shouldn't normally happen) fall back to
+        # the last allocated topic rather than staying untagged.
+        while idx < len(questions):
+            questions[idx].topic = allocations[-1][0]
+            idx += 1
 
     # ------------------------------------------------------------------
     # Batched generation
@@ -1100,6 +1144,14 @@ class AssessmentAgent:
             )
             if call_start_tracker:
                 prev_call_start = call_start_tracker[-1]
+
+            # Tag every question in this batch with the topic string it was
+            # generated for. This is what lets the export layer group
+            # questions into VTU-style exam paper Modules later — the
+            # association only exists here, at batch-assignment time, and
+            # is otherwise lost once questions are merged into a flat list.
+            for q in batch_assessment.questions:
+                q.topic = batch_topics
 
             batch_assessments.append(batch_assessment)
 
