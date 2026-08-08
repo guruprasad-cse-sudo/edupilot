@@ -47,6 +47,10 @@ from models import (
     Question,
     ReviewerResult,
     SourceAttribution,
+    VTU_MARKS_PER_FULL_QUESTION,
+    VTU_MAX_MODULES,
+    VTU_MAX_TOTAL_MARKS,
+    split_sizes_for_pairing,
 )
 from prompts import (
     ASSESSMENT_SYSTEM_PROMPT,
@@ -354,6 +358,132 @@ _OUTPUT_BUDGET_FRACTION: float = 0.85
 # ---------------------------------------------------------------------------
 # Shared pure-function helpers (analytics + reviewer)
 # ---------------------------------------------------------------------------
+
+
+def parse_vtu_marks_blueprint(
+    blueprint_text: str,
+) -> Dict[str, Tuple[List[int], List[int]]]:
+    """Parse a faculty-authored custom marks blueprint into a lookup dict.
+
+    Expected format, one line per topic::
+
+        <topic name>: <Q-A sub-part marks, comma-separated> | <Q-B sub-part marks>
+
+    e.g. ``"Autoencoders: 5,5,10 | 5,5,10"``. Blank lines, lines without a
+    colon, or lines that fail to parse cleanly are skipped rather than
+    raising — this is faculty-typed free text, not a strict config file,
+    so a typo in one line should not break every other topic's blueprint
+    or fall back to fully automatic generation for the whole assessment.
+
+    Args:
+        blueprint_text: Raw textarea contents from the Generate form.
+            Empty string (the default / no blueprint given) yields ``{}``.
+
+    Returns:
+        Dict mapping topic name (as typed by the faculty) to a
+        ``(marks_for_q_a, marks_for_q_b)`` tuple of integer lists.
+    """
+    result: Dict[str, Tuple[List[int], List[int]]] = {}
+    if not blueprint_text or not blueprint_text.strip():
+        return result
+
+    for raw_line in blueprint_text.splitlines():
+        line = raw_line.strip()
+        if not line or ":" not in line:
+            continue
+        topic_part, _, marks_part = line.partition(":")
+        topic = topic_part.strip()
+        if not topic:
+            continue
+        sides = marks_part.split("|")
+        if len(sides) != 2:
+            logger.warning(
+                "parse_vtu_marks_blueprint(): skipping malformed line "
+                "(expected one '|' separating Q-A/Q-B marks): %r",
+                line,
+            )
+            continue
+        try:
+            marks_a = [
+                int(m.strip()) for m in sides[0].split(",") if m.strip()
+            ]
+            marks_b = [
+                int(m.strip()) for m in sides[1].split(",") if m.strip()
+            ]
+        except ValueError:
+            logger.warning(
+                "parse_vtu_marks_blueprint(): skipping line with "
+                "non-integer marks: %r", line,
+            )
+            continue
+        if not marks_a or not marks_b:
+            logger.warning(
+                "parse_vtu_marks_blueprint(): skipping line with an "
+                "empty marks list: %r", line,
+            )
+            continue
+        result[topic] = (marks_a, marks_b)
+
+    return result
+
+
+def _depth_guidance_for_marks(marks: int) -> str:
+    """Return depth/scope guidance text for a sub-part worth *marks* marks.
+
+    Used to tell the LLM how substantial an answer should be for each
+    individually marked sub-part in a custom VTU marks blueprint, so a
+    10-mark sub-part reads as visibly more developed than a 3-mark one
+    rather than both getting generic, similarly-sized answers.
+
+    Args:
+        marks: Marks allocated to this specific sub-part.
+
+    Returns:
+        str: A short scope-guidance phrase for the prompt.
+    """
+    if marks <= 3:
+        return (
+            "a very brief, direct answer — a definition, a one-line fact, "
+            "or a short list (roughly 2-3 sentences)"
+        )
+    if marks <= 6:
+        return (
+            "a short-to-moderate explanation — a few sentences, or one "
+            "simple worked example"
+        )
+    if marks <= 10:
+        return (
+            "a detailed explanation covering multiple points, a full "
+            "worked example, or a multi-step derivation"
+        )
+    return (
+        "an in-depth, comprehensive answer covering multiple sub-aspects "
+        "in detail — e.g. an extended derivation, multi-part case "
+        "analysis, or thorough design discussion"
+    )
+
+
+def _auto_marks_split(n: int, total: int) -> List[int]:
+    """Split *total* marks across *n* sub-parts as evenly as possible.
+
+    Used to auto-derive a marks blueprint for a VTU Semester Examination
+    topic that the faculty did NOT manually customize — every full
+    question still ends up totalling exactly ``total`` marks (per
+    ``models.VTU_MARKS_PER_FULL_QUESTION``), just with an even split
+    instead of a faculty-chosen one.
+
+    Args:
+        n: Number of sub-parts to split marks across.
+        total: Total marks to distribute (must sum exactly across parts).
+
+    Returns:
+        List of *n* positive integers summing to *total*, e.g.
+        ``_auto_marks_split(3, 20)`` → ``[7, 7, 6]``.
+    """
+    if n <= 0:
+        return []
+    base, rem = divmod(total, n)
+    return [base + (1 if i < rem else 0) for i in range(n)]
 
 
 def _normalise_text(text: str) -> str:
@@ -679,6 +809,7 @@ class AssessmentAgent:
                 failure before raising.
         """
         self.max_retries = max_retries
+        self._vtu_blueprint: Dict[str, Tuple[List[int], List[int]]] = {}
         logger.info("AssessmentAgent initialised (max_retries=%d)", max_retries)
 
     # ------------------------------------------------------------------
@@ -727,7 +858,19 @@ class AssessmentAgent:
             plan.question_count,
         )
 
-        if self._needs_batching(plan):
+        # Semester Examinations always use the per-topic marks-blueprint
+        # path now (custom or auto-derived — see _resolve_vtu_blueprint),
+        # which is only wired into the batched generation path. Force
+        # batching for every Semester Exam, and whenever any other
+        # assessment type has a custom blueprint typed in, so it's never
+        # silently ignored by the single-call path on a small assessment.
+        is_semester_exam = (
+            plan.assessment_type == AssessmentType.SEMESTER_EXAM.value
+        )
+        has_custom_blueprint = bool(
+            parse_vtu_marks_blueprint(plan.vtu_marks_blueprint)
+        )
+        if is_semester_exam or has_custom_blueprint or self._needs_batching(plan):
             return self._generate_batched(
                 plan=plan,
                 rag_context=rag_context,
@@ -833,49 +976,148 @@ class AssessmentAgent:
         )
         return allocations
 
+    def _resolve_vtu_blueprint(
+        self, plan: AssessmentPlan
+    ) -> Dict[str, Tuple[List[int], List[int]]]:
+        """Resolve the complete per-topic marks blueprint for *plan*.
+
+        Combines any faculty-typed custom blueprint entries
+        (``plan.vtu_marks_blueprint``) with auto-derived ones. Auto-
+        derivation only applies to Semester Examinations: every topic
+        NOT covered by a custom entry still gets an automatically
+        computed marks split, evenly dividing
+        ``models.VTU_MARKS_PER_FULL_QUESTION`` (20) across however many
+        sub-parts that topic's allocated question quota works out to —
+        so every module in a Semester Exam paper ends up with a full
+        question worth exactly 20 marks, whether the faculty customized
+        that topic or not.
+
+        Non-Semester-Exam assessment types only ever use faculty-typed
+        custom entries (if any are present) and are otherwise returned
+        with no auto-derived entries — this preserves the original,
+        uniform marks_per_question generation behaviour for every other
+        assessment type exactly as it was before this feature existed.
+
+        Args:
+            plan: The assessment plan.
+
+        Returns:
+            Dict mapping topic name -> ``(marks_for_q_a, marks_for_q_b)``.
+        """
+        custom = parse_vtu_marks_blueprint(plan.vtu_marks_blueprint)
+        is_semester_exam = (
+            plan.assessment_type == AssessmentType.SEMESTER_EXAM.value
+        )
+        if not is_semester_exam:
+            return custom
+
+        all_topics = [t.strip() for t in plan.topics.split(",") if t.strip()]
+        if not all_topics:
+            all_topics = ["General"]
+
+        if len(all_topics) > VTU_MAX_MODULES:
+            logger.warning(
+                "AssessmentAgent._resolve_vtu_blueprint(): %d topics given "
+                "but a %d-mark Semester Exam supports at most %d Modules "
+                "(%d marks each) — the paper will exceed %d marks. "
+                "Consider reducing the Topics field to %d entries.",
+                len(all_topics), VTU_MAX_TOTAL_MARKS, VTU_MAX_MODULES,
+                VTU_MARKS_PER_FULL_QUESTION, VTU_MAX_TOTAL_MARKS,
+                VTU_MAX_MODULES,
+            )
+
+        resolved: Dict[str, Tuple[List[int], List[int]]] = dict(custom)
+        auto_topics = [t for t in all_topics if t not in custom]
+        if auto_topics:
+            quota_by_topic = dict(
+                self._allocate_per_topic(
+                    ",".join(auto_topics), plan.question_count
+                )
+            )
+            for topic in auto_topics:
+                # Every Module needs an OR-pair, so floor the quota at 2
+                # even if the proportional allocation would have given
+                # this topic 0 or 1 — a small, documented deviation from
+                # plan.question_count in exchange for a structurally
+                # valid VTU paper (see class docstring note on totals).
+                quota = max(quota_by_topic.get(topic, 2), 2)
+                sizes = split_sizes_for_pairing(quota)
+                marks_a = _auto_marks_split(
+                    sizes[0], VTU_MARKS_PER_FULL_QUESTION
+                )
+                marks_b = (
+                    _auto_marks_split(sizes[1], VTU_MARKS_PER_FULL_QUESTION)
+                    if len(sizes) > 1
+                    else list(marks_a)
+                )
+                resolved[topic] = (marks_a, marks_b)
+
+        return resolved
+
     def _build_batch_specs(
         self, plan: AssessmentPlan
     ) -> List[Tuple[int, str]]:
         """Compute per-batch (question_count, topics) specifications.
 
-        Questions are first allocated proportionally to each topic via
-        :meth:`_allocate_per_topic` (largest-remainder / Hamilton method),
-        ensuring every topic receives a fair share of the total.  Each
-        topic's quota is then split into batches of at most
-        ``config.batch_size`` questions.  If a topic's quota exceeds
-        ``batch_size`` it is split into consecutive same-topic batches.
+        Every topic with a resolved VTU marks blueprint entry (custom or
+        auto-derived — see :meth:`_resolve_vtu_blueprint`) gets an exact
+        single batch sized to that blueprint's total sub-part count —
+        never split across batches and never subject to proportional
+        allocation, since its question count is fixed by the blueprint,
+        not derived from ``plan.question_count``.
 
-        This guarantees:
-        - Each topic's batch(es) sum to exactly its allocated quota.
-        - All batch counts together sum to ``plan.question_count``.
-        - No topic is starved: ``max_quota − min_quota ≤ 1`` across topics.
+        Any remaining topics (only possible for non-Semester-Exam types,
+        since Semester Exams get a blueprint entry for every topic) use
+        the original proportional allocation: first allocated via
+        :meth:`_allocate_per_topic` against ``plan.question_count``, then
+        split into batches of at most ``config.batch_size`` questions.
+
+        As a side effect, stashes the resolved blueprint on
+        ``self._vtu_blueprint`` for the generation loop to consult.
 
         Args:
             plan: The assessment plan to split.
 
         Returns:
             List[Tuple[int, str]]: One ``(count, topic_string)`` pair per
-                batch, ordered by topic then sub-batch within a topic.
+                batch, blueprint topics first, then any remaining
+                non-blueprint topics in original order.
         """
-        total = plan.question_count
         batch_size = config.batch_size
-        per_topic = self._allocate_per_topic(plan.topics, total)
+        blueprint = self._resolve_vtu_blueprint(plan)
+        self._vtu_blueprint = blueprint
+        all_topics = [t.strip() for t in plan.topics.split(",") if t.strip()]
+        if not all_topics:
+            all_topics = ["General"]
 
         specs: List[Tuple[int, str]] = []
-        for topic, quota in per_topic:
-            # Split this topic's quota into ≤batch_size sub-batches
-            remaining = quota
-            while remaining > 0:
-                count = min(batch_size, remaining)
-                specs.append((count, topic))
-                remaining -= count
+        for topic in all_topics:
+            if topic in blueprint:
+                marks_a, marks_b = blueprint[topic]
+                specs.append((len(marks_a) + len(marks_b), topic))
+
+        remaining_topics_str = ",".join(
+            t for t in all_topics if t not in blueprint
+        )
+        if remaining_topics_str:
+            per_topic = self._allocate_per_topic(
+                remaining_topics_str, plan.question_count
+            )
+            for topic, quota in per_topic:
+                # Split this topic's quota into ≤batch_size sub-batches
+                remaining = quota
+                while remaining > 0:
+                    count = min(batch_size, remaining)
+                    specs.append((count, topic))
+                    remaining -= count
 
         num_batches = len(specs)
         logger.info(
-            "AssessmentAgent._build_batch_specs(): total=%d batch_size=%d "
-            "num_batches=%d specs=%s",
-            total,
+            "AssessmentAgent._build_batch_specs(): plan_total=%d "
+            "batch_size=%d blueprint_topics=%d num_batches=%d specs=%s",
+            plan.question_count,
             batch_size,
+            len(blueprint),
             num_batches,
             [(c, t[:40]) for c, t in specs],
         )
@@ -1014,6 +1256,54 @@ class AssessmentAgent:
     # Batched generation
     # ------------------------------------------------------------------
 
+    def _apply_blueprint_marks(
+        self,
+        questions: List[Question],
+        blueprint_entry: Tuple[List[int], List[int]],
+        topic: str,
+    ) -> None:
+        """Force each question's marks/group to match the faculty blueprint.
+
+        The LLM is asked to honour the exact per-question marks list, but
+        prompt compliance is never guaranteed — this makes the paper
+        correct regardless, by overwriting whatever the LLM put in the
+        ``marks`` field with the faculty-authored value at that position,
+        and tagging ``blueprint_group`` ("A"/"B") so export can split the
+        two OR-alternative questions precisely instead of guessing.
+
+        If the LLM returned a different number of questions than
+        requested (rare, but possible), this pads or truncates gracefully
+        rather than raising — a slightly-off blueprint match is far
+        better than crashing the whole generation run over it.
+
+        Args:
+            questions: This batch's generated questions, in order.
+            blueprint_entry: ``(marks_for_q_a, marks_for_q_b)`` from
+                :func:`parse_vtu_marks_blueprint`.
+            topic: Topic name, used only for the log message.
+        """
+        marks_a, marks_b = blueprint_entry
+        expected = marks_a + marks_b
+        groups = ["A"] * len(marks_a) + ["B"] * len(marks_b)
+
+        if len(questions) != len(expected):
+            logger.warning(
+                "AssessmentAgent._apply_blueprint_marks(): topic %r "
+                "expected %d questions per blueprint but LLM returned "
+                "%d — applying blueprint marks to as many as match, "
+                "leaving any extras with their original marks.",
+                topic[:60], len(expected), len(questions),
+            )
+
+        for i, q in enumerate(questions):
+            if i < len(expected):
+                q.marks = expected[i]
+                q.blueprint_group = groups[i]
+            # Extra questions beyond the blueprint (shouldn't normally
+            # happen) keep whatever marks the LLM gave them and are left
+            # with an empty blueprint_group, so export's automatic
+            # even-split fallback picks them up rather than mis-grouping.
+
     def _generate_batched(
         self,
         plan: AssessmentPlan,
@@ -1053,6 +1343,9 @@ class AssessmentAgent:
         batch_specs = self._build_batch_specs(plan)
         total_batches = len(batch_specs)
         total_qs = plan.question_count
+        # self._vtu_blueprint was populated as a side effect of
+        # _build_batch_specs() above (custom + auto-derived entries — see
+        # _resolve_vtu_blueprint), ready for the per-batch loop below.
         logger.info(
             "AssessmentAgent._generate_batched(): %d questions → %d batches "
             "(size ≤ %d, delay %.0fs)",
@@ -1107,12 +1400,29 @@ class AssessmentAgent:
             )
 
             # ── Build this batch's plan fragment ───────────────────────────
-            batch_hint = (
-                f"BATCH {batch_num} OF {total_batches} — "
-                f"Generate exactly {batch_count} question(s) covering these "
-                f"topics: {batch_topics}. "
-                f"Other batches will cover the remaining topics separately."
-            )
+            blueprint_entry = self._vtu_blueprint.get(batch_topics)
+            per_question_marks = None
+            if blueprint_entry is not None:
+                marks_a, marks_b = blueprint_entry
+                all_marks = marks_a + marks_b
+                per_question_marks = [
+                    (m, _depth_guidance_for_marks(m)) for m in all_marks
+                ]
+                batch_hint = (
+                    f"BATCH {batch_num} OF {total_batches} — topic: "
+                    f"{batch_topics}. This topic uses a FIXED faculty-"
+                    f"authored marks blueprint (see PER-QUESTION MARKS "
+                    f"below) — follow it exactly, do not add or drop "
+                    f"questions. Other batches will cover the remaining "
+                    f"topics separately."
+                )
+            else:
+                batch_hint = (
+                    f"BATCH {batch_num} OF {total_batches} — "
+                    f"Generate exactly {batch_count} question(s) covering these "
+                    f"topics: {batch_topics}. "
+                    f"Other batches will cover the remaining topics separately."
+                )
             user_prompt = build_assessment_prompt(
                 assessment_type=plan.assessment_type,
                 course_name=plan.course_name,
@@ -1126,6 +1436,7 @@ class AssessmentAgent:
                 difficulty=plan.difficulty,
                 extra_instructions=plan.extra_instructions,
                 batch_hint=batch_hint,
+                per_question_marks=per_question_marks,
             )
 
             # ── Invoke LLM: rate-limit retries + parse retries ────────────
@@ -1152,6 +1463,11 @@ class AssessmentAgent:
             # is otherwise lost once questions are merged into a flat list.
             for q in batch_assessment.questions:
                 q.topic = batch_topics
+
+            if blueprint_entry is not None:
+                self._apply_blueprint_marks(
+                    batch_assessment.questions, blueprint_entry, batch_topics
+                )
 
             batch_assessments.append(batch_assessment)
 

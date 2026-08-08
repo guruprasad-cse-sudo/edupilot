@@ -521,6 +521,14 @@ def render_generation_form() -> Optional[dict]:
     Returns:
         dict | None: Structured plan dict on valid submission, else None.
     """
+    from models import (
+        AssessmentType,
+        VTU_MARKS_PER_FULL_QUESTION,
+        VTU_MAX_MODULES,
+        VTU_MAX_TOTAL_MARKS,
+    )
+    from agent import parse_vtu_marks_blueprint
+
     st.subheader("📋 Faculty Requirement")
 
     # Load saved department default before the form widget is created so the
@@ -686,6 +694,30 @@ def render_generation_form() -> Optional[dict]:
             height=60,
         )
 
+        vtu_marks_blueprint = st.text_area(
+            "Custom Sub-Question Marks (optional — Semester Examination only)",
+            value=str(_ep("vtu_marks_blueprint")),
+            placeholder=(
+                "Only used when Assessment Type is \"Semester Examination\". "
+                "One line per topic, giving the exact marks for each "
+                "lettered sub-part of both OR-alternative questions:\n"
+                "Autoencoders: 5,5,10 | 5,5,10\n"
+                "GANs: 5,5,10 | 10,10\n"
+                "Topics left out fall back to automatic equal-marks "
+                "distribution — leave this entirely blank to keep that "
+                "default behaviour for every topic."
+            ),
+            height=90,
+            help=(
+                "Format: \"<topic>: <sub-part marks for Q-A, comma-"
+                "separated> | <sub-part marks for Q-B>\" — one line per "
+                "topic. The AI will generate content scoped to match each "
+                "marks value (e.g. a 10-mark sub-part gets a more detailed "
+                "answer than a 3-mark one). Topic names must match the "
+                "Topics field above."
+            ),
+        )
+
         submitted = st.form_submit_button(
             "🚀 Generate Assessment",
             type="primary",
@@ -706,6 +738,34 @@ def render_generation_form() -> Optional[dict]:
         errors.append("Select at least one Bloom level.")
     if not co_mapping:
         errors.append("Select at least one Course Outcome.")
+
+    if assessment_type == AssessmentType.SEMESTER_EXAM.value:
+        topic_list = [t.strip() for t in topics.split(",") if t.strip()]
+        if len(topic_list) > VTU_MAX_MODULES:
+            errors.append(
+                f"Semester Examination supports at most {VTU_MAX_MODULES} "
+                f"Modules ({VTU_MARKS_PER_FULL_QUESTION} marks each = "
+                f"{VTU_MAX_TOTAL_MARKS} marks total). You entered "
+                f"{len(topic_list)} topics — please reduce the Topics "
+                f"field to {VTU_MAX_MODULES} or fewer."
+            )
+        if vtu_marks_blueprint.strip():
+            parsed_bp = parse_vtu_marks_blueprint(vtu_marks_blueprint)
+            for line_topic, (marks_a, marks_b) in parsed_bp.items():
+                if sum(marks_a) != VTU_MARKS_PER_FULL_QUESTION:
+                    errors.append(
+                        f"Custom marks for \"{line_topic}\" (Q-A side) sum "
+                        f"to {sum(marks_a)}, not {VTU_MARKS_PER_FULL_QUESTION}. "
+                        f"Each full question must total exactly "
+                        f"{VTU_MARKS_PER_FULL_QUESTION} marks."
+                    )
+                if sum(marks_b) != VTU_MARKS_PER_FULL_QUESTION:
+                    errors.append(
+                        f"Custom marks for \"{line_topic}\" (Q-B side) sum "
+                        f"to {sum(marks_b)}, not {VTU_MARKS_PER_FULL_QUESTION}. "
+                        f"Each full question must total exactly "
+                        f"{VTU_MARKS_PER_FULL_QUESTION} marks."
+                    )
 
     if errors:
         for e in errors:
@@ -734,6 +794,7 @@ def render_generation_form() -> Optional[dict]:
         "marks_per_question": int(marks_per_question),
         "difficulty": difficulty,
         "extra_instructions": extra_instructions.strip(),
+        "vtu_marks_blueprint": vtu_marks_blueprint.strip(),
         "duration_minutes": 0,
         "department": department.strip(),
         "semester": semester.strip(),

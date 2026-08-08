@@ -57,6 +57,53 @@ class AssessmentType(str, Enum):
 
 
 # ---------------------------------------------------------------------------
+# VTU Semester Examination marks structure
+# ---------------------------------------------------------------------------
+# Standard VTU semester-end exam convention: each Module contributes exactly
+# one full question worth a fixed number of marks (the student answers ONE
+# of its two OR-alternatives), and the paper covers a fixed number of
+# Modules totalling the university's standard maximum. These are used both
+# to auto-compute sub-question marks when no custom blueprint is given, and
+# to validate faculty-entered custom blueprints and topic counts.
+VTU_MARKS_PER_FULL_QUESTION = 20
+VTU_MAX_TOTAL_MARKS = 100
+VTU_MAX_MODULES = VTU_MAX_TOTAL_MARKS // VTU_MARKS_PER_FULL_QUESTION  # 5
+
+
+def split_sizes_for_pairing(n: int, max_subparts: int = 3) -> List[int]:
+    """Split *n* questions into exactly one OR-alternative pair of groups.
+
+    Shared by the generation layer (agent.py, to auto-derive a marks
+    blueprint per topic) and the export layer (downloads.py, to group a
+    flat question list into VTU-style Modules) — kept here in models.py
+    so neither has to depend on the other for this pure, data-only logic.
+
+    Real VTU exam papers give each Module exactly one choice: two
+    alternative full questions (e.g. "Q1 OR Q2"), each broken into as
+    many lettered sub-parts as needed — not multiple separate pairs
+    within one module. Groups are split as evenly as possible between
+    the two alternatives.
+
+    Args:
+        n: Total number of questions available for this module.
+        max_subparts: Unused; kept for signature stability — real papers
+            do not cap sub-parts per question, they flex to fit.
+
+    Returns:
+        ``[n]`` when there's only one question (nothing to pair against),
+        otherwise a 2-element list of near-equal sizes summing to *n*
+        (e.g. ``[5, 4]`` for ``n=9``).
+    """
+    if n <= 0:
+        return []
+    if n == 1:
+        return [1]
+    first = (n + 1) // 2
+    second = n - first
+    return [first, second]
+
+
+# ---------------------------------------------------------------------------
 # Core data models
 # ---------------------------------------------------------------------------
 
@@ -126,6 +173,13 @@ class Question:
     """Syllabus topic/module this question was generated for — used to
     group questions into VTU-style exam paper Modules on export. Empty
     string for older saved runs predating this field."""
+    blueprint_group: str = ""
+    """"A" or "B" when this question was generated against a faculty-
+    supplied custom marks blueprint (see AssessmentPlan.vtu_marks_blueprint)
+    — identifies which of the two OR-alternative full questions this
+    sub-part belongs to, so export can group precisely instead of
+    auto-splitting. Empty string when no blueprint was used for this
+    question's topic."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -146,6 +200,7 @@ class Question:
             "notes": self.notes,
             "options": list(self.options),
             "topic": self.topic,
+            "blueprint_group": self.blueprint_group,
         }
 
 
@@ -444,6 +499,14 @@ class AssessmentPlan:
     faculty_name: str
     extra_instructions: str
     test_date: str = ""
+    vtu_marks_blueprint: str = ""
+    """Optional faculty-authored custom marks pattern for VTU-style
+    Semester Examinations. One line per topic:
+    "<topic name>: <Q-A marks csv> | <Q-B marks csv>", e.g.
+    "Autoencoders: 5,5,10 | 5,5,10". Topics not mentioned here fall back
+    to the normal uniform question_count/marks_per_question generation.
+    Empty string (the default) means no custom blueprint — fully
+    backward compatible with existing behaviour."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.

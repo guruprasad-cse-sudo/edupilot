@@ -45,7 +45,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 from logging_utils import get_logger
-from models import Assessment, AssessmentType, Question
+from models import Assessment, AssessmentType, Question, split_sizes_for_pairing
 
 logger = get_logger(__name__)
 
@@ -83,6 +83,7 @@ class ParsedQuestion:
     notes: str
     options: List[str] = field(default_factory=list)  # MCQ answer options
     topic: str = ""  # syllabus topic/module this question targets
+    blueprint_group: str = ""  # "A"/"B" when a custom marks blueprint was used
 
 
 @dataclass
@@ -195,6 +196,9 @@ class AssessmentParser:
                         if cls._safe(o)
                     ],
                     topic=cls._safe(getattr(q, "topic", "")),
+                    blueprint_group=cls._safe(
+                        getattr(q, "blueprint_group", "")
+                    ),
                 )
             )
 
@@ -291,34 +295,6 @@ class VTUModule:
     alternative (only occurs when a Module has just a single question)."""
 
 
-def _split_sizes_for_pairing(n: int, max_subparts: int = 3) -> List[int]:
-    """Split *n* questions into exactly one OR-alternative pair of groups.
-
-    Real VTU exam papers give each Module exactly one choice: two
-    alternative full questions (e.g. "Q1 OR Q2"), each broken into as
-    many lettered sub-parts as needed to use up that module's questions —
-    not multiple separate pairs within one module. Groups are split as
-    evenly as possible between the two alternatives.
-
-    Args:
-        n: Total number of questions available for this module.
-        max_subparts: Unused; kept for signature stability — real papers
-            do not cap sub-parts per question, they flex to fit.
-
-    Returns:
-        ``[n]`` when there's only one question (nothing to pair against),
-        otherwise a 2-element list of near-equal sizes summing to *n*
-        (e.g. ``[5, 4]`` for ``n=9``).
-    """
-    if n <= 0:
-        return []
-    if n == 1:
-        return [1]
-    first = (n + 1) // 2
-    second = n - first
-    return [first, second]
-
-
 def build_vtu_paper_layout(
     questions: List[ParsedQuestion], max_subparts: int = 3
 ) -> List[VTUModule]:
@@ -352,12 +328,31 @@ def build_vtu_paper_layout(
     q_counter = 1
     for m_idx, topic in enumerate(topic_order, start=1):
         topic_questions = groups_by_topic[topic]
-        sizes = _split_sizes_for_pairing(len(topic_questions), max_subparts)
+
+        # When every question in this topic carries a blueprint_group
+        # ("A"/"B" — set when a faculty custom marks blueprint was used
+        # for this topic), split precisely along that boundary instead of
+        # guessing an even split. This preserves the faculty's exact
+        # intended sub-question structure for each OR-alternative.
+        has_full_blueprint_tagging = bool(topic_questions) and all(
+            q.blueprint_group in ("A", "B") for q in topic_questions
+        )
+        if has_full_blueprint_tagging:
+            chunks = [
+                [q for q in topic_questions if q.blueprint_group == "A"],
+                [q for q in topic_questions if q.blueprint_group == "B"],
+            ]
+            chunks = [c for c in chunks if c]  # drop an empty side, if any
+        else:
+            sizes = split_sizes_for_pairing(len(topic_questions), max_subparts)
+            chunks = []
+            idx = 0
+            for size in sizes:
+                chunks.append(topic_questions[idx: idx + size])
+                idx += size
+
         groups: List[VTUQuestionGroup] = []
-        idx = 0
-        for size in sizes:
-            chunk = topic_questions[idx: idx + size]
-            idx += size
+        for chunk in chunks:
             subparts = [
                 VTUSubQuestion(letter=letters[i], question=cq)
                 for i, cq in enumerate(chunk)
@@ -571,8 +566,9 @@ class WordExporter:
         self._add_footer(doc, pa)
 
         if is_semester_exam:
-            self._add_vtu_exam_header(doc, pa)
-            self._add_vtu_question_table(doc, pa)
+            vtu_modules = build_vtu_paper_layout(pa.questions)
+            self._add_vtu_exam_header(doc, pa, vtu_modules)
+            self._add_vtu_question_table(doc, pa, vtu_modules)
         else:
             self._add_header(doc, pa)
             self._add_title_block(doc, pa)
@@ -752,7 +748,10 @@ class WordExporter:
     # ── VTU-style Semester Examination layout ───────────────────────────────
 
     def _add_vtu_exam_header(
-        self, doc: DocxDocument, pa: ParsedAssessment
+        self,
+        doc: DocxDocument,
+        pa: ParsedAssessment,
+        modules: List[VTUModule],
     ) -> None:
         """Render the standard VTU semester-exam header block.
 
@@ -760,6 +759,15 @@ class WordExporter:
         title line, a Course/Code/Marks/Duration meta table, and the
         standard "answer any N questions" note — matching the layout of
         official VTU semester-end question papers.
+
+        Args:
+            doc: The in-progress python-docx Document.
+            pa: The parsed assessment.
+            modules: Pre-built VTU module/OR-pair layout (shared with
+                :meth:`_add_vtu_question_table` so both reflect the exact
+                same structure and the true achievable max marks — only
+                ONE alternative per module is ever actually answered, so
+                summing every question's marks would double-count).
         """
         # USN box: label + a row of individual empty boxes for the student
         # to fill in their University Seat Number.
@@ -819,18 +827,20 @@ class WordExporter:
         _set(1, 2, "Duration:", bold_label=True)
         _set(1, 3, pa.duration)
 
+        # True achievable max marks = sum of ONE alternative per module
+        # (the first side of each OR-pair) — NOT a sum of every question,
+        # which would double-count both alternatives of every module even
+        # though a student only ever answers one of them.
+        true_max_marks = sum(
+            pair[0].total_marks for m in modules for pair in m.pairs[:1]
+        )
         _set(2, 0, "Max Marks:", bold_label=True)
-        _set(2, 1, pa.total_marks)
+        _set(2, 1, f"{true_max_marks} marks" if true_max_marks else pa.total_marks)
         meta.cell(2, 1).merge(meta.cell(2, 3))
 
         doc.add_paragraph()
 
-        # Standard VTU note line — count of modules is filled in by the
-        # caller via the questions themselves (see _add_vtu_question_table),
-        # so we count it here from pa.questions' distinct topics.
-        module_count = len(
-            {q.topic.strip() or "General" for q in pa.questions}
-        ) or 1
+        module_count = len(modules) or 1
         p_note = doc.add_paragraph()
         run_note = p_note.add_run(
             f"Note: Answer any {module_count} full questions, choosing at "
@@ -841,7 +851,10 @@ class WordExporter:
         doc.add_paragraph()
 
     def _add_vtu_question_table(
-        self, doc: DocxDocument, pa: ParsedAssessment
+        self,
+        doc: DocxDocument,
+        pa: ParsedAssessment,
+        modules: List[VTUModule],
     ) -> None:
         """Render the Module / OR-pair / sub-part question table.
 
@@ -851,9 +864,14 @@ class WordExporter:
         merged across that question's lettered sub-parts), with a
         full-width "OR" divider row between the two alternatives in a
         pair.
-        """
-        modules = build_vtu_paper_layout(pa.questions)
 
+        Args:
+            doc: The in-progress python-docx Document.
+            pa: The parsed assessment.
+            modules: Pre-built VTU module/OR-pair layout (see
+                :func:`build_vtu_paper_layout`), shared with
+                :meth:`_add_vtu_exam_header` for consistency.
+        """
         table = doc.add_table(rows=1, cols=6)
         table.style = "Table Grid"
         headers = ["Q.No", "", "Question", "Marks", "BL", "CO"]
@@ -1347,8 +1365,9 @@ class PDFExporter:
         is_semester_exam = pa.assessment_type == AssessmentType.SEMESTER_EXAM.value
 
         if is_semester_exam:
-            story.extend(self._build_vtu_header(pa, styles))
-            story.extend(self._build_vtu_question_table(pa, styles))
+            vtu_modules = build_vtu_paper_layout(pa.questions)
+            story.extend(self._build_vtu_header(pa, styles, vtu_modules))
+            story.extend(self._build_vtu_question_table(pa, styles, vtu_modules))
         else:
             # ── Title block ──────────────────────────────────────────────
             story.append(Paragraph(self._esc(pa.university), styles["university"]))
@@ -1475,12 +1494,19 @@ class PDFExporter:
 
     # ── VTU-style Semester Examination layout ───────────────────────────────
 
-    def _build_vtu_header(self, pa: ParsedAssessment, styles: dict) -> list:
+    def _build_vtu_header(
+        self, pa: ParsedAssessment, styles: dict, modules: list
+    ) -> list:
         """Build the USN box, institution header, and course meta table.
 
         Args:
             pa: The parsed assessment.
             styles: Named ParagraphStyle dict.
+            modules: Pre-built VTU module/OR-pair layout, shared with
+                :meth:`_build_vtu_question_table` — used here to compute
+                the true achievable max marks (one alternative per
+                module, not a sum of every printed question) and the
+                accurate module count for the note line.
 
         Returns:
             list: Flowables for the exam paper header block.
@@ -1521,10 +1547,20 @@ class PDFExporter:
         )
 
         # Course / Code / Duration / Max Marks meta table with selective merges
+        # True achievable max marks = sum of ONE alternative per module
+        # (the first side of each OR-pair) — NOT a sum of every question,
+        # which would double-count both alternatives of every module even
+        # though a student only ever answers one of them.
+        true_max_marks = sum(
+            pair[0].total_marks for m in modules for pair in m.pairs[:1]
+        )
+        max_marks_display = (
+            f"{true_max_marks} marks" if true_max_marks else pa.total_marks
+        )
         meta_data = [
             ["Course:", pa.course_name or "—", "", ""],
             ["Course Code:", pa.course_code or "—", "Duration:", pa.duration],
-            ["Max Marks:", pa.total_marks, "", ""],
+            ["Max Marks:", max_marks_display, "", ""],
         ]
         meta_table = Table(
             meta_data, colWidths=[3.2 * cm, 6.0 * cm, 2.8 * cm, 4.0 * cm]
@@ -1547,9 +1583,7 @@ class PDFExporter:
         flow.append(meta_table)
         flow.append(Spacer(1, 10))
 
-        module_count = len(
-            {q.topic.strip() or "General" for q in pa.questions}
-        ) or 1
+        module_count = len(modules) or 1
         flow.append(
             Paragraph(
                 f"Note: Answer any {module_count} full questions, choosing "
@@ -1561,7 +1595,7 @@ class PDFExporter:
         return flow
 
     def _build_vtu_question_table(
-        self, pa: ParsedAssessment, styles: dict
+        self, pa: ParsedAssessment, styles: dict, modules: list
     ) -> list:
         """Build the Module / OR-pair / sub-part question table.
 
@@ -1572,14 +1606,14 @@ class PDFExporter:
         Args:
             pa: The parsed assessment.
             styles: Named ParagraphStyle dict.
+            modules: Pre-built VTU module/OR-pair layout, shared with
+                :meth:`_build_vtu_header`.
 
         Returns:
             list: A single-element list containing the assembled Table
             flowable (wrapped in a list for consistency with other
             flowable-returning builders).
         """
-        modules = build_vtu_paper_layout(pa.questions)
-
         data: list = [["Q.No", "", "Question", "Marks", "BL", "CO"]]
         style_cmds = [
             ("BACKGROUND", (0, 0), (-1, 0), self._LIGHT_BG),

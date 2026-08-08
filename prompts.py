@@ -18,7 +18,7 @@ Purpose: LangChain prompt template library.  Defines reusable, per-assessment-
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional, Tuple
 
 from logging_utils import get_logger
 
@@ -314,6 +314,7 @@ def build_assessment_prompt(
     difficulty: str = "Mixed",
     extra_instructions: str = "",
     batch_hint: str = "",
+    per_question_marks: Optional[List[Tuple[int, str]]] = None,
 ) -> str:
     """Build the user-turn prompt for the Assessment Agent.
 
@@ -328,24 +329,38 @@ def build_assessment_prompt(
         bloom_targets: Target Bloom levels (e.g. "Apply, Analyse").
         co_mapping: Target Course Outcome codes (e.g. "CO1, CO2").
         rag_context: Retrieved knowledge-base text for grounding.
-        question_count: Number of questions to generate.
-        marks_per_question: Marks allocated per question.
+        question_count: Number of questions to generate. Ignored when
+            per_question_marks is provided (its length is used instead).
+        marks_per_question: Marks allocated per question. Ignored when
+            per_question_marks is provided.
         difficulty: Overall difficulty target (Easy/Medium/Hard/Mixed).
         extra_instructions: Any additional faculty instructions.
         batch_hint: Optional batching context injected by the Assessment Agent
             when generating in batches, e.g.
             "BATCH 2 OF 3 — Topics for this batch: Graphs, Sorting".
             Empty string when generating in a single call.
+        per_question_marks: Optional list of ``(marks, depth_guidance)``
+            tuples — one per question, in order — used when a faculty
+            member has supplied a custom VTU marks blueprint for this
+            topic. When provided, this REPLACES the uniform
+            question_count/marks_per_question instruction with an
+            itemized, per-question marks + expected-depth specification,
+            so each generated question is scoped to match its exact
+            target marks rather than all questions being generated at a
+            uniform difficulty/length. ``None`` (the default) preserves
+            the original uniform-marks behaviour exactly.
 
     Returns:
         str: Formatted prompt string ready for the LLM.
     """
     logger.debug(
-        "build_assessment_prompt(): type=%s questions=%d marks=%d batch_hint=%r",
+        "build_assessment_prompt(): type=%s questions=%d marks=%d batch_hint=%r "
+        "custom_blueprint=%s",
         assessment_type,
         question_count,
         marks_per_question,
         batch_hint or "(single call)",
+        bool(per_question_marks),
     )
 
     type_guidance = _TYPE_GUIDANCE.get(
@@ -384,14 +399,37 @@ def build_assessment_prompt(
         else ""
     )
 
+    if per_question_marks:
+        lines = "\n".join(
+            f"  Question {i}: {marks} marks — the answer should be "
+            f"{guidance}."
+            for i, (marks, guidance) in enumerate(per_question_marks, start=1)
+        )
+        count_and_marks_section = (
+            f"NUMBER OF QUESTIONS: {len(per_question_marks)} (EXACT — this "
+            f"is a fixed faculty-authored blueprint, not a suggestion)\n"
+            f"PER-QUESTION MARKS (EXACT — do not deviate from these "
+            f"values, and generate the questions in this exact order):\n"
+            f"{lines}\n"
+            f"CRITICAL: Scope the depth and length of each answer to "
+            f"match its stated marks — a low-mark question must get a "
+            f"correspondingly brief answer, and a high-mark question must "
+            f"get a correspondingly detailed one. Do not make every "
+            f"answer the same length regardless of its marks.\n"
+        )
+    else:
+        count_and_marks_section = (
+            f"NUMBER OF QUESTIONS: {question_count}\n"
+            f"MARKS PER QUESTION: {marks_per_question}\n"
+        )
+
     return (
         f"ASSESSMENT TYPE: {assessment_type}\n"
         f"COURSE: {course_name}" + (f" ({course_code})" if course_code else "") + "\n"
         f"TOPICS: {topics}\n"
         f"BLOOM LEVELS TO TARGET: {bloom_targets}\n"
         f"COURSE OUTCOMES TO MAP: {co_mapping}\n"
-        f"NUMBER OF QUESTIONS: {question_count}\n"
-        f"MARKS PER QUESTION: {marks_per_question}\n"
+        f"{count_and_marks_section}"
         f"DIFFICULTY: {difficulty}\n"
         f"\nTYPE-SPECIFIC GUIDANCE:\n{type_guidance}\n"
         f"\n{rag_section}"
