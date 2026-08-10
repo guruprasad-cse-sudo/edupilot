@@ -217,7 +217,11 @@ This is a take-home Assignment.
 """,
     "Semester Examination": """\
 This is a formal end-semester Semester Examination.
-- Mix MCQ, Short Answer, and Long Answer types.
+- Do NOT use MCQ questions under any circumstances. Use only descriptive
+  and numerical question types: Short Answer, Long Answer, Essay,
+  Case Study, and Numerical (for problems requiring calculation,
+  derivation, or a worked solution). Leave the "options" array empty for
+  every question — this paper has no multiple-choice component at all.
 - Cover all specified Course Outcomes with at least one question each.
 - Span all six Bloom levels across the paper.
 - Default duration: 180 minutes.
