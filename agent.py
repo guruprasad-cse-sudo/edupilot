@@ -1806,6 +1806,9 @@ class AssessmentAgent:
                     for o in (raw_q.get("options") or [])
                     if str(o).strip()
                 ] if isinstance(raw_q.get("options"), (list, tuple)) else [],
+                case_background=str(
+                    raw_q.get("case_background", "")
+                ).strip(),
             )
             questions.append(question)
 

@@ -511,6 +511,7 @@ ASSESSMENT_TYPES = [
     "Viva",
     "Role Play",
     "Question Bank",
+    "Consultancy Case Study",
 ]
 DIFFICULTY_OPTIONS = ["Mixed", "Easy", "Medium", "Hard"]
 
@@ -1701,6 +1702,7 @@ def _reconstruct_assessment(data: Dict[str, Any]) -> Any:
                     if str(o).strip()
                 ],
                 topic=q_raw.get("topic", ""),
+                case_background=q_raw.get("case_background", ""),
             )
         )
 

@@ -54,6 +54,7 @@ class AssessmentType(str, Enum):
     VIVA = "Viva"
     ROLE_PLAY = "Role Play"
     QUESTION_BANK = "Question Bank"
+    CONSULTANCY_CASE = "Consultancy Case Study"
 
 
 # ---------------------------------------------------------------------------
@@ -180,6 +181,12 @@ class Question:
     sub-part belongs to, so export can group precisely instead of
     auto-splitting. Empty string when no blueprint was used for this
     question's topic."""
+    case_background: str = ""
+    """For Consultancy Case Study assessments only: the realistic
+    (fictional) company/scenario background and context the case is
+    built on — kept separate from question_text (which holds the actual
+    task/ask) so export can render them as distinct "Case Background" /
+    "Your Task" sections. Empty string for every other assessment type."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -201,6 +208,7 @@ class Question:
             "options": list(self.options),
             "topic": self.topic,
             "blueprint_group": self.blueprint_group,
+            "case_background": self.case_background,
         }
 
 

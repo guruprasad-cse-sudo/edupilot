@@ -42,7 +42,8 @@ Schema:
   "questions": [
     {
       "question_id": "Q1",
-      "question_text": "<full question text>",
+      "question_text": "<full question text — for Consultancy Case Study, this is the specific task/ask, NOT the scenario itself>",
+      "case_background": "<for Consultancy Case Study ONLY: the realistic (fictional) company/scenario background and context the case is built on. Empty string for every other assessment type.>",
       "question_type": "<MCQ | Short Answer | Long Answer | Numerical | Oral | Essay | Case Study>",
       "bloom_level": "<Remember | Understand | Apply | Analyze | Evaluate | Create>",
       "co_mapping": ["CO1"],
@@ -226,6 +227,52 @@ This is a formal end-semester Semester Examination.
 - Span all six Bloom levels across the paper.
 - Default duration: 180 minutes.
 - Include section headings in generation_notes if multiple sections exist.
+""",
+    "Consultancy Case Study": """\
+This is a Consultancy Case Study assessment — the goal is to develop
+students' ability to solve real-world business and technology problems the
+way an analyst at a top consulting firm (strategy, technology, or
+Big-4-style advisory) would, for a genuine client engagement.
+
+STRUCTURE — each "question" in your output is ONE COMPLETE CASE, not a
+sub-part. For each case:
+- "case_background" MUST contain a rich, realistic scenario: a clearly
+  FICTIONAL company (invent a plausible name — NEVER use real, identifiable
+  companies such as actual consulting firms, banks, or corporations as the
+  subject of the case), its industry, its business or technology situation,
+  relevant quantitative data (revenue, market share, costs, timelines, user
+  metrics, system architecture details, etc. — invented but internally
+  consistent and plausible), key stakeholders, and the core problem or
+  decision the organisation is facing. Write this as a substantial narrative
+  (several paragraphs), not a one-line summary — real case studies give the
+  reader enough to actually reason with.
+- "question_text" MUST contain the specific task(s) the student is asked to
+  perform — e.g. "As the lead consultant, prepare a recommendation
+  addressing: (1) ... (2) ... (3) ...". Multi-part asks within one case are
+  encouraged and normal.
+- "answer_key" MUST function as an evaluation rubric for faculty, not a
+  single fixed answer (there usually isn't one "correct" answer in a real
+  case). Include: the analytical framework(s) a strong response should
+  apply (e.g. SWOT, Porter's Five Forces, cost-benefit / TCO analysis, risk
+  matrices, technology architecture trade-off analysis, McKinsey 7S, market
+  sizing, etc. — whichever genuinely fits this case), the key insights a
+  strong answer should surface, and what separates an excellent response
+  from a mediocre one.
+
+CONTENT MIX:
+- Cases should span BOTH business strategy angles (market entry, growth,
+  competitive positioning, M&A, cost reduction) AND technology angles
+  (digital transformation, cloud/AI adoption, cybersecurity trade-offs,
+  legacy system modernisation, data strategy) — often both intertwined in
+  the same case, mirroring how real consulting engagements blend the two.
+- Do NOT use MCQ questions under any circumstances — every case is fully
+  open-ended. Leave "options" empty. Use question_type "Case Study" for
+  every question.
+- Target higher-order Bloom levels: Analyze, Evaluate, and Create
+  predominate; avoid pure Remember/Understand-level asks.
+- Each case should be substantial: default 25-40 marks per case unless the
+  faculty specifies otherwise, reflecting real depth of analysis expected.
+- Default duration: 60-90 minutes per case.
 """,
     "Viva": """\
 This is a Viva (oral examination).

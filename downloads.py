@@ -30,6 +30,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm, mm
 from reportlab.platypus import (
     HRFlowable,
+    PageBreak,
     Paragraph,
     SimpleDocTemplate,
     Spacer,
@@ -84,6 +85,7 @@ class ParsedQuestion:
     options: List[str] = field(default_factory=list)  # MCQ answer options
     topic: str = ""  # syllabus topic/module this question targets
     blueprint_group: str = ""  # "A"/"B" when a custom marks blueprint was used
+    case_background: str = ""  # Consultancy Case Study: scenario/context text
 
 
 @dataclass
@@ -198,6 +200,9 @@ class AssessmentParser:
                     topic=cls._safe(getattr(q, "topic", "")),
                     blueprint_group=cls._safe(
                         getattr(q, "blueprint_group", "")
+                    ),
+                    case_background=cls._safe(
+                        getattr(q, "case_background", "")
                     ),
                 )
             )
@@ -561,6 +566,10 @@ class WordExporter:
         is_semester_exam = (
             assessment.metadata.assessment_type == AssessmentType.SEMESTER_EXAM
         )
+        is_case_study = (
+            assessment.metadata.assessment_type
+            == AssessmentType.CONSULTANCY_CASE
+        )
 
         self._configure_page(doc)
         self._add_footer(doc, pa)
@@ -569,6 +578,15 @@ class WordExporter:
             vtu_modules = build_vtu_paper_layout(pa.questions)
             self._add_vtu_exam_header(doc, pa, vtu_modules)
             self._add_vtu_question_table(doc, pa, vtu_modules)
+        elif is_case_study:
+            self._add_header(doc, pa)
+            self._add_title_block(doc, pa)
+            self._add_metadata_table(doc, pa)
+
+            if pa.has_instructions:
+                self._add_instructions(doc, pa)
+
+            self._add_case_study_questions(doc, pa)
         else:
             self._add_header(doc, pa)
             self._add_title_block(doc, pa)
@@ -580,7 +598,19 @@ class WordExporter:
             self._add_questions(doc, pa)
 
         if pa.has_answer_key:
-            self._add_answer_key(doc, pa)
+            if is_case_study:
+                self._add_answer_key(
+                    doc, pa,
+                    heading="Evaluation Criteria & Model Approach",
+                    entry_label=(
+                        "For faculty use only — not to be distributed to "
+                        "students. There is rarely a single \"correct\" "
+                        "answer for an open-ended case; use this as a "
+                        "grading rubric, not a fixed key."
+                    ),
+                )
+            else:
+                self._add_answer_key(doc, pa)
 
         if pa.has_generation_notes:
             self._add_generation_notes(doc, pa)
@@ -1015,18 +1045,91 @@ class WordExporter:
 
             doc.add_paragraph()
 
-    def _add_answer_key(
+    def _add_case_study_questions(
         self, doc: DocxDocument, pa: ParsedAssessment
     ) -> None:
-        """Add answer-key section after a page break."""
+        """Render Consultancy Case Study questions in a branded layout.
+
+        Each case gets its own "Case N" heading, followed by clearly
+        labelled "Case Background" and "Your Task" sections (rather than
+        the generic single question_text block), matching a real
+        consulting case-study handout rather than an exam question list.
+        """
+        h = doc.add_heading("Cases", level=1)
+        h.runs[0].font.color.rgb = self._COLOUR_PRIMARY
+        doc.add_paragraph()
+
+        for i, q in enumerate(pa.questions):
+            if i > 0:
+                doc.add_page_break()
+
+            p_case = doc.add_paragraph()
+            run_case = p_case.add_run(f"Case {q.number}")
+            run_case.bold = True
+            run_case.font.size = Pt(15)
+            run_case.font.color.rgb = self._COLOUR_PRIMARY
+            doc.add_paragraph()
+
+            if q.case_background:
+                h_bg = doc.add_heading("Case Background", level=2)
+                h_bg.runs[0].font.color.rgb = self._COLOUR_PRIMARY
+                p_bg = doc.add_paragraph(q.case_background)
+                p_bg.paragraph_format.space_after = Pt(10)
+                doc.add_paragraph()
+
+            h_task = doc.add_heading("Your Task", level=2)
+            h_task.runs[0].font.color.rgb = self._COLOUR_PRIMARY
+            p_task = doc.add_paragraph(q.text)
+            p_task.paragraph_format.space_after = Pt(10)
+            doc.add_paragraph()
+
+            meta_parts = [
+                f"[{q.question_type}]",
+                f"Bloom: {q.bloom_level}",
+                f"Difficulty: {q.difficulty}",
+                f"CO: {q.co_mapping}",
+                f"Marks: {q.marks}",
+            ]
+            p_meta = doc.add_paragraph("    ".join(meta_parts))
+            p_meta.paragraph_format.left_indent = Inches(0.25)
+            for run in p_meta.runs:
+                run.font.size = Pt(9)
+                run.font.color.rgb = RGBColor(0x55, 0x66, 0x77)
+
+            if q.notes:
+                p_note = doc.add_paragraph(f"Note: {q.notes}")
+                p_note.paragraph_format.left_indent = Inches(0.25)
+                for run in p_note.runs:
+                    run.italic = True
+                    run.font.size = Pt(9)
+
+            doc.add_paragraph()
+
+    def _add_answer_key(
+        self,
+        doc: DocxDocument,
+        pa: ParsedAssessment,
+        heading: str = "Answer Key",
+        entry_label: str = "For faculty use only — not to be distributed to students.",
+    ) -> None:
+        """Add answer-key section after a page break.
+
+        Args:
+            doc: The in-progress python-docx Document.
+            pa: The parsed assessment.
+            heading: Section heading text — overridden to "Evaluation
+                Criteria & Model Approach" for Consultancy Case Studies,
+                since there's rarely a single fixed "correct answer" for
+                an open-ended business case the way there is for a
+                typical exam question.
+            entry_label: The faculty-only notice line under the heading.
+        """
         doc.add_page_break()
 
-        h = doc.add_heading("Answer Key", level=1)
+        h = doc.add_heading(heading, level=1)
         h.runs[0].font.color.rgb = self._COLOUR_PRIMARY
 
-        notice = doc.add_paragraph(
-            "For faculty use only — not to be distributed to students."
-        )
+        notice = doc.add_paragraph(entry_label)
         for run in notice.runs:
             run.italic = True
             run.font.color.rgb = RGBColor(0xAA, 0x44, 0x00)
@@ -1363,6 +1466,9 @@ class PDFExporter:
         """
         story = []
         is_semester_exam = pa.assessment_type == AssessmentType.SEMESTER_EXAM.value
+        is_case_study = (
+            pa.assessment_type == AssessmentType.CONSULTANCY_CASE.value
+        )
 
         if is_semester_exam:
             vtu_modules = build_vtu_paper_layout(pa.questions)
@@ -1428,46 +1534,101 @@ class PDFExporter:
             story.append(HRFlowable(width="100%", thickness=0.5, color=colors.lightgrey))
 
             # ── Questions ────────────────────────────────────────────────
-            story.append(Paragraph("Questions", styles["section_heading"]))
-
-            for q in pa.questions:
-                meta_line = (
-                    f"[{q.question_type}]  •  Bloom: {q.bloom_level}  •  "
-                    f"Difficulty: {q.difficulty}  •  CO: {q.co_mapping}  •  "
-                    f"Marks: {q.marks}"
-                )
-                block = [
-                    Paragraph(
-                        f"{q.number}.  {self._esc(q.text)}",
-                        styles["question_text"],
-                    ),
-                ]
-                for i, opt in enumerate(q.options):
-                    block.append(
-                        Paragraph(
-                            f"○&nbsp;&nbsp;{chr(65 + i)}.&nbsp;&nbsp;"
-                            f"{self._esc(opt)}",
-                            styles["option_line"],
+            if is_case_study:
+                story.append(Paragraph("Cases", styles["section_heading"]))
+                for i, q in enumerate(pa.questions):
+                    if i > 0:
+                        story.append(PageBreak())
+                    story.append(Paragraph(f"Case {q.number}", styles["title"]))
+                    story.append(Spacer(1, 6))
+                    if q.case_background:
+                        story.append(
+                            Paragraph("Case Background", styles["section_heading"])
                         )
+                        story.append(
+                            Paragraph(self._esc(q.case_background), styles["normal"])
+                        )
+                        story.append(Spacer(1, 8))
+                    story.append(
+                        Paragraph("Your Task", styles["section_heading"])
                     )
-                block.append(Paragraph(self._esc(meta_line), styles["meta_tag"]))
-                if q.notes:
-                    block.append(
-                        Paragraph(f"Note: {self._esc(q.notes)}", styles["note_tag"])
+                    story.append(
+                        Paragraph(self._esc(q.text), styles["normal"])
                     )
-                story.append(KeepTogether(block))
+                    story.append(Spacer(1, 8))
+                    meta_line = (
+                        f"[{q.question_type}]  •  Bloom: {q.bloom_level}  •  "
+                        f"Difficulty: {q.difficulty}  •  CO: {q.co_mapping}  •  "
+                        f"Marks: {q.marks}"
+                    )
+                    story.append(
+                        Paragraph(self._esc(meta_line), styles["meta_tag"])
+                    )
+                    if q.notes:
+                        story.append(
+                            Paragraph(
+                                f"Note: {self._esc(q.notes)}",
+                                styles["note_tag"],
+                            )
+                        )
+            else:
+                story.append(Paragraph("Questions", styles["section_heading"]))
+
+                for q in pa.questions:
+                    meta_line = (
+                        f"[{q.question_type}]  •  Bloom: {q.bloom_level}  •  "
+                        f"Difficulty: {q.difficulty}  •  CO: {q.co_mapping}  •  "
+                        f"Marks: {q.marks}"
+                    )
+                    block = [
+                        Paragraph(
+                            f"{q.number}.  {self._esc(q.text)}",
+                            styles["question_text"],
+                        ),
+                    ]
+                    for i, opt in enumerate(q.options):
+                        block.append(
+                            Paragraph(
+                                f"○&nbsp;&nbsp;{chr(65 + i)}.&nbsp;&nbsp;"
+                                f"{self._esc(opt)}",
+                                styles["option_line"],
+                            )
+                        )
+                    block.append(Paragraph(self._esc(meta_line), styles["meta_tag"]))
+                    if q.notes:
+                        block.append(
+                            Paragraph(f"Note: {self._esc(q.notes)}", styles["note_tag"])
+                        )
+                    story.append(KeepTogether(block))
 
         # ── Answer key ───────────────────────────────────────────────────────
         if pa.has_answer_key:
             story.append(Spacer(1, 6))
             story.append(HRFlowable(width="100%", thickness=1, color=self._NAVY))
-            story.append(Paragraph("Answer Key", styles["section_heading"]))
-            story.append(
-                Paragraph(
-                    "For faculty use only — not to be distributed to students.",
-                    styles["answer_notice"],
+            if is_case_study:
+                story.append(
+                    Paragraph(
+                        "Evaluation Criteria & Model Approach",
+                        styles["section_heading"],
+                    )
                 )
-            )
+                story.append(
+                    Paragraph(
+                        "For faculty use only — not to be distributed to "
+                        "students. There is rarely a single \"correct\" "
+                        "answer for an open-ended case; use this as a "
+                        "grading rubric, not a fixed key.",
+                        styles["answer_notice"],
+                    )
+                )
+            else:
+                story.append(Paragraph("Answer Key", styles["section_heading"]))
+                story.append(
+                    Paragraph(
+                        "For faculty use only — not to be distributed to students.",
+                        styles["answer_notice"],
+                    )
+                )
 
             for q in pa.questions:
                 answer_text = q.answer_key if q.answer_key else "Not provided."
