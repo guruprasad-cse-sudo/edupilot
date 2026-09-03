@@ -566,6 +566,9 @@ class WordExporter:
         is_semester_exam = (
             assessment.metadata.assessment_type == AssessmentType.SEMESTER_EXAM
         )
+        is_internal_assessment = (
+            assessment.metadata.assessment_type == AssessmentType.INTERNAL
+        )
         is_case_study = (
             assessment.metadata.assessment_type
             == AssessmentType.CONSULTANCY_CASE
@@ -574,10 +577,19 @@ class WordExporter:
         self._configure_page(doc)
         self._add_footer(doc, pa)
 
-        if is_semester_exam:
+        if is_semester_exam or is_internal_assessment:
+            # Both Semester Examination and Internal Assessment use the
+            # same OR-alternative paper structure. Internal Assessment
+            # papers omit the "Module – N" divider rows (they aren't part
+            # of the institutional IAT format) and use IAT-appropriate
+            # note wording instead of the semester-exam "per module" note.
             vtu_modules = build_vtu_paper_layout(pa.questions)
-            self._add_vtu_exam_header(doc, pa, vtu_modules)
-            self._add_vtu_question_table(doc, pa, vtu_modules)
+            self._add_vtu_exam_header(
+                doc, pa, vtu_modules, show_module_labels=is_semester_exam
+            )
+            self._add_vtu_question_table(
+                doc, pa, vtu_modules, show_module_labels=is_semester_exam
+            )
         elif is_case_study:
             self._add_header(doc, pa)
             self._add_title_block(doc, pa)
@@ -782,13 +794,17 @@ class WordExporter:
         doc: DocxDocument,
         pa: ParsedAssessment,
         modules: List[VTUModule],
+        show_module_labels: bool = True,
     ) -> None:
-        """Render the standard VTU semester-exam header block.
+        """Render the standard VTU-style OR-pair paper header block.
 
         Produces: USN entry box, institution name + affiliation, exam
-        title line, a Course/Code/Marks/Duration meta table, and the
-        standard "answer any N questions" note — matching the layout of
-        official VTU semester-end question papers.
+        title line, a Course/Code/Marks/Duration meta table, and an
+        "answer any N questions" note — matching the layout of official
+        VTU semester-end question papers, and (with
+        ``show_module_labels=False``) the institutional Internal
+        Assessment Test format, which shares the same OR-pair structure
+        but does not print "Module – N" divider rows.
 
         Args:
             doc: The in-progress python-docx Document.
@@ -798,6 +814,10 @@ class WordExporter:
                 same structure and the true achievable max marks — only
                 ONE alternative per module is ever actually answered, so
                 summing every question's marks would double-count).
+            show_module_labels: When True (Semester Examination), the
+                note refers to "each MODULE". When False (Internal
+                Assessment), the note refers to "each question pair"
+                instead, since IAT papers don't label modules explicitly.
         """
         # USN box: label + a row of individual empty boxes for the student
         # to fill in their University Seat Number.
@@ -872,10 +892,17 @@ class WordExporter:
 
         module_count = len(modules) or 1
         p_note = doc.add_paragraph()
-        run_note = p_note.add_run(
-            f"Note: Answer any {module_count} full questions, choosing at "
-            f"least ONE question from each MODULE."
-        )
+        if show_module_labels:
+            note_text = (
+                f"Note: Answer any {module_count} full questions, choosing at "
+                f"least ONE question from each MODULE."
+            )
+        else:
+            note_text = (
+                f"Note: Answer all {module_count} questions, choosing ONE "
+                f"alternative from each OR pair."
+            )
+        run_note = p_note.add_run(note_text)
         run_note.bold = True
         run_note.font.size = Pt(10)
         doc.add_paragraph()
@@ -885,15 +912,16 @@ class WordExporter:
         doc: DocxDocument,
         pa: ParsedAssessment,
         modules: List[VTUModule],
+        show_module_labels: bool = True,
     ) -> None:
         """Render the Module / OR-pair / sub-part question table.
 
         Builds one continuous table for the whole paper: a column-header
-        row, then for each Module a full-width "Module – N" divider row
-        followed by its question groups (with the Q-number cell vertically
-        merged across that question's lettered sub-parts), with a
-        full-width "OR" divider row between the two alternatives in a
-        pair.
+        row, then for each Module (optionally) a full-width "Module – N"
+        divider row followed by its question groups (with the Q-number
+        cell vertically merged across that question's lettered
+        sub-parts), with a full-width "OR" divider row between the two
+        alternatives in a pair.
 
         Args:
             doc: The in-progress python-docx Document.
@@ -901,6 +929,11 @@ class WordExporter:
             modules: Pre-built VTU module/OR-pair layout (see
                 :func:`build_vtu_paper_layout`), shared with
                 :meth:`_add_vtu_exam_header` for consistency.
+            show_module_labels: When True (Semester Examination), print a
+                "Module – N: label" divider row before each module's
+                pair(s). When False (Internal Assessment), omit these
+                rows so the paper flows as a continuous Q1 OR Q2, Q3 OR
+                Q4, … sequence, matching the institutional IAT format.
         """
         table = doc.add_table(rows=1, cols=6)
         table.style = "Table Grid"
@@ -957,7 +990,8 @@ class WordExporter:
                 )
 
         for module in modules:
-            _full_width_row(f"Module – {module.module_number}: {module.label}")
+            if show_module_labels:
+                _full_width_row(f"Module – {module.module_number}: {module.label}")
             for pair_idx, pair in enumerate(module.pairs):
                 if pair_idx > 0:
                     _full_width_row("OR")
@@ -1466,14 +1500,23 @@ class PDFExporter:
         """
         story = []
         is_semester_exam = pa.assessment_type == AssessmentType.SEMESTER_EXAM.value
+        is_internal_assessment = pa.assessment_type == AssessmentType.INTERNAL.value
         is_case_study = (
             pa.assessment_type == AssessmentType.CONSULTANCY_CASE.value
         )
 
-        if is_semester_exam:
+        if is_semester_exam or is_internal_assessment:
             vtu_modules = build_vtu_paper_layout(pa.questions)
-            story.extend(self._build_vtu_header(pa, styles, vtu_modules))
-            story.extend(self._build_vtu_question_table(pa, styles, vtu_modules))
+            story.extend(
+                self._build_vtu_header(
+                    pa, styles, vtu_modules, show_module_labels=is_semester_exam
+                )
+            )
+            story.extend(
+                self._build_vtu_question_table(
+                    pa, styles, vtu_modules, show_module_labels=is_semester_exam
+                )
+            )
         else:
             # ── Title block ──────────────────────────────────────────────
             story.append(Paragraph(self._esc(pa.university), styles["university"]))
@@ -1656,7 +1699,11 @@ class PDFExporter:
     # ── VTU-style Semester Examination layout ───────────────────────────────
 
     def _build_vtu_header(
-        self, pa: ParsedAssessment, styles: dict, modules: list
+        self,
+        pa: ParsedAssessment,
+        styles: dict,
+        modules: list,
+        show_module_labels: bool = True,
     ) -> list:
         """Build the USN box, institution header, and course meta table.
 
@@ -1668,6 +1715,9 @@ class PDFExporter:
                 the true achievable max marks (one alternative per
                 module, not a sum of every printed question) and the
                 accurate module count for the note line.
+            show_module_labels: When True (Semester Examination), the
+                note refers to "each MODULE". When False (Internal
+                Assessment), the note refers to "each OR pair" instead.
 
         Returns:
             list: Flowables for the exam paper header block.
@@ -1745,18 +1795,26 @@ class PDFExporter:
         flow.append(Spacer(1, 10))
 
         module_count = len(modules) or 1
-        flow.append(
-            Paragraph(
+        if show_module_labels:
+            note_text = (
                 f"Note: Answer any {module_count} full questions, choosing "
-                f"at least ONE question from each MODULE.",
-                styles["vtu_note"],
+                f"at least ONE question from each MODULE."
             )
-        )
+        else:
+            note_text = (
+                f"Note: Answer all {module_count} questions, choosing ONE "
+                f"alternative from each OR pair."
+            )
+        flow.append(Paragraph(note_text, styles["vtu_note"]))
         flow.append(Spacer(1, 6))
         return flow
 
     def _build_vtu_question_table(
-        self, pa: ParsedAssessment, styles: dict, modules: list
+        self,
+        pa: ParsedAssessment,
+        styles: dict,
+        modules: list,
+        show_module_labels: bool = True,
     ) -> list:
         """Build the Module / OR-pair / sub-part question table.
 
@@ -1769,6 +1827,10 @@ class PDFExporter:
             styles: Named ParagraphStyle dict.
             modules: Pre-built VTU module/OR-pair layout, shared with
                 :meth:`_build_vtu_header`.
+            show_module_labels: When True (Semester Examination), print
+                a "Module – N: label" divider row before each module's
+                pair(s). When False (Internal Assessment), omit these
+                rows, matching the institutional IAT format.
 
         Returns:
             list: A single-element list containing the assembled Table
@@ -1824,7 +1886,8 @@ class PDFExporter:
                 )
 
         for module in modules:
-            _full_width_row(f"Module – {module.module_number}: {module.label}")
+            if show_module_labels:
+                _full_width_row(f"Module – {module.module_number}: {module.label}")
             for pair in module.pairs:
                 _group_rows(pair[0])
                 if len(pair) > 1:

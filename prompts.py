@@ -77,6 +77,11 @@ Rules you MUST follow:
 5. Never fabricate course-specific facts; use only information present in the
    context or general academic knowledge.
 6. Honour the exact question count and marks per question specified.
+7. Never include phrases such as "as per the syllabus", "as per the module",
+   "as per the chapter in the syllabus", or close variants anywhere in
+   question_text. Questions must read as standalone academic questions,
+   without referencing their own sourcing scope. This applies to every
+   assessment type, including Internal Assessment and Semester Examination.
 """
 
 # ---------------------------------------------------------------------------
@@ -190,9 +195,18 @@ Important rules for the JSON:
 
 _TYPE_GUIDANCE: dict[str, str] = {
     "Internal Assessment": """\
-This is a formal mid-semester Internal Assessment.
+This is a formal mid-semester Internal Assessment, following the standard
+institutional IAT paper pattern: exactly 10 questions, structured as 5
+"OR"-alternative pairs (Q1 OR Q2, Q3 OR Q4, Q5 OR Q6, Q7 OR Q8, Q9 OR Q10) —
+one pair per topic/module. Each pair must carry equal marks, and the 5 pairs
+must sum to exactly the assessment's Max Marks. To achieve this:
+- Distribute the requested topics across exactly 5 topics/modules if
+  possible (ask for topic guidance from the faculty request; if fewer
+  topics are supplied, allocate more than one pair's worth of questions to
+  the available topics so 5 distinct topic groups still result).
 - Prefer Short Answer and Long Answer question types.
-- Target a balanced spread of Bloom levels: at least one Apply/Analyze question.
+- Target a balanced spread of Bloom levels: at least one Apply/Analyze
+  question per pair.
 - Default duration: 90 minutes unless specified.
 - Include unit and module references in answer keys where relevant.
 """,
