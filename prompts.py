@@ -380,6 +380,7 @@ def build_assessment_prompt(
     extra_instructions: str = "",
     batch_hint: str = "",
     per_question_marks: Optional[List[Tuple[int, str]]] = None,
+    avoid_repeating: Optional[List[str]] = None,
 ) -> str:
     """Build the user-turn prompt for the Assessment Agent.
 
@@ -414,6 +415,17 @@ def build_assessment_prompt(
             target marks rather than all questions being generated at a
             uniform difficulty/length. ``None`` (the default) preserves
             the original uniform-marks behaviour exactly.
+        avoid_repeating: Optional list of question texts already
+            generated earlier in this same assessment run (e.g. by
+            prior batches covering other topics). When non-empty, the
+            prompt instructs the model not to repeat or closely
+            rephrase these — batched generation calls the LLM once per
+            topic with no visibility into sibling batches' output, so
+            thematically close topics (e.g. two topics both touching
+            the same decision-making phases) can otherwise produce
+            near-duplicate questions across the paper. ``None`` or an
+            empty list omits this section entirely (default, original
+            behaviour).
 
     Returns:
         str: Formatted prompt string ready for the LLM.
@@ -464,6 +476,20 @@ def build_assessment_prompt(
         else ""
     )
 
+    avoid_section = ""
+    if avoid_repeating:
+        # Cap the injected list so the prompt doesn't grow unboundedly on
+        # very large assessments — the most recent questions are the ones
+        # most likely to tempt a near-duplicate from an adjacent topic.
+        recent = avoid_repeating[-40:]
+        listed = "\n".join(f"- {t}" for t in recent)
+        avoid_section = (
+            f"\nQUESTIONS ALREADY USED ELSEWHERE IN THIS ASSESSMENT "
+            f"(DO NOT repeat or closely rephrase any of these — every "
+            f"question in the paper must test a distinct fact, concept, "
+            f"or angle):\n{listed}\n"
+        )
+
     if per_question_marks:
         lines = "\n".join(
             f"  Question {i}: {marks} marks — the answer should be "
@@ -499,6 +525,7 @@ def build_assessment_prompt(
         f"\nTYPE-SPECIFIC GUIDANCE:\n{type_guidance}\n"
         f"\n{rag_section}"
         f"{extra_section}"
+        f"{avoid_section}"
         f"{batch_section}\n"
         f"OUTPUT FORMAT:\n{ASSESSMENT_JSON_SCHEMA}"
     )

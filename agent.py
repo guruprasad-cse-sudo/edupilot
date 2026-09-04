@@ -1358,6 +1358,16 @@ class AssessmentAgent:
         batch_assessments: List[Assessment] = []
         questions_done = 0
         prev_call_start: Optional[float] = None
+        # Flat list of every question_text generated so far in THIS run,
+        # across all batches — passed to each subsequent batch's prompt so
+        # the model can avoid repeating an earlier batch's question. Batches
+        # are independent LLM calls with no other visibility into sibling
+        # batches' output, so without this, thematically close topics
+        # readily produce near-duplicate questions (observed in practice:
+        # multiple batches independently asking "list the four phases of
+        # Simon's decision-making process" when several topics all touch
+        # decision-making phases).
+        already_asked: List[str] = []
 
         for batch_idx, (batch_count, batch_topics) in enumerate(batch_specs):
             batch_num = batch_idx + 1  # 1-based for display
@@ -1437,6 +1447,7 @@ class AssessmentAgent:
                 extra_instructions=plan.extra_instructions,
                 batch_hint=batch_hint,
                 per_question_marks=per_question_marks,
+                avoid_repeating=already_asked,
             )
 
             # ── Invoke LLM: rate-limit retries + parse retries ────────────
@@ -1470,6 +1481,9 @@ class AssessmentAgent:
                 )
 
             batch_assessments.append(batch_assessment)
+            already_asked.extend(
+                q.question_text for q in batch_assessment.questions
+            )
 
             qs_start = questions_done + 1
             qs_end = questions_done + batch_assessment.question_count
