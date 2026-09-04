@@ -21,6 +21,7 @@ import re
 import textwrap
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import List, Optional
 
 from reportlab.lib import colors
@@ -30,6 +31,7 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm, mm
 from reportlab.platypus import (
     HRFlowable,
+    Image,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -40,6 +42,7 @@ from reportlab.platypus import (
 from reportlab.platypus.flowables import KeepTogether
 
 from docx import Document as DocxDocument
+from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -55,9 +58,53 @@ logger = get_logger(__name__)
 # ---------------------------------------------------------------------------
 
 _UNIVERSITY_NAME = "Dayananda Sagar Academy of Technology and Management"
-_UNIVERSITY_AFFILIATION = "(An Autonomous Institute under VTU, Belagavi)"
+_UNIVERSITY_AFFILIATION = "(Autonomous Institute under VTU)"
 _UNIVERSITY_TAGLINE = "Department of Academic Excellence"
+_UNIVERSITY_ACCREDITATION_LINES = [
+    "Affiliated to VTU",
+    "Approved by AICTE",
+    "Accredited by NAAC with A+ Grade",
+    "4 Programs Accredited by NBA (CSE, ISE, ECE, ME)",
+]
+# Words highlighted in red within the accreditation lines above, matching
+# the official paper's styling exactly.
+_ACCREDITATION_HIGHLIGHT_WORDS = (
+    "VTU", "AICTE", "NAAC", "A+", "NBA",
+)
+_ACCREDITATION_HIGHLIGHT_RE = re.compile(
+    "(" + "|".join(
+        re.escape(w) for w in
+        sorted(_ACCREDITATION_HIGHLIGHT_WORDS, key=len, reverse=True)
+    ) + ")"
+)
+_ACCREDITATION_HIGHLIGHT_COLOR = "CC0000"  # red, matches the official paper
+# Institution logo (left) and IQAC accreditation badge (right) for the exam
+# paper header. Drop the actual image files at these paths — both are
+# optional: if a file is missing, the header simply renders without that
+# image (text-only fallback) rather than failing, so this works today and
+# picks up real artwork the moment it's added.
+_ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+_INSTITUTION_LOGO_PATH = _ASSETS_DIR / "institution_logo.png"
+_IQAC_BADGE_PATH = _ASSETS_DIR / "iqac_badge.png"
+
+
+def _department_heading(department: str) -> str:
+    """Return a "Department of X" heading without doubling the prefix.
+
+    ``ParsedAssessment.department`` falls back to a generic tagline
+    ("Department of Academic Excellence") when no real department was
+    set on the assessment — that fallback already reads naturally on
+    its own, so prefixing it again would print "Department of
+    Department of Academic Excellence". Real department names (e.g.
+    "Computer Science and Engineering") don't start with "Department",
+    so they still get the prefix as expected.
+    """
+    dept = (department or "").strip()
+    if dept.lower().startswith("department"):
+        return dept
+    return f"Department of {dept}" if dept else "Department"
 _DATE_FMT = "%d %B %Y"
+_DATE_TIME_FMT = "%d %B %Y, %I:%M %p"
 
 
 # ===========================================================================
@@ -108,8 +155,12 @@ class ParsedAssessment:
     total_marks: str        # "100 marks"
     faculty_name: str
     date_generated: str
+    datetime_generated: str
     test_date: str
     instructions: str
+    batch: str
+    teaching_department: str
+    academic_year: str
 
     # Body
     questions: List[ParsedQuestion] = field(default_factory=list)
@@ -223,8 +274,14 @@ class AssessmentParser:
             total_marks=total_marks,
             faculty_name=faculty_name,
             date_generated=datetime.now().strftime(_DATE_FMT),
+            datetime_generated=datetime.now().strftime(_DATE_TIME_FMT),
             test_date=cls._safe(getattr(meta, "test_date", "")),
             instructions=instructions,
+            batch=cls._safe(getattr(meta, "batch", "")),
+            teaching_department=(
+                cls._safe(getattr(meta, "teaching_department", "")) or department
+            ),
+            academic_year=cls._safe(getattr(meta, "academic_year", "")),
             questions=parsed_questions,
             generation_notes=generation_notes,
             has_answer_key=has_any_answer_key,
@@ -367,6 +424,35 @@ def build_vtu_paper_layout(
         pairs = [groups[i: i + 2] for i in range(0, len(groups), 2)]
         modules.append(VTUModule(module_number=m_idx, label=topic, pairs=pairs))
     return modules
+
+
+def _mirror_pair_co_bloom(pair: List["VTUQuestionGroup"]) -> None:
+    """Mirror the first side's CO/Bloom pattern onto the second side.
+
+    Q(n) and Q(n+1) are two alternative versions of the SAME question —
+    a student answers only one — so if Q(n)'s sub-parts are CO1/CO2/CO1
+    at Bloom levels L1/L3/L1, its OR-counterpart Q(n+1) should carry
+    that identical pattern across its own a)/b)/c), even though the
+    question text differs. This is a display-level safety net: agent.py
+    already applies this at generation time for blueprinted assessments
+    (see AssessmentAgent._apply_blueprint_marks), but export can be
+    called on older saved runs generated before that fix existed, so
+    this re-applies the same rule at render time regardless of when or
+    how the assessment was generated. A no-op when the pair has only
+    one side (no OR-alternative to mirror against).
+
+    Args:
+        pair: A ``module.pairs[i]`` entry — a list of 1 or 2
+            VTUQuestionGroup. Mutates the second group's ParsedQuestion
+            objects in place (safe: this is the export-time parsed copy,
+            not the original stored Question objects).
+    """
+    if len(pair) != 2:
+        return
+    side_a, side_b = pair[0].subparts, pair[1].subparts
+    for a_sp, b_sp in zip(side_a, side_b):
+        b_sp.question.co_mapping = a_sp.question.co_mapping
+        b_sp.question.bloom_level = a_sp.question.bloom_level
 
 
 def build_fixed_pair_layout(
@@ -914,13 +1000,15 @@ class WordExporter:
     ) -> None:
         """Render the standard VTU-style OR-pair paper header block.
 
-        Produces: USN entry box, institution name + affiliation, exam
-        title line, a Course/Code/Marks/Duration meta table, and an
-        "answer any N questions" note — matching the layout of official
-        VTU semester-end question papers, and (with
-        ``show_module_labels=False``) the institutional Internal
-        Assessment Test format, which shares the same OR-pair structure
-        but does not print "Module – N" divider rows.
+        Matches the official institutional paper layout: logo / name /
+        accreditation lines / IQAC badge, a rule, a centred USN box,
+        an ALL-CAPS department heading, a title+metadata table (course,
+        code, semester, max marks, batch, duration, IAT date, teaching
+        department, RBT legend), and an instruction line — followed by
+        (for Semester Examination only) an "answer any N" note, since
+        that format spans multiple Modules and needs the extra
+        clarification the fixed institutional Internal Assessment
+        instruction line doesn't require.
 
         Args:
             doc: The in-progress python-docx Document.
@@ -930,51 +1018,128 @@ class WordExporter:
                 same structure and the true achievable max marks — only
                 ONE alternative per module is ever actually answered, so
                 summing every question's marks would double-count).
-            show_module_labels: When True (Semester Examination), the
-                note refers to "each MODULE". When False (Internal
-                Assessment), the note refers to "each question pair"
-                instead, since IAT papers don't label modules explicitly.
+            show_module_labels: When True (Semester Examination), an
+                extra "answer any N, one per MODULE" note is appended.
+                When False (Internal Assessment), the fixed
+                institutional instruction line is used instead, matching
+                the official paper exactly.
         """
-        # USN box: label + a row of individual empty boxes for the student
-        # to fill in their University Seat Number.
+        # Date/time stamp, top-left corner — printed before anything else.
+        p_stamp = doc.add_paragraph()
+        p_stamp.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        run_stamp = p_stamp.add_run(pa.datetime_generated)
+        run_stamp.font.size = Pt(8)
+        run_stamp.font.color.rgb = RGBColor(0x66, 0x66, 0x66)
+        p_stamp.paragraph_format.space_after = Pt(2)
+
+        # Institution header: logo | name + affiliation | accreditation
+        # lines | IQAC badge. Logo/badge images are optional (see
+        # _INSTITUTION_LOGO_PATH / _IQAC_BADGE_PATH) — if the file isn't
+        # present, that column is simply left blank rather than breaking
+        # the export.
+        header_table = doc.add_table(rows=1, cols=4)
+        header_table.autofit = False
+        # Printable width is 5.87in (8.27in A4 minus 1.2in margins each
+        # side, per _configure_page) — these must sum to fit within that,
+        # or Word pushes the last column off the page.
+        col_widths = [Inches(0.7), Inches(2.6), Inches(1.87), Inches(0.7)]
+        for c, w in enumerate(col_widths):
+            header_table.columns[c].width = w
+            header_table.cell(0, c).width = w
+        for row in header_table.rows:
+            for cell in row.cells:
+                self._set_cell_no_borders(cell)
+
+        # Col 0: institution logo
+        cell_logo = header_table.cell(0, 0)
+        cell_logo.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if _INSTITUTION_LOGO_PATH.exists():
+            cell_logo.paragraphs[0].add_run().add_picture(
+                str(_INSTITUTION_LOGO_PATH), width=Inches(0.55)
+            )
+
+        # Col 1: institution name + affiliation
+        cell_name = header_table.cell(0, 1)
+        p_uni = cell_name.paragraphs[0]
+        p_uni.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        run_uni = p_uni.add_run(pa.university)
+        run_uni.bold = True
+        run_uni.font.size = Pt(13)
+        run_uni.font.color.rgb = self._COLOUR_PRIMARY
+        p_affil = cell_name.add_paragraph()
+        p_affil.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        run_affil = p_affil.add_run(_UNIVERSITY_AFFILIATION)
+        run_affil.font.size = Pt(10)
+        run_affil.italic = True
+
+        # Col 2: accreditation lines — key terms (VTU, AICTE, NAAC, A+,
+        # NBA) rendered in red, matching the official paper's styling.
+        cell_accred = header_table.cell(0, 2)
+        p_first = cell_accred.paragraphs[0]
+        p_first.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        for i, line in enumerate(_UNIVERSITY_ACCREDITATION_LINES):
+            p = p_first if i == 0 else cell_accred.add_paragraph()
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            p.paragraph_format.space_after = Pt(0)
+            for part in _ACCREDITATION_HIGHLIGHT_RE.split(line):
+                if not part:
+                    continue
+                run = p.add_run(part)
+                run.font.size = Pt(8)
+                run.font.color.rgb = (
+                    RGBColor.from_string(_ACCREDITATION_HIGHLIGHT_COLOR)
+                    if part in _ACCREDITATION_HIGHLIGHT_WORDS
+                    else RGBColor(0x22, 0x22, 0x22)
+                )
+
+        # Col 3: IQAC badge
+        cell_badge = header_table.cell(0, 3)
+        cell_badge.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if _IQAC_BADGE_PATH.exists():
+            cell_badge.paragraphs[0].add_run().add_picture(
+                str(_IQAC_BADGE_PATH), width=Inches(0.55)
+            )
+
+        # Rule under the header block
+        p_rule = doc.add_paragraph()
+        p_rule.paragraph_format.space_before = Pt(4)
+        p_rule.paragraph_format.space_after = Pt(6)
+        self._set_paragraph_border(p_rule, bottom_color="000000", bottom_size=6)
+
+        # USN box — centred (not full-width), matching the official layout.
         usn_table = doc.add_table(rows=1, cols=11)
         usn_table.style = "Table Grid"
         usn_table.autofit = False
+        usn_table.alignment = WD_TABLE_ALIGNMENT.RIGHT
         usn_table.cell(0, 0).text = "USN"
         usn_table.cell(0, 0).paragraphs[0].runs[0].bold = True
         usn_table.cell(0, 0).width = Inches(0.6)
         for c in range(1, 11):
             usn_table.cell(0, c).width = Inches(0.35)
-        p_spacer = doc.add_paragraph()
-        p_spacer.paragraph_format.space_after = Pt(4)
+        doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
-        # Institution name + affiliation
-        p_uni = doc.add_paragraph()
-        p_uni.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run_uni = p_uni.add_run(pa.university.upper())
-        run_uni.bold = True
-        run_uni.font.size = Pt(13)
-        run_uni.font.color.rgb = self._COLOUR_PRIMARY
+        # Department line — ALL CAPS, bold, left-aligned.
+        p_dept = doc.add_paragraph()
+        p_dept.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        run_dept = p_dept.add_run(_department_heading(pa.department).upper())
+        run_dept.bold = True
+        run_dept.font.size = Pt(11)
+        doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
-        p_affil = doc.add_paragraph()
-        p_affil.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run_affil = p_affil.add_run(_UNIVERSITY_AFFILIATION)
-        run_affil.font.size = Pt(10)
-        run_affil.italic = True
+        # True achievable max marks = sum of ONE alternative per module
+        # (the first side of each OR-pair) — NOT a sum of every question,
+        # which would double-count both alternatives of every module even
+        # though a student only ever answers one of them.
+        true_max_marks = sum(
+            pair[0].total_marks for m in modules for pair in m.pairs[:1]
+        )
+        max_marks_display = str(true_max_marks) if true_max_marks else pa.total_marks
 
-        # Exam title line
-        p_title = doc.add_paragraph()
-        p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        title_bits = [pa.semester, pa.assessment_type]
-        if pa.test_date:
-            title_bits.append(f"— {pa.test_date}")
-        run_title = p_title.add_run("  ".join(b for b in title_bits if b))
-        run_title.bold = True
-        run_title.font.size = Pt(11)
-        doc.add_paragraph()
-
-        # Course / Code / Marks / Duration meta table (4 cols, selective merges)
-        meta = doc.add_table(rows=3, cols=4)
+        # Title + metadata table: row 0 is a merged, centred title row
+        # ("<Assessment Type> (<...>)   AY- <academic_year>"); rows 1-5
+        # are the Course/Code/Semester/Max-Marks/Batch/Duration/Date-of-
+        # IAT/Teaching-Department/RBT-Levels grid.
+        meta = doc.add_table(rows=6, cols=4)
         meta.style = "Table Grid"
 
         def _set(r: int, c: int, text: str, bold_label: bool = False) -> None:
@@ -984,43 +1149,65 @@ class WordExporter:
                 cell.paragraphs[0].runs[0].bold = bold_label
                 cell.paragraphs[0].runs[0].font.size = Pt(10)
 
-        _set(0, 0, "Course:", bold_label=True)
-        _set(0, 1, pa.course_name or "—")
-        meta.cell(0, 1).merge(meta.cell(0, 3))
+        title_bits = [pa.semester, pa.assessment_type]
+        title_text = "  ".join(b for b in title_bits if b)
+        if pa.academic_year:
+            title_text += f"     {pa.academic_year}"
+        _set(0, 0, title_text, bold_label=True)
+        meta.cell(0, 0).merge(meta.cell(0, 3))
+        meta.cell(0, 0).paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-        _set(1, 0, "Course Code:", bold_label=True)
-        _set(1, 1, pa.course_code or "—")
-        _set(1, 2, "Duration:", bold_label=True)
-        _set(1, 3, pa.duration)
+        _set(1, 0, "Course:", bold_label=True)
+        _set(1, 1, pa.course_name or "—")
+        _set(1, 2, "Course Code:", bold_label=True)
+        _set(1, 3, pa.course_code or "—")
 
-        # True achievable max marks = sum of ONE alternative per module
-        # (the first side of each OR-pair) — NOT a sum of every question,
-        # which would double-count both alternatives of every module even
-        # though a student only ever answers one of them.
-        true_max_marks = sum(
-            pair[0].total_marks for m in modules for pair in m.pairs[:1]
+        _set(2, 0, "Semester:", bold_label=True)
+        _set(2, 1, pa.semester or "—")
+        _set(2, 2, "Max. Marks:", bold_label=True)
+        _set(2, 3, max_marks_display)
+
+        _set(3, 0, "Batch:", bold_label=True)
+        _set(3, 1, pa.batch or "—")
+        _set(3, 2, "Duration:", bold_label=True)
+        _set(3, 3, pa.duration)
+
+        _set(4, 0, "Date of IAT:", bold_label=True)
+        _set(4, 1, pa.test_date or "—")
+        _set(4, 2, "Teaching Department:", bold_label=True)
+        _set(4, 3, pa.teaching_department or "—")
+
+        _set(5, 0, "RBT Levels:", bold_label=True)
+        _set(
+            5, 1,
+            "L1-Remember, L2-Understand, L3-Apply, L4-Analyze, "
+            "L5-Evaluate, L6-Create",
         )
-        _set(2, 0, "Max Marks:", bold_label=True)
-        _set(2, 1, f"{true_max_marks} marks" if true_max_marks else pa.total_marks)
-        meta.cell(2, 1).merge(meta.cell(2, 3))
+        meta.cell(5, 1).merge(meta.cell(5, 3))
 
         doc.add_paragraph()
 
-        module_count = len(modules) or 1
+        # Instruction line — the fixed institutional wording for Internal
+        # Assessment; Semester Examination keeps its dynamic per-module
+        # note, since that format needs the extra module-choice
+        # clarification a single fixed line can't express.
         p_note = doc.add_paragraph()
         if show_module_labels:
+            module_count = len(modules) or 1
             note_text = (
                 f"Note: Answer any {module_count} full questions, choosing at "
                 f"least ONE question from each MODULE."
             )
+            run_note = p_note.add_run(note_text)
+            run_note.bold = True
+            run_note.font.size = Pt(10)
         else:
-            note_text = (
-                f"Note: Answer all {module_count} questions, choosing ONE "
-                f"alternative from each OR pair."
+            run_note = p_note.add_run(
+                "Instruction: Answer the following questions"
             )
-        run_note = p_note.add_run(note_text)
-        run_note.bold = True
-        run_note.font.size = Pt(10)
+            run_note.italic = True
+            run_note.bold = True
+            run_note.font.size = Pt(10)
         doc.add_paragraph()
 
     def _add_vtu_question_table(
@@ -1033,11 +1220,15 @@ class WordExporter:
         """Render the Module / OR-pair / sub-part question table.
 
         Builds one continuous table for the whole paper: a column-header
-        row, then for each Module (optionally) a full-width "Module – N"
-        divider row followed by its question groups (with the Q-number
-        cell vertically merged across that question's lettered
-        sub-parts), with a full-width "OR" divider row between the two
-        alternatives in a pair.
+        row (Q No / Questions / Marks / COs / RBTL — matching the
+        official institutional paper's column labels exactly), then for
+        each Module (optionally) a full-width "Module – N" divider row
+        followed by its question groups, with a full-width "OR" divider
+        row between the two alternatives in a pair. Each lettered
+        sub-part is its own full row labelled "N. a", "N. b", … (no
+        separate letter column, no vertical cell merging) — matching the
+        official paper's row format exactly; a single un-split question
+        is labelled just "N.".
 
         Args:
             doc: The in-progress python-docx Document.
@@ -1051,9 +1242,9 @@ class WordExporter:
                 rows so the paper flows as a continuous Q1 OR Q2, Q3 OR
                 Q4, … sequence, matching the institutional IAT format.
         """
-        table = doc.add_table(rows=1, cols=6)
+        table = doc.add_table(rows=1, cols=5)
         table.style = "Table Grid"
-        headers = ["Q.No", "", "Question", "Marks", "BL", "CO"]
+        headers = ["Q No", "Questions", "Marks", "COs", "RBTL"]
         for c, text in enumerate(headers):
             cell = table.cell(0, c)
             cell.text = text
@@ -1061,7 +1252,7 @@ class WordExporter:
                 cell.paragraphs[0].runs[0].bold = True
             self._shade_cell(cell, "F0F4F8")
 
-        col_widths = [Inches(w) for w in (0.5, 0.4, 3.6, 0.6, 0.5, 0.6)]
+        col_widths = [Inches(w) for w in (0.55, 3.9, 0.6, 0.6, 0.6)]
 
         def _full_width_row(text: str, bold: bool = True) -> None:
             row_cells = table.add_row().cells
@@ -1074,36 +1265,26 @@ class WordExporter:
             self._shade_cell(row_cells[0], "F0F4F8")
 
         def _question_group_rows(group: VTUQuestionGroup) -> None:
-            first_row_idx = None
+            multi = len(group.subparts) > 1
             for sp in group.subparts:
                 row_cells = table.add_row().cells
-                row_idx = len(table.rows) - 1
-                if first_row_idx is None:
-                    first_row_idx = row_idx
-                    row_cells[0].text = str(group.q_number)
-                    row_cells[0].paragraphs[0].runs[0].bold = True
-                # sub-part letter
-                row_cells[1].text = f"{sp.letter})" if len(group.subparts) > 1 else ""
+                q_label = f"{group.q_number}. {sp.letter}" if multi else f"{group.q_number}."
+                row_cells[0].text = q_label
+                row_cells[0].paragraphs[0].runs[0].bold = True
                 # question text
-                row_cells[2].text = sp.question.text
-                for run in row_cells[2].paragraphs[0].runs:
+                row_cells[1].text = sp.question.text
+                for run in row_cells[1].paragraphs[0].runs:
                     run.font.size = Pt(10)
-                # marks / bloom / CO
-                row_cells[3].text = sp.question.marks
+                # marks / CO / RBTL
+                row_cells[2].text = sp.question.marks
+                row_cells[3].text = sp.question.co_mapping
                 row_cells[4].text = self._bloom_short_code(sp.question.bloom_level)
-                row_cells[5].text = sp.question.co_mapping
-                for idx in (0, 1, 3, 4, 5):
+                for idx in (0, 2, 3, 4):
                     if row_cells[idx].paragraphs[0].runs:
                         row_cells[idx].paragraphs[0].runs[0].font.size = Pt(10)
                     row_cells[idx].paragraphs[0].alignment = (
                         WD_ALIGN_PARAGRAPH.CENTER
                     )
-            # Vertically merge the Q-number cell across all sub-part rows
-            if first_row_idx is not None and len(group.subparts) > 1:
-                last_row_idx = len(table.rows) - 1
-                table.cell(first_row_idx, 0).merge(
-                    table.cell(last_row_idx, 0)
-                )
 
         for module in modules:
             if show_module_labels:
@@ -1111,6 +1292,7 @@ class WordExporter:
             for pair_idx, pair in enumerate(module.pairs):
                 if pair_idx > 0:
                     _full_width_row("OR")
+                _mirror_pair_co_bloom(pair)
                 _question_group_rows(pair[0])
                 if len(pair) > 1:
                     _full_width_row("OR")
@@ -1306,6 +1488,18 @@ class WordExporter:
         doc.add_paragraph(pa.generation_notes)
 
     # ── XML helpers ───────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _set_cell_no_borders(cell) -> None:
+        """Remove all borders from a table cell (for borderless layout tables)."""
+        tc = cell._tc
+        tcPr = tc.get_or_add_tcPr()
+        borders = OxmlElement("w:tcBorders")
+        for edge in ("top", "left", "bottom", "right"):
+            el = OxmlElement(f"w:{edge}")
+            el.set(qn("w:val"), "nil")
+            borders.append(el)
+        tcPr.append(borders)
 
     @staticmethod
     def _shade_cell(cell, fill_hex: str) -> None:
@@ -1536,6 +1730,22 @@ class PDFExporter:
                 fontName="Helvetica",
                 spaceAfter=4,
                 leftIndent=12,
+            ),
+            "meta_cell_label": ParagraphStyle(
+                "EduMetaCellLabel",
+                parent=base["Normal"],
+                fontSize=9.5,
+                fontName="Helvetica-Bold",
+                textColor=colors.black,
+                leading=12,
+            ),
+            "meta_cell_value": ParagraphStyle(
+                "EduMetaCellValue",
+                parent=base["Normal"],
+                fontSize=9.5,
+                fontName="Helvetica",
+                textColor=colors.black,
+                leading=12,
             ),
             "note_tag": ParagraphStyle(
                 "EduNote",
@@ -1843,10 +2053,61 @@ class PDFExporter:
         """
         flow: list = []
 
-        # USN entry box — one wide label cell + 10 individual digit boxes.
+        # Date/time stamp, top-left corner — printed before anything else.
+        flow.append(Paragraph(self._esc(pa.datetime_generated), styles["meta_tag"]))
+        flow.append(Spacer(1, 2))
+
+        # Institution header: logo | name + affiliation | accreditation
+        # lines (key terms in red) | IQAC badge. Missing image files
+        # degrade gracefully to a blank cell.
+        name_block = [
+            Paragraph(self._esc(pa.university), styles["university"]),
+            Paragraph(
+                self._esc(_UNIVERSITY_AFFILIATION), styles["vtu_affiliation"]
+            ),
+        ]
+        accred_block = [
+            Paragraph(self._accreditation_html(line), styles["meta_tag"])
+            for line in _UNIVERSITY_ACCREDITATION_LINES
+        ]
+        logo_cell = (
+            Image(str(_INSTITUTION_LOGO_PATH), width=0.55 * 72, height=0.55 * 72)
+            if _INSTITUTION_LOGO_PATH.exists()
+            else ""
+        )
+        badge_cell = (
+            Image(str(_IQAC_BADGE_PATH), width=0.55 * 72, height=0.55 * 72)
+            if _IQAC_BADGE_PATH.exists()
+            else ""
+        )
+        # Printable width is 16cm (A4 21cm minus 2.5cm margins each side,
+        # per SimpleDocTemplate below) — these must sum to fit within that.
+        header_table = Table(
+            [[logo_cell, name_block, accred_block, badge_cell]],
+            colWidths=[2.0 * cm, 7.0 * cm, 5.0 * cm, 2.0 * cm],
+        )
+        header_table.setStyle(
+            TableStyle([
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("ALIGN", (0, 0), (0, 0), "CENTER"),
+                ("ALIGN", (1, 0), (1, 0), "LEFT"),
+                ("ALIGN", (2, 0), (2, 0), "LEFT"),
+                ("ALIGN", (3, 0), (3, 0), "CENTER"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 2),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 2),
+            ])
+        )
+        flow.append(header_table)
+        flow.append(Spacer(1, 4))
+        flow.append(HRFlowable(width="100%", thickness=1.2, color=colors.black))
+        flow.append(Spacer(1, 6))
+
+        # USN entry box — one wide label cell + 10 individual digit boxes,
+        # right-aligned to match the official paper's positioning.
         usn_data = [["USN"] + [""] * 10]
         usn_table = Table(
-            usn_data, colWidths=[1.6 * cm] + [0.9 * cm] * 10, rowHeights=[0.7 * cm]
+            usn_data, colWidths=[1.6 * cm] + [0.9 * cm] * 10, rowHeights=[0.7 * cm],
+            hAlign="RIGHT",
         )
         usn_table.setStyle(
             TableStyle([
@@ -1859,24 +2120,17 @@ class PDFExporter:
             ])
         )
         flow.append(usn_table)
-        flow.append(Spacer(1, 12))
+        flow.append(Spacer(1, 10))
 
-        flow.append(Paragraph(self._esc(pa.university.upper()), styles["university"]))
-        flow.append(
-            Paragraph(self._esc(_UNIVERSITY_AFFILIATION), styles["vtu_affiliation"])
-        )
-
-        title_bits = [pa.semester, pa.assessment_type]
-        if pa.test_date:
-            title_bits.append(f"— {pa.test_date}")
+        # Department line — ALL CAPS, bold, left-aligned.
         flow.append(
             Paragraph(
-                self._esc("  ".join(b for b in title_bits if b)),
+                self._esc(_department_heading(pa.department).upper()),
                 styles["vtu_exam_title"],
             )
         )
+        flow.append(Spacer(1, 8))
 
-        # Course / Code / Duration / Max Marks meta table with selective merges
         # True achievable max marks = sum of ONE alternative per module
         # (the first side of each OR-pair) — NOT a sum of every question,
         # which would double-count both alternatives of every module even
@@ -1884,26 +2138,47 @@ class PDFExporter:
         true_max_marks = sum(
             pair[0].total_marks for m in modules for pair in m.pairs[:1]
         )
-        max_marks_display = (
-            f"{true_max_marks} marks" if true_max_marks else pa.total_marks
-        )
+        max_marks_display = str(true_max_marks) if true_max_marks else pa.total_marks
+
+        title_bits = [pa.semester, pa.assessment_type]
+        title_text = "  ".join(b for b in title_bits if b)
+        if pa.academic_year:
+            title_text += f"     {pa.academic_year}"
+
+        # Title + metadata table: row 0 is a merged, centred title row;
+        # rows 1-5 are the Course/Code/Semester/Max-Marks/Batch/Duration/
+        # Date-of-IAT/Teaching-Department/RBT-Levels grid.
+        def _lbl(text: str):
+            return Paragraph(self._esc(text), styles["meta_cell_label"])
+
+        def _val(text: str):
+            return Paragraph(self._esc(text), styles["meta_cell_value"])
+
         meta_data = [
-            ["Course:", pa.course_name or "—", "", ""],
-            ["Course Code:", pa.course_code or "—", "Duration:", pa.duration],
-            ["Max Marks:", max_marks_display, "", ""],
+            [Paragraph(f"<b>{self._esc(title_text)}</b>", styles["meta_cell_label"]), "", "", ""],
+            [_lbl("Course:"), _val(pa.course_name or "—"), _lbl("Course Code:"), _val(pa.course_code or "—")],
+            [_lbl("Semester:"), _val(pa.semester or "—"), _lbl("Max. Marks:"), _val(max_marks_display)],
+            [_lbl("Batch:"), _val(pa.batch or "—"), _lbl("Duration:"), _val(pa.duration)],
+            [_lbl("Date of IAT:"), _val(pa.test_date or "—"), _lbl("Teaching Department:"), _val(pa.teaching_department or "—")],
+            [
+                _lbl("RBT Levels:"),
+                _val(
+                    "L1-Remember, L2-Understand, L3-Apply, L4-Analyze, "
+                    "L5-Evaluate, L6-Create"
+                ),
+                "", "",
+            ],
         ]
         meta_table = Table(
-            meta_data, colWidths=[3.2 * cm, 6.0 * cm, 2.8 * cm, 4.0 * cm]
+            meta_data, colWidths=[3.0 * cm, 5.6 * cm, 3.6 * cm, 3.8 * cm]
         )
         meta_table.setStyle(
             TableStyle([
                 ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
                 ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
-                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
-                ("FONTNAME", (2, 1), (2, 1), "Helvetica-Bold"),
-                ("FONTSIZE", (0, 0), (-1, -1), 9.5),
-                ("SPAN", (1, 0), (3, 0)),
-                ("SPAN", (1, 2), (3, 2)),
+                ("ALIGN", (0, 0), (-1, 0), "CENTER"),
+                ("SPAN", (0, 0), (3, 0)),
+                ("SPAN", (1, 5), (3, 5)),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("LEFTPADDING", (0, 0), (-1, -1), 6),
                 ("TOPPADDING", (0, 0), (-1, -1), 3),
@@ -1919,12 +2194,14 @@ class PDFExporter:
                 f"Note: Answer any {module_count} full questions, choosing "
                 f"at least ONE question from each MODULE."
             )
+            flow.append(Paragraph(note_text, styles["vtu_note"]))
         else:
-            note_text = (
-                f"Note: Answer all {module_count} questions, choosing ONE "
-                f"alternative from each OR pair."
+            flow.append(
+                Paragraph(
+                    "<i>Instruction: Answer the following questions</i>",
+                    styles["vtu_note"],
+                )
             )
-        flow.append(Paragraph(note_text, styles["vtu_note"]))
         flow.append(Spacer(1, 6))
         return flow
 
@@ -1956,7 +2233,7 @@ class PDFExporter:
             flowable (wrapped in a list for consistency with other
             flowable-returning builders).
         """
-        data: list = [["Q.No", "", "Question", "Marks", "BL", "CO"]]
+        data: list = [["Q No", "Questions", "Marks", "COs", "RBTL"]]
         style_cmds = [
             ("BACKGROUND", (0, 0), (-1, 0), self._LIGHT_BG),
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
@@ -1965,7 +2242,7 @@ class PDFExporter:
 
         def _full_width_row(text: str) -> None:
             nonlocal row
-            data.append([text, "", "", "", "", ""])
+            data.append([text, "", "", "", ""])
             style_cmds.append(("SPAN", (0, row), (-1, row)))
             style_cmds.append(("BACKGROUND", (0, row), (-1, row), self._LIGHT_BG))
             style_cmds.append(("FONTNAME", (0, row), (-1, row), "Helvetica-Bold"))
@@ -1974,47 +2251,36 @@ class PDFExporter:
 
         def _group_rows(group: VTUQuestionGroup) -> None:
             nonlocal row
-            first_row = row
-            for sp_idx, sp in enumerate(group.subparts):
-                letter_text = f"{sp.letter})" if len(group.subparts) > 1 else ""
-                q_num_text = str(group.q_number) if sp_idx == 0 else ""
+            multi = len(group.subparts) > 1
+            for sp in group.subparts:
+                q_label = f"{group.q_number}. {sp.letter}" if multi else f"{group.q_number}."
                 data.append([
-                    q_num_text,
-                    letter_text,
+                    q_label,
                     Paragraph(self._esc(sp.question.text), styles["vtu_cell_text"]),
                     sp.question.marks,
-                    self._bloom_short_code(sp.question.bloom_level),
                     sp.question.co_mapping,
+                    self._bloom_short_code(sp.question.bloom_level),
                 ])
+                style_cmds.append(("ALIGN", (0, row), (0, row), "CENTER"))
+                style_cmds.append(("VALIGN", (0, row), (0, row), "MIDDLE"))
+                style_cmds.append(("FONTNAME", (0, row), (0, row), "Helvetica-Bold"))
+                for col in (2, 3, 4):
+                    style_cmds.append(("ALIGN", (col, row), (col, row), "CENTER"))
+                    style_cmds.append(("VALIGN", (col, row), (col, row), "MIDDLE"))
                 row += 1
-            last_row = row - 1
-            if last_row > first_row:
-                style_cmds.append(("SPAN", (0, first_row), (0, last_row)))
-            style_cmds.append(
-                ("VALIGN", (0, first_row), (0, last_row), "MIDDLE")
-            )
-            style_cmds.append(
-                ("ALIGN", (0, first_row), (0, last_row), "CENTER")
-            )
-            for col in (1, 3, 4, 5):
-                style_cmds.append(
-                    ("ALIGN", (col, first_row), (col, last_row), "CENTER")
-                )
-                style_cmds.append(
-                    ("VALIGN", (col, first_row), (col, last_row), "MIDDLE")
-                )
 
         for module in modules:
             if show_module_labels:
                 _full_width_row(f"Module – {module.module_number}: {module.label}")
             for pair in module.pairs:
+                _mirror_pair_co_bloom(pair)
                 _group_rows(pair[0])
                 if len(pair) > 1:
                     _full_width_row("OR")
                     _group_rows(pair[1])
 
         col_widths = [
-            1.3 * cm, 1.0 * cm, 9.0 * cm, 1.5 * cm, 1.2 * cm, 1.8 * cm,
+            1.4 * cm, 10.6 * cm, 1.5 * cm, 1.5 * cm, 1.5 * cm,
         ]
         table = Table(data, colWidths=col_widths, repeatRows=1)
         style_cmds.extend([
@@ -2101,6 +2367,37 @@ class PDFExporter:
         text = text.replace("<", "&lt;")
         text = text.replace(">", "&gt;")
         return text
+
+    @classmethod
+    def _accreditation_html(cls, line: str) -> str:
+        """Wrap key accreditation terms in red <font> tags for ReportLab.
+
+        Splits *line* on the shared highlight-word pattern (see
+        ``_ACCREDITATION_HIGHLIGHT_RE`` / ``_ACCREDITATION_HIGHLIGHT_WORDS``
+        in the module-level constants) and marks each matched word in red,
+        matching the Word exporter's run-colouring and the official
+        paper's styling.
+
+        Args:
+            line: One raw accreditation line (e.g. "Approved by AICTE").
+
+        Returns:
+            str: HTML-safe, ReportLab-renderable markup with highlighted
+            words wrapped in ``<font color="#CC0000">...</font>``.
+        """
+        parts = _ACCREDITATION_HIGHLIGHT_RE.split(line)
+        out = []
+        for part in parts:
+            if not part:
+                continue
+            escaped = cls._esc(part)
+            if part in _ACCREDITATION_HIGHLIGHT_WORDS:
+                out.append(
+                    f'<font color="#{_ACCREDITATION_HIGHLIGHT_COLOR}">{escaped}</font>'
+                )
+            else:
+                out.append(escaped)
+        return "".join(out)
 
 
 # ===========================================================================

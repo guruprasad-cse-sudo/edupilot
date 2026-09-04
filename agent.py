@@ -1262,7 +1262,8 @@ class AssessmentAgent:
         blueprint_entry: Tuple[List[int], List[int]],
         topic: str,
     ) -> None:
-        """Force each question's marks/group to match the faculty blueprint.
+        """Force each question's marks/group to match the faculty blueprint,
+        and mirror side A's CO/Bloom pattern onto side B.
 
         The LLM is asked to honour the exact per-question marks list, but
         prompt compliance is never guaranteed — this makes the paper
@@ -1270,6 +1271,20 @@ class AssessmentAgent:
         ``marks`` field with the faculty-authored value at that position,
         and tagging ``blueprint_group`` ("A"/"B") so export can split the
         two OR-alternative questions precisely instead of guessing.
+
+        It also mirrors ``co_mapping`` and ``bloom_level`` from side A
+        onto side B, sub-part by sub-part (index 0 of A → index 0 of B,
+        index 1 of A → index 1 of B, and so on). Q1 and Q2 are two
+        alternative versions of the SAME question — a student answers
+        only one of them — so if Q1's sub-parts are CO1/CO2/CO1 at
+        L1/L3/L1, its OR-counterpart Q2 should carry that identical
+        CO/Bloom pattern across its own a)/b)/c), even though the actual
+        question text differs. Left alone, the LLM assigns each side's
+        CO/Bloom independently, so the two alternatives can end up
+        assessing different outcomes at different cognitive levels —
+        not a fair "either one" choice for the student. Sub-parts within
+        one side are NOT forced to match each other — only the two
+        sides are matched to each other, position by position.
 
         If the LLM returned a different number of questions than
         requested (rare, but possible), this pads or truncates gracefully
@@ -1303,6 +1318,22 @@ class AssessmentAgent:
             # happen) keep whatever marks the LLM gave them and are left
             # with an empty blueprint_group, so export's automatic
             # even-split fallback picks them up rather than mis-grouping.
+
+        # Mirror side A's CO/Bloom pattern onto side B, position by
+        # position — NOT unifying within a side.
+        side_a = questions[:len(marks_a)]
+        side_b = questions[len(marks_a):len(marks_a) + len(marks_b)]
+        for a_q, b_q in zip(side_a, side_b):
+            b_q.co_mapping = list(a_q.co_mapping)
+            b_q.bloom_level = a_q.bloom_level
+        if len(side_a) != len(side_b):
+            logger.debug(
+                "AssessmentAgent._apply_blueprint_marks(): topic %r side "
+                "A has %d sub-parts, side B has %d — mirrored the first "
+                "%d positions only.",
+                topic[:60], len(side_a), len(side_b),
+                min(len(side_a), len(side_b)),
+            )
 
     def _generate_batched(
         self,
@@ -1747,6 +1778,9 @@ class AssessmentAgent:
             faculty_name=plan.faculty_name,
             instructions=data.get("instructions", ""),
             test_date=plan.test_date,
+            batch=plan.batch,
+            teaching_department=plan.teaching_department,
+            academic_year=plan.academic_year,
         )
 
         return Assessment(

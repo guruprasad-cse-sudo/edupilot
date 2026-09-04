@@ -240,6 +240,17 @@ class AssessmentMetadata:
     faculty_name: str = ""
     instructions: str = ""
     test_date: str = ""
+    batch: str = ""
+    """Student batch/admission year label (e.g. "2024"), shown on the
+    institutional IAT header. Empty string when not specified."""
+    teaching_department: str = ""
+    """Abbreviated teaching department (e.g. "CSE"), shown on the
+    institutional IAT header's metadata grid. Falls back to
+    ``department`` when empty — see ParsedAssessment/AssessmentParser."""
+    academic_year: str = ""
+    """Academic year / term label (e.g. "2025-26 (Even Sem)"), appended
+    to the exam title line on the institutional IAT header. Empty
+    string when not specified."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -259,6 +270,9 @@ class AssessmentMetadata:
             "faculty_name": self.faculty_name,
             "instructions": self.instructions,
             "test_date": self.test_date,
+            "batch": self.batch,
+            "teaching_department": self.teaching_department,
+            "academic_year": self.academic_year,
         }
 
 
@@ -515,6 +529,9 @@ class AssessmentPlan:
     to the normal uniform question_count/marks_per_question generation.
     Empty string (the default) means no custom blueprint — fully
     backward compatible with existing behaviour."""
+    batch: str = ""
+    teaching_department: str = ""
+    academic_year: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -539,6 +556,9 @@ class AssessmentPlan:
             "extra_instructions": self.extra_instructions,
             "test_date": self.test_date,
             "vtu_marks_blueprint": self.vtu_marks_blueprint,
+            "batch": self.batch,
+            "teaching_department": self.teaching_department,
+            "academic_year": self.academic_year,
         }
 
     @classmethod
@@ -585,6 +605,11 @@ class AssessmentPlan:
             vtu_marks_blueprint=str(
                 data.get("vtu_marks_blueprint", "")
             ).strip(),
+            batch=str(data.get("batch", "")).strip(),
+            teaching_department=str(
+                data.get("teaching_department", "")
+            ).strip(),
+            academic_year=str(data.get("academic_year", "")).strip(),
         )
 
 

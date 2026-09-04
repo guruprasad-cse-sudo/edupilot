@@ -662,6 +662,33 @@ def render_generation_form() -> Optional[dict]:
                     help="Optional — pre-filled from your account; shown on "
                          "downloaded documents.",
                 )
+            col_batch, col_teach_dept, col_ay = st.columns(3)
+            with col_batch:
+                batch = st.text_input(
+                    "Batch",
+                    value=str(_ep("batch")),
+                    placeholder="e.g. 2024",
+                    help="Optional — student batch/admission year, shown "
+                         "on the Internal Assessment / Semester "
+                         "Examination header.",
+                )
+            with col_teach_dept:
+                teaching_department = st.text_input(
+                    "Teaching Department",
+                    value=str(_ep("teaching_department")),
+                    placeholder="e.g. CSE",
+                    help="Optional — abbreviated department, shown on the "
+                         "header's metadata grid. Falls back to "
+                         "Department above if left blank.",
+                )
+            with col_ay:
+                academic_year = st.text_input(
+                    "Academic Year",
+                    value=str(_ep("academic_year")),
+                    placeholder="e.g. 2025-26 (Even Sem)",
+                    help="Optional — appended to the exam title line on "
+                         "the header.",
+                )
             topics = st.text_area(
                 "Topics to Cover *",
                 value=str(_ep("topics")),
@@ -878,6 +905,9 @@ def render_generation_form() -> Optional[dict]:
         "semester": semester.strip(),
         "faculty_name": faculty_name.strip(),
         "test_date": test_date.strftime("%d %B %Y") if test_date else "",
+        "batch": batch.strip(),
+        "teaching_department": teaching_department.strip(),
+        "academic_year": academic_year.strip(),
     }
 
 
