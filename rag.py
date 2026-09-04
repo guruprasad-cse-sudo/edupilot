@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import gc
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -734,6 +735,153 @@ class RAGModule:
 # ---------------------------------------------------------------------------
 # CLI entry point — for local verification only
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Syllabus CO table extraction
+# ---------------------------------------------------------------------------
+# Separate from the RAG text-chunking pipeline above: this reads a syllabus/
+# scheme PDF's actual table structure (via pdfplumber, not plain-text
+# chunking) to pull out the official, faculty-approved Course Outcomes for a
+# given course code — e.g. "CO1: Understand the Business Intelligence,
+# Analytics and Decision Support system" — so generated papers can print the
+# institution's real CO wording instead of the LLM's own guess.
+
+_SYLLABUS_CO_CACHE: dict = {}
+"""Cache keyed by (pdf_path, mtime, course_code) -> extracted CO rows, so a
+syllabus PDF already scanned once (potentially 50+ pages) isn't re-parsed on
+every single assessment generation."""
+
+
+def _find_co_table_in_pdf(
+    pdf_path, course_code: str
+) -> List[Tuple[str, str, str]]:
+    """Extract the CO table for *course_code* from one syllabus PDF.
+
+    Locates the page containing a "Course Code : <course_code>" line, then
+    scans that page and the next few for a table whose header row contains
+    both "CO" and "Course Outcomes" columns (the institutional syllabus
+    format — see the "RBT Level" / "RBT Level Indicator" columns that
+    typically follow). Tolerates two-letter and multi-letter RBT indicator
+    formats (e.g. "L2" or "Ap") since both appear across different course
+    pages in practice.
+
+    Args:
+        pdf_path: Path to the syllabus/scheme PDF.
+        course_code: Course code to search for (e.g. "BCS703A").
+
+    Returns:
+        List of ``(co_code, description, rbt_level)`` tuples in document
+        order. Empty list if the course code or its CO table isn't found.
+    """
+    import pdfplumber  # lazy import — only needed for this feature
+
+    code = course_code.strip().upper()
+    if not code:
+        return []
+
+    try:
+        with pdfplumber.open(str(pdf_path)) as pdf:
+            start_idx = None
+            for i, page in enumerate(pdf.pages):
+                text = page.extract_text() or ""
+                if re.search(
+                    rf"Course\s*Code\s*:?\s*{re.escape(code)}\b",
+                    text, re.IGNORECASE,
+                ):
+                    start_idx = i
+                    break
+
+            if start_idx is None:
+                return []
+
+            for i in range(start_idx, min(start_idx + 6, len(pdf.pages))):
+                page = pdf.pages[i]
+                text = page.extract_text() or ""
+                if "Course Outcomes" not in text:
+                    continue
+
+                for table in page.extract_tables():
+                    if not table or not table[0]:
+                        continue
+                    header = [(c or "").strip().lower() for c in table[0]]
+                    has_co_col = any(h == "co" or h.startswith("co ") for h in header)
+                    has_desc_col = any("course outcomes" in h for h in header)
+                    if not (has_co_col and has_desc_col):
+                        continue
+
+                    rows: List[Tuple[str, str, str]] = []
+                    for row in table[1:]:
+                        if not row or not row[0]:
+                            continue
+                        co_code = (row[0] or "").strip()
+                        if not re.match(r"^CO\d+$", co_code, re.IGNORECASE):
+                            continue
+                        desc = (row[1] or "").strip().replace("\n", " ")
+                        rbt = (row[2] or "").strip().replace("\n", " ") if len(row) > 2 else ""
+                        if desc:
+                            rows.append((co_code.upper(), desc, rbt))
+                    if rows:
+                        return rows
+        return []
+    except Exception as exc:  # noqa: BLE001 — never let a bad PDF break generation
+        logger.warning(
+            "_find_co_table_in_pdf(): failed to parse %s for %r: %s",
+            pdf_path, course_code, exc,
+        )
+        return []
+
+
+def extract_syllabus_co_table(course_code: str) -> List[Tuple[str, str, str]]:
+    """Find the official CO table for *course_code* across the knowledge base.
+
+    Scans every PDF in ``config.knowledge_dir`` (not a hardcoded filename —
+    whichever scheme/syllabus document the faculty has uploaded, under
+    whatever name) for a "Course Code : <course_code>" match, returning the
+    first CO table found. Results are cached per (file, mtime, course code)
+    so repeated generations for the same course don't re-scan a large
+    syllabus PDF every time.
+
+    Args:
+        course_code: Course code to look up (e.g. "BCS703A"). Case-insensitive.
+
+    Returns:
+        List of ``(co_code, description, rbt_level)`` tuples, empty if no
+        matching course code / CO table is found anywhere in the knowledge
+        base (e.g. the syllabus hasn't been uploaded, or this course isn't
+        in it) — callers should treat this as "no official CO table
+        available" and fall back gracefully, never raise.
+    """
+    code = (course_code or "").strip().upper()
+    if not code:
+        return []
+
+    knowledge_dir = config.knowledge_dir
+    if not knowledge_dir.exists():
+        return []
+
+    for pdf_path in sorted(knowledge_dir.glob("*.pdf")):
+        try:
+            mtime = pdf_path.stat().st_mtime
+        except OSError:
+            continue
+        cache_key = (str(pdf_path), mtime, code)
+        if cache_key in _SYLLABUS_CO_CACHE:
+            cached = _SYLLABUS_CO_CACHE[cache_key]
+            if cached:
+                return cached
+            continue
+
+        rows = _find_co_table_in_pdf(pdf_path, code)
+        _SYLLABUS_CO_CACHE[cache_key] = rows
+        if rows:
+            logger.info(
+                "extract_syllabus_co_table(): found %d COs for %r in %s",
+                len(rows), code, pdf_path.name,
+            )
+            return rows
+
+    return []
+
 
 def _cli_main() -> None:
     """Command-line verification helper.

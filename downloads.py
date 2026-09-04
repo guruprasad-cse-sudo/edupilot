@@ -842,6 +842,7 @@ class WordExporter:
                 doc, pa, vtu_modules, show_module_labels=is_semester_exam
             )
             self._add_co_coverage_table(doc, vtu_modules)
+            self._add_official_co_table(doc, pa)
         elif is_case_study:
             self._add_header(doc, pa)
             self._add_title_block(doc, pa)
@@ -1395,6 +1396,63 @@ class WordExporter:
         doc.add_paragraph()
 
     @staticmethod
+    def _add_official_co_table(doc: DocxDocument, pa: ParsedAssessment) -> None:
+        """Render the official syllabus CO table, if one can be found.
+
+        Looks up ``pa.course_code`` against whatever syllabus/scheme PDF
+        is in the knowledge base (see
+        :func:`rag.extract_syllabus_co_table` — dynamic, not tied to a
+        specific filename) and, if found, prints the institution's actual
+        approved Course Outcomes wording, matching the standard syllabus
+        format: "Course Outcomes (COs): At the end of the Course, the
+        Student will be able to:" followed by a CO / description table.
+        Renders nothing when the course code isn't found anywhere in the
+        knowledge base (e.g. the syllabus hasn't been uploaded, or this
+        is a course it doesn't cover) — this is expected and not an
+        error, so it fails silently rather than showing a placeholder.
+
+        Args:
+            doc: The in-progress python-docx Document.
+            pa: The parsed assessment (uses ``pa.course_code``).
+        """
+        if not pa.course_code:
+            return
+
+        from rag import extract_syllabus_co_table  # lazy: avoid heavy rag.py import at module load
+
+        try:
+            co_rows = extract_syllabus_co_table(pa.course_code)
+        except Exception:  # noqa: BLE001 — never let this break export
+            return
+        if not co_rows:
+            return
+
+        h = doc.add_heading(
+            "Course Outcomes (COs): At the end of the Course, the Student "
+            "will be able to:",
+            level=2,
+        )
+        h.runs[0].font.color.rgb = RGBColor(0x1A, 0x37, 0x6C)
+        h.runs[0].font.size = Pt(12)
+
+        table = doc.add_table(rows=len(co_rows), cols=2)
+        table.style = "Table Grid"
+        table.autofit = False
+        table.columns[0].width = Inches(0.8)
+        table.columns[1].width = Inches(5.0)
+        for i, (co, desc, _rbt) in enumerate(co_rows):
+            cell_co = table.cell(i, 0)
+            cell_co.text = co
+            cell_co.paragraphs[0].runs[0].bold = True
+            cell_co.width = Inches(0.8)
+
+            cell_desc = table.cell(i, 1)
+            cell_desc.text = desc
+            cell_desc.width = Inches(5.0)
+
+        doc.add_paragraph()
+
+    @staticmethod
     def _bloom_short_code(bloom_level: str) -> str:
         """Map a full Bloom's level name to its short "L1"-"L6" code."""
         order = [
@@ -1936,6 +1994,7 @@ class PDFExporter:
                 )
             )
             story.extend(self._build_co_coverage_table(vtu_modules, styles))
+            story.extend(self._build_official_co_table(pa, styles))
         else:
             # ── Title block ──────────────────────────────────────────────
             story.append(Paragraph(self._esc(pa.university), styles["university"]))
@@ -2426,6 +2485,58 @@ class PDFExporter:
             ])
         )
         return [Spacer(1, 8), KeepTogether([table]), Spacer(1, 8)]
+
+    def _build_official_co_table(self, pa: ParsedAssessment, styles: dict) -> list:
+        """Build the official syllabus CO table, if one can be found.
+
+        Mirrors :meth:`WordExporter._add_official_co_table` — see its
+        docstring for the lookup logic and graceful-empty behaviour.
+
+        Args:
+            pa: The parsed assessment (uses ``pa.course_code``).
+            styles: Named ParagraphStyle dict.
+
+        Returns:
+            list: Flowables for the official CO table (empty if none found).
+        """
+        if not pa.course_code:
+            return []
+
+        from rag import extract_syllabus_co_table  # lazy import
+
+        try:
+            co_rows = extract_syllabus_co_table(pa.course_code)
+        except Exception:  # noqa: BLE001
+            return []
+        if not co_rows:
+            return []
+
+        flow: list = [
+            Paragraph(
+                "Course Outcomes (COs): At the end of the Course, the "
+                "Student will be able to:",
+                styles["section_heading"],
+            )
+        ]
+        table_data = [
+            [co, Paragraph(self._esc(desc), styles["vtu_cell_text"])]
+            for co, desc, _rbt in co_rows
+        ]
+        table = Table(table_data, colWidths=[2.0 * cm, 14.0 * cm])
+        table.setStyle(
+            TableStyle([
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+                ("FONTNAME", (0, 0), (0, -1), "Helvetica-Bold"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ])
+        )
+        flow.append(table)
+        flow.append(Spacer(1, 8))
+        return flow
 
     @staticmethod
     def _bloom_short_code(bloom_level: str) -> str:
