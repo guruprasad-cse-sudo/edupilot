@@ -607,8 +607,14 @@ def render_generation_form() -> Optional[dict]:
         key="gen_assessment_type",
     )
     _is_internal = assessment_type == AssessmentType.INTERNAL.value
+    # Internal Assessment renders as 5 OR-pairs and the student only ever
+    # answers ONE side per pair — so the true achievable total is
+    # (5 pairs × marks_per_question), not (question_count × marks_per_
+    # question). To hit the standard 50-mark IAT total, each pair (i.e.
+    # each side of each OR) must be worth 10 marks, hence 10 here — NOT
+    # 5, which would only reach 25 (5 pairs × 5).
     _default_question_count, _default_marks_per_question = (
-        (10, 5) if _is_internal else (5, 5)
+        (10, 10) if _is_internal else (5, 5)
     )
     if edit_plan:
         # Editing a previously generated plan always wins over the
@@ -702,6 +708,13 @@ def render_generation_form() -> Optional[dict]:
                     value=_default_marks_per_question,
                     step=1,
                     key=f"marks_per_question_{assessment_type}",
+                    help=(
+                        "For Internal Assessment, this is the marks per "
+                        "OR-pair (only one side is answered), not per raw "
+                        "question — 10 marks × 5 pairs = 50 total, the "
+                        "standard IAT max marks."
+                        if _is_internal else None
+                    ),
                 )
             difficulty = st.select_slider(
                 "Difficulty", options=DIFFICULTY_OPTIONS,
@@ -726,14 +739,17 @@ def render_generation_form() -> Optional[dict]:
         )
 
         vtu_marks_blueprint = st.text_area(
-            "Custom Sub-Question Marks (optional — Semester Examination only)",
+            "Custom Sub-Question Marks (optional — Semester Examination "
+            "& Internal Assessment)",
             value=str(_ep("vtu_marks_blueprint")),
             placeholder=(
-                "Only used when Assessment Type is \"Semester Examination\". "
                 "One line per topic, giving the exact marks for each "
                 "lettered sub-part of both OR-alternative questions:\n"
                 "Autoencoders: 5,5,10 | 5,5,10\n"
                 "GANs: 5,5,10 | 10,10\n"
+                "For Internal Assessment with a), b), c) sub-parts, e.g. "
+                "10 marks per pair split three ways:\n"
+                "BI Basics: 4,4,2 | 4,4,2\n"
                 "Topics left out fall back to automatic equal-marks "
                 "distribution — leave this entirely blank to keep that "
                 "default behaviour for every topic."
@@ -745,7 +761,11 @@ def render_generation_form() -> Optional[dict]:
                 "topic. The AI will generate content scoped to match each "
                 "marks value (e.g. a 10-mark sub-part gets a more detailed "
                 "answer than a 3-mark one). Topic names must match the "
-                "Topics field above."
+                "Topics field above. For Internal Assessment, each side's "
+                "marks must sum to the paper's Marks / Question value "
+                "(10 by default, for a 50-mark paper across 5 pairs); "
+                "for Semester Examination, each side must sum to "
+                f"{VTU_MARKS_PER_FULL_QUESTION}."
             ),
         )
 
@@ -797,6 +817,33 @@ def render_generation_form() -> Optional[dict]:
                         f"Each full question must total exactly "
                         f"{VTU_MARKS_PER_FULL_QUESTION} marks."
                     )
+    elif assessment_type == AssessmentType.INTERNAL.value:
+        if vtu_marks_blueprint.strip():
+            parsed_bp = parse_vtu_marks_blueprint(vtu_marks_blueprint)
+            target = int(marks_per_question)
+            for line_topic, (marks_a, marks_b) in parsed_bp.items():
+                if sum(marks_a) != target:
+                    errors.append(
+                        f"Custom marks for \"{line_topic}\" (Q-A side) sum "
+                        f"to {sum(marks_a)}, not {target}. Each full "
+                        f"question must total exactly {target} marks "
+                        f"(the Marks / Question value above)."
+                    )
+                if sum(marks_b) != target:
+                    errors.append(
+                        f"Custom marks for \"{line_topic}\" (Q-B side) sum "
+                        f"to {sum(marks_b)}, not {target}. Each full "
+                        f"question must total exactly {target} marks "
+                        f"(the Marks / Question value above)."
+                    )
+            topic_list = [t.strip() for t in topics.split(",") if t.strip()]
+            if len(topic_list) > 5:
+                errors.append(
+                    "Internal Assessment with custom sub-question marks "
+                    "supports at most 5 topics (5 OR-pairs). You entered "
+                    f"{len(topic_list)} topics — please reduce the Topics "
+                    "field to 5 or fewer."
+                )
 
     if errors:
         for e in errors:
