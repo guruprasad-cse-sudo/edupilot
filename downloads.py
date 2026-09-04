@@ -455,6 +455,55 @@ def _mirror_pair_co_bloom(pair: List["VTUQuestionGroup"]) -> None:
         b_sp.question.bloom_level = a_sp.question.bloom_level
 
 
+def _compute_co_coverage(modules: List["VTUModule"]) -> List[tuple]:
+    """Compute marks-weighted CO coverage percentages for a VTU-style paper.
+
+    Only the achievable side of each OR-pair (index 0 — the side actually
+    counted toward the paper's max marks, matching the ``true_max_marks``
+    calculation used elsewhere) is counted, since a student only ever
+    answers one side per pair and _mirror_pair_co_bloom already keeps
+    both sides' CO/Bloom pattern identical anyway. When a sub-part maps
+    to multiple COs, its marks are attributed to the first (primary) CO
+    only, so percentages sum to 100% rather than double-counting.
+
+    Args:
+        modules: Pre-built VTU module/OR-pair layout.
+
+    Returns:
+        List of ``(co_code, percentage)`` tuples for every CO that
+        appears at least once, sorted by CO code (e.g. "CO1" before
+        "CO2"). Empty list when there are no marks to attribute.
+    """
+    co_marks: dict = {}
+    total_marks = 0
+    for m in modules:
+        for pair in m.pairs[:1]:
+            for group in pair[:1]:
+                for sp in group.subparts:
+                    try:
+                        marks = int(sp.question.marks)
+                    except (TypeError, ValueError):
+                        continue
+                    total_marks += marks
+                    co_str = (sp.question.co_mapping or "").strip()
+                    primary_co = co_str.split(",")[0].strip() if co_str else ""
+                    if not primary_co:
+                        continue
+                    co_marks[primary_co] = co_marks.get(primary_co, 0) + marks
+
+    if total_marks == 0:
+        return []
+
+    def _co_sort_key(co: str):
+        digits = "".join(ch for ch in co if ch.isdigit())
+        return (0, int(digits)) if digits else (1, co)
+
+    return [
+        (co, round(marks * 100 / total_marks))
+        for co, marks in sorted(co_marks.items(), key=lambda kv: _co_sort_key(kv[0]))
+    ]
+
+
 def build_fixed_pair_layout(
     questions: List[ParsedQuestion], pair_count: int = 5
 ) -> List[VTUModule]:
@@ -792,6 +841,7 @@ class WordExporter:
             self._add_vtu_question_table(
                 doc, pa, vtu_modules, show_module_labels=is_semester_exam
             )
+            self._add_co_coverage_table(doc, vtu_modules)
         elif is_case_study:
             self._add_header(doc, pa)
             self._add_title_block(doc, pa)
@@ -1302,6 +1352,45 @@ class WordExporter:
             for c, cell in enumerate(row.cells):
                 if c < len(col_widths):
                     cell.width = col_widths[c]
+
+        doc.add_paragraph()
+
+    def _add_co_coverage_table(
+        self, doc: DocxDocument, modules: List["VTUModule"]
+    ) -> None:
+        """Render the CO coverage summary table right after the questions.
+
+        A two-row table: "Course Outcomes" header row listing every CO
+        that appears in the paper, and a "Percentage" row with each CO's
+        marks-weighted share of the paper's total (achievable) marks —
+        see :func:`_compute_co_coverage` for how that's calculated.
+        Renders nothing when there's no CO data to show.
+
+        Args:
+            doc: The in-progress python-docx Document.
+            modules: Pre-built VTU module/OR-pair layout.
+        """
+        coverage = _compute_co_coverage(modules)
+        if not coverage:
+            return
+
+        table = doc.add_table(rows=2, cols=len(coverage) + 1)
+        table.style = "Table Grid"
+
+        table.cell(0, 0).text = "Course Outcomes"
+        table.cell(0, 0).paragraphs[0].runs[0].bold = True
+        table.cell(1, 0).text = "Percentage"
+        table.cell(1, 0).paragraphs[0].runs[0].bold = True
+
+        for i, (co, pct) in enumerate(coverage, start=1):
+            cell_co = table.cell(0, i)
+            cell_co.text = co
+            cell_co.paragraphs[0].runs[0].bold = True
+            cell_co.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+            cell_pct = table.cell(1, i)
+            cell_pct.text = f"{pct}%"
+            cell_pct.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
         doc.add_paragraph()
 
@@ -1846,6 +1935,7 @@ class PDFExporter:
                     pa, styles, vtu_modules, show_module_labels=is_semester_exam
                 )
             )
+            story.extend(self._build_co_coverage_table(vtu_modules, styles))
         else:
             # ── Title block ──────────────────────────────────────────────
             story.append(Paragraph(self._esc(pa.university), styles["university"]))
@@ -2294,6 +2384,48 @@ class PDFExporter:
         ])
         table.setStyle(TableStyle(style_cmds))
         return [table]
+
+    def _build_co_coverage_table(
+        self, modules: List["VTUModule"], styles: dict
+    ) -> list:
+        """Build the CO coverage summary table right after the questions.
+
+        A two-row table: "Course Outcomes" header row listing every CO
+        that appears in the paper, and a "Percentage" row with each CO's
+        marks-weighted share of the paper's total (achievable) marks —
+        see :func:`_compute_co_coverage` for how that's calculated.
+        Returns an empty list when there's no CO data to show.
+
+        Args:
+            modules: Pre-built VTU module/OR-pair layout.
+            styles: Named ParagraphStyle dict.
+
+        Returns:
+            list: Flowables for the CO coverage table (empty if no data).
+        """
+        coverage = _compute_co_coverage(modules)
+        if not coverage:
+            return []
+
+        header_row = ["Course Outcomes"] + [co for co, _ in coverage]
+        pct_row = ["Percentage"] + [f"{pct}%" for _, pct in coverage]
+        col_widths = [3.5 * cm] + [
+            (16.0 - 3.5) / len(coverage) * cm for _ in coverage
+        ]
+        table = Table([header_row, pct_row], colWidths=col_widths)
+        table.setStyle(
+            TableStyle([
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+                ("FONTNAME", (0, 0), (-1, -1), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+                ("ALIGN", (1, 0), (-1, -1), "CENTER"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ])
+        )
+        return [Spacer(1, 8), KeepTogether([table]), Spacer(1, 8)]
 
     @staticmethod
     def _bloom_short_code(bloom_level: str) -> str:
