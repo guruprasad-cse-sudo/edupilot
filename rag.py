@@ -21,6 +21,7 @@ Purpose: Retrieval-Augmented Generation (RAG) layer. Handles ingestion of
 
 from __future__ import annotations
 
+import gc
 import json
 import shutil
 import sys
@@ -45,6 +46,12 @@ SUPPORTED_EXTENSIONS: tuple[str, ...] = (".pdf", ".txt", ".docx")
 # RAGModule instantiation (one model load per process, not per pipeline run).
 # ---------------------------------------------------------------------------
 _EMBEDDINGS_CACHE: dict = {}
+
+# Number of chunks embedded per FAISS.from_documents()/add_documents() call
+# during ingest(). Keeps peak memory roughly constant regardless of
+# knowledge-base size — see the comment in ingest() for why this matters
+# on memory-constrained hosts.
+EMBEDDING_BATCH_SIZE = 32
 CHUNK_SIZE: int = 500
 CHUNK_OVERLAP: int = 50
 META_FILENAME: str = "meta.json"
@@ -584,7 +591,31 @@ class RAGModule:
 
         embeddings = self._get_embeddings()
         logger.info("Embedding %d chunks — this may take a moment …", len(lc_docs))
-        new_store = FAISS.from_documents(lc_docs, embeddings)
+
+        # Embed in small batches rather than one FAISS.from_documents() call
+        # over the entire document set. Embedding all chunks at once holds
+        # every chunk's text AND its resulting vector in memory
+        # simultaneously (on top of the already-loaded ONNX runtime,
+        # Streamlit, and LangChain baseline) — on memory-constrained hosts
+        # (e.g. Render's 512MB starter plan) this was observed to exceed
+        # the limit and crash the process mid-ingest. Batching keeps peak
+        # memory roughly constant regardless of knowledge-base size, at
+        # the cost of a few extra FAISS merge calls (index build still
+        # only touches disk once, at the end, via the atomic swap below).
+        batch_size = EMBEDDING_BATCH_SIZE
+        new_store = None
+        for start in range(0, len(lc_docs), batch_size):
+            batch = lc_docs[start: start + batch_size]
+            if new_store is None:
+                new_store = FAISS.from_documents(batch, embeddings)
+            else:
+                new_store.add_documents(batch)
+            logger.debug(
+                "  embedded %d/%d chunks",
+                min(start + batch_size, len(lc_docs)),
+                len(lc_docs),
+            )
+            gc.collect()
 
         # ── Atomic write (temp-dir then swap) ─────────────────────────────
         self._vectorstore_path.mkdir(parents=True, exist_ok=True)
