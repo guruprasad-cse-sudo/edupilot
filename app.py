@@ -592,15 +592,38 @@ def render_generation_form() -> Optional[dict]:
         except ValueError:
             _test_date_default = None
 
+    # Assessment Type lives OUTSIDE the form (unlike every other field) so
+    # that choosing it triggers an immediate rerun — Streamlit widgets
+    # inside st.form() don't rerun the script until the form is submitted,
+    # so a selectbox in there can't drive other fields' defaults live. This
+    # lets "No. of Questions" / "Marks / Question" below default to the
+    # institutional Internal Assessment paper shape (10 questions, 5 marks
+    # each = 50 total, exactly 5 OR-pairs) the moment Internal Assessment
+    # is picked, without the user needing to manually change them.
+    assessment_type = st.selectbox(
+        "Assessment Type *", ASSESSMENT_TYPES,
+        index=_type_index,
+        help="Select the OBE assessment category.",
+        key="gen_assessment_type",
+    )
+    _is_internal = assessment_type == AssessmentType.INTERNAL.value
+    _default_question_count, _default_marks_per_question = (
+        (10, 5) if _is_internal else (5, 5)
+    )
+    if edit_plan:
+        # Editing a previously generated plan always wins over the
+        # type-based default, same as every other field on this form.
+        _default_question_count = _ep_int(
+            "question_count", _default_question_count, 1, 30
+        )
+        _default_marks_per_question = _ep_int(
+            "marks_per_question", _default_marks_per_question, 1, 100
+        )
+
     with st.form("generation_form"):
         col_left, col_right = st.columns(2)
 
         with col_left:
-            assessment_type = st.selectbox(
-                "Assessment Type *", ASSESSMENT_TYPES,
-                index=_type_index,
-                help="Select the OBE assessment category.",
-            )
             course_name = st.text_input(
                 "Course Name *",
                 value=str(_ep("course_name")),
@@ -663,15 +686,22 @@ def render_generation_form() -> Optional[dict]:
                 question_count = st.number_input(
                     "No. of Questions *",
                     min_value=1, max_value=30,
-                    value=_ep_int("question_count", 5, 1, 30),
+                    value=_default_question_count,
                     step=1,
+                    key=f"question_count_{assessment_type}",
+                    help=(
+                        "Defaults to 10 for Internal Assessment (5 OR-pairs, "
+                        "matching the institutional IAT paper format)."
+                        if _is_internal else None
+                    ),
                 )
             with col_mpq:
                 marks_per_question = st.number_input(
                     "Marks / Question *",
                     min_value=1, max_value=100,
-                    value=_ep_int("marks_per_question", 5, 1, 100),
+                    value=_default_marks_per_question,
                     step=1,
+                    key=f"marks_per_question_{assessment_type}",
                 )
             difficulty = st.select_slider(
                 "Difficulty", options=DIFFICULTY_OPTIONS,
