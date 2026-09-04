@@ -538,6 +538,7 @@ class AssessmentPlan:
             "faculty_name": self.faculty_name,
             "extra_instructions": self.extra_instructions,
             "test_date": self.test_date,
+            "vtu_marks_blueprint": self.vtu_marks_blueprint,
         }
 
     @classmethod
@@ -581,6 +582,9 @@ class AssessmentPlan:
             faculty_name=str(data.get("faculty_name", "")).strip(),
             extra_instructions=str(data.get("extra_instructions", "")).strip(),
             test_date=str(data.get("test_date", "")).strip(),
+            vtu_marks_blueprint=str(
+                data.get("vtu_marks_blueprint", "")
+            ).strip(),
         )
 
 
