@@ -374,19 +374,25 @@ def build_fixed_pair_layout(
 ) -> List[VTUModule]:
     """Group a flat question list into exactly ``pair_count`` OR-pairs.
 
-    Unlike :func:`build_vtu_paper_layout`, this does NOT group by the
-    ``topic`` field — it always targets a fixed pair count (10 questions
-    for the default pair_count=5), splitting the flat, already-ordered
-    question list evenly across ``pair_count * 2`` full-question groups.
+    Two grouping strategies, chosen automatically:
 
-    This exists because Internal Assessment papers must always render
-    as the institutional IAT format (5 OR-pairs, 10 questions total),
-    and topic-based grouping is unreliable for this: if the generation
-    agent tags every question with the same (or an empty) topic, topic
-    grouping collapses everything into a single giant pair instead of 5
-    — which is exactly the bug this function fixes. Using question order
-    directly guarantees the target pair count regardless of how topics
-    were tagged upstream.
+    1. **Blueprint-aware** (preferred, used whenever every question in a
+       topic carries a faculty-authored ``blueprint_group`` of "A" or
+       "B" — see the Custom Sub-Question Marks field on the Generate
+       form). Each topic becomes exactly one pair, split precisely along
+       the A/B boundary the faculty specified, so multi-part questions
+       (e.g. a), b), c) sub-parts with faculty-chosen marks) render
+       exactly as authored. This is the same per-topic blueprint logic
+       :func:`build_vtu_paper_layout` already uses for Semester
+       Examination, reused here for Internal Assessment.
+    2. **Flat fallback** (used when blueprint tagging is absent or only
+       partial): splits the flat, ordered question list evenly across
+       ``pair_count * 2`` groups regardless of topic. This exists
+       because topic-based grouping alone is unreliable — if every
+       question ends up tagged with the same (or an empty) topic, topic
+       grouping collapses everything into a single giant pair instead of
+       ``pair_count`` — so this guarantees the target pair count no
+       matter how (or whether) topics were tagged upstream.
 
     Args:
         questions: Flat, already-parsed question list in original order.
@@ -397,19 +403,57 @@ def build_fixed_pair_layout(
         papers render without "Module – N" divider rows — see
         ``show_module_labels=False`` in the exporters).
     """
-    total = len(questions)
-    group_count = pair_count * 2
-    if total == 0 or group_count == 0:
+    if not questions:
         return []
 
-    # If fewer questions were generated than the target group count,
-    # shrink the number of groups (and therefore pairs) to match rather
-    # than emitting empty groups — this only occurs when generation
-    # produced fewer than 10 questions for an Internal Assessment.
-    group_count = min(group_count, total)
+    # ── Strategy 1: blueprint-aware, grouped by topic ──────────────────
+    groups_by_topic: dict = {}
+    topic_order: List[str] = []
+    for q in questions:
+        key = q.topic.strip() if q.topic and q.topic.strip() else "General"
+        if key not in groups_by_topic:
+            groups_by_topic[key] = []
+            topic_order.append(key)
+        groups_by_topic[key].append(q)
+
+    all_topics_blueprinted = all(
+        bool(qs) and all(q.blueprint_group in ("A", "B") for q in qs)
+        for qs in groups_by_topic.values()
+    )
+
+    letters = "abcdefgh"
+    if all_topics_blueprinted and len(topic_order) >= 1:
+        modules: List[VTUModule] = []
+        q_counter = 1
+        for m_idx, topic in enumerate(topic_order, start=1):
+            topic_questions = groups_by_topic[topic]
+            chunks = [
+                [q for q in topic_questions if q.blueprint_group == "A"],
+                [q for q in topic_questions if q.blueprint_group == "B"],
+            ]
+            chunks = [c for c in chunks if c]
+            groups: List[VTUQuestionGroup] = []
+            for chunk in chunks:
+                subparts = [
+                    VTUSubQuestion(letter=letters[i], question=cq)
+                    for i, cq in enumerate(chunk)
+                ]
+                groups.append(
+                    VTUQuestionGroup(q_number=q_counter, subparts=subparts)
+                )
+                q_counter += 1
+            modules.append(
+                VTUModule(module_number=m_idx, label="", pairs=[groups])
+            )
+        return modules
+
+    # ── Strategy 2: flat fallback, ignores topic entirely ──────────────
+    total = len(questions)
+    group_count = min(pair_count * 2, total)
+    if group_count == 0:
+        return []
 
     base, remainder = divmod(total, group_count)
-    letters = "abcdefgh"
     chunks: List[List[ParsedQuestion]] = []
     idx = 0
     for i in range(group_count):
