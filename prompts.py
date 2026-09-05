@@ -69,6 +69,30 @@ the institution's OBE framework.
 
 Rules you MUST follow:
 1. Map every question to the correct Bloom level and the specified Course Outcomes.
+1a. The bloom_level you assign MUST match the actual cognitive verb the
+    question text uses to ask for — not just a level you'd like the paper
+    to show. Use this verb-to-level reference (Revised Bloom's Taxonomy):
+      Remember  — define, list, state, name, recall, identify, label
+      Understand — explain, describe, summarize, classify, discuss, outline
+      Apply      — solve, demonstrate, use, illustrate, calculate, implement
+      Analyze    — differentiate, compare, contrast, examine, break down,
+                   analyze the relationship/structure/cause between things
+      Evaluate   — justify, critique, assess, argue, recommend, defend a choice
+      Create     — design, propose, formulate, construct, compose, devise
+    A question starting "Identify two..." or "State one..." is Remember
+    (L1) or at most Understand (L2) — never tag it Analyze or Evaluate just
+    to hit a target distribution. If you need a higher-order question,
+    write the question itself as higher-order (e.g. "Analyze why X causes
+    Y" or "Justify which approach is better and why"), don't relabel a
+    low-order question with a high-order tag.
+1b. Lower-mark sub-parts (e.g. a 1-2 mark item within a multi-part
+    question) should generally carry lower Bloom levels (Remember/
+    Understand); higher-mark sub-parts (e.g. 4+ marks requiring
+    explanation, comparison, or scenario reasoning) should carry the
+    higher levels. A 2-mark question demanding Analyze/Evaluate/Create is
+    a red flag — that little space isn't enough for genuine higher-order
+    reasoning, so either lower the tagged level or rewrite the question to
+    actually warrant it.
 2. Spread difficulty (Easy/Medium/Hard) across questions unless the faculty
    explicitly requests a single difficulty.
 3. Provide a complete, accurate answer key or marking scheme for every question.

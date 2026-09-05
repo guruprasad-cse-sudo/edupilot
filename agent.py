@@ -84,6 +84,80 @@ _DIFFICULTY_MAP: Dict[str, DifficultyLevel] = {
     "hard": DifficultyLevel.HARD,
 }
 
+# Leading verbs that unambiguously signal Remember-level recall — used by
+# _fix_bloom_verb_mismatches() as a conservative, deterministic safety net.
+# Intentionally short and unambiguous: this only catches clear-cut cases
+# (e.g. "Identify two..." tagged Analyze) rather than trying to fully
+# re-derive Bloom level from question text, which is far too fuzzy to do
+# reliably with a keyword list. The prompt-level guidance (see rule 1a/1b
+# in ASSESSMENT_SYSTEM_PROMPT) is the primary defence; this just catches
+# what slips through.
+_REMEMBER_LEVEL_VERBS = (
+    "identify", "state", "list", "define", "name", "recall", "mention",
+    "what is", "what are", "who is", "who are",
+)
+
+
+def _bloom_verb_calls_for_remember(q: Question) -> bool:
+    """True if *q*'s own question text opens with an unambiguous recall verb.
+
+    Pure text check — does not look at or modify ``q.bloom_level``. Used
+    by both :func:`_fix_bloom_verb_mismatches` (global safety net) and
+    the per-pair mirroring check in ``_apply_blueprint_marks`` (checks
+    both OR-alternative sides' own text before deciding whether to
+    demote the pair together).
+
+    Args:
+        q: Question to check.
+
+    Returns:
+        bool: True if the text starts with a Remember-level verb (after
+        stripping a leading "a) "/"iii) " sub-part marker).
+    """
+    text = (q.question_text or "").strip().lower()
+    text = re.sub(r"^[a-z]{1,3}[\)\.]\s*", "", text)
+    text = re.sub(r"^[ivx]{1,4}[\)\.]\s*", "", text)
+    return any(text.startswith(v) for v in _REMEMBER_LEVEL_VERBS)
+
+
+def _fix_bloom_verb_mismatches(questions: List[Question]) -> None:
+    """Downgrade obviously mismatched Bloom levels based on the leading verb.
+
+    Deterministic safety net for cases like "Identify two key activities…"
+    tagged Analyze or Evaluate — a low-order recall verb paired with a
+    high-order Bloom tag. Only fires on unambiguous verb matches at the
+    very start of the question text, and only downgrades FROM Apply-or-
+    higher TO Remember — it never upgrades a level, since under-claiming
+    is harmless but a falsely high-order tag misrepresents what the
+    question actually tests.
+
+    This is the GLOBAL pass, applied once per generation run in
+    :meth:`AssessmentAgent.generate` to every question regardless of
+    path. For blueprinted (a/b/c sub-part) assessments,
+    ``_apply_blueprint_marks`` already applies the same check pairwise
+    (per OR-alternative side) before this runs, so mirrored pairs stay
+    consistent — this pass is then mostly a no-op for those, and the
+    real coverage here is single-call / non-blueprinted generation.
+
+    Args:
+        questions: Questions to check in place (mutates ``bloom_level``
+            on any that match).
+    """
+    demote_from = {
+        BloomLevel.APPLY, BloomLevel.ANALYZE, BloomLevel.EVALUATE,
+        BloomLevel.CREATE,
+    }
+    for q in questions:
+        if q.bloom_level not in demote_from:
+            continue
+        if _bloom_verb_calls_for_remember(q):
+            logger.debug(
+                "_fix_bloom_verb_mismatches(): downgrading %s from %s to "
+                "Remember — leading verb indicates recall.",
+                q.question_id, q.bloom_level,
+            )
+            q.bloom_level = BloomLevel.REMEMBER
+
 _ASSESSMENT_TYPE_MAP: Dict[str, AssessmentType] = {
     "internal assessment": AssessmentType.INTERNAL,
     "internal": AssessmentType.INTERNAL,
@@ -871,17 +945,20 @@ class AssessmentAgent:
             parse_vtu_marks_blueprint(plan.vtu_marks_blueprint)
         )
         if is_semester_exam or has_custom_blueprint or self._needs_batching(plan):
-            return self._generate_batched(
+            result = self._generate_batched(
                 plan=plan,
                 rag_context=rag_context,
                 sources=sources or [],
                 batch_progress_callback=batch_progress_callback,
             )
-        return self._generate_single(
-            plan=plan,
-            rag_context=rag_context,
-            sources=sources or [],
-        )
+        else:
+            result = self._generate_single(
+                plan=plan,
+                rag_context=rag_context,
+                sources=sources or [],
+            )
+        _fix_bloom_verb_mismatches(result.questions)
+        return result
 
     # ------------------------------------------------------------------
     # Batching decision helpers
@@ -1320,9 +1397,18 @@ class AssessmentAgent:
             # even-split fallback picks them up rather than mis-grouping.
 
         # Mirror side A's CO/Bloom pattern onto side B, position by
-        # position — NOT unifying within a side.
+        # position — NOT unifying within a side. Before mirroring, check
+        # BOTH sides' own question text for an obvious verb/Bloom-level
+        # mismatch (e.g. "Identify two…" wrongly tagged Analyze) and, if
+        # either side's text calls for Remember, force the WHOLE PAIR to
+        # Remember together — checking only one side risks leaving the
+        # two OR-alternatives at different levels, which defeats the
+        # "either one is a fair choice" point of mirroring them at all.
         side_a = questions[:len(marks_a)]
         side_b = questions[len(marks_a):len(marks_a) + len(marks_b)]
+        for a_q, b_q in zip(side_a, side_b):
+            if _bloom_verb_calls_for_remember(a_q) or _bloom_verb_calls_for_remember(b_q):
+                a_q.bloom_level = BloomLevel.REMEMBER
         for a_q, b_q in zip(side_a, side_b):
             b_q.co_mapping = list(a_q.co_mapping)
             b_q.bloom_level = a_q.bloom_level
