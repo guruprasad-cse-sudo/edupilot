@@ -977,6 +977,17 @@ def extract_content_diagrams(pdf_path: Path, source_name: str) -> List[dict]:
             decorative_dims = _find_decorative_image_dims(pdf)
             idx = 0
             for page_num, page in enumerate(pdf.pages, start=1):
+                if page_num == 1:
+                    # Cover/title pages almost universally carry the
+                    # institution logo/crest, not a content diagram — and
+                    # a one-off cover logo can slip past both filters
+                    # above (moderate aspect ratio, and it may not repeat
+                    # often enough within THIS document to trip the
+                    # recurring-dimension check, even though it's
+                    # unmistakably decorative). Observed in practice: a
+                    # college crest on a syllabus PDF's cover page got
+                    # catalogued and attached to a generated question.
+                    continue
                 page_text = (page.extract_text() or "").strip()
                 for img in page.images:
                     dim = (round(img["width"]), round(img["height"]))
