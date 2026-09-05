@@ -98,6 +98,81 @@ _REMEMBER_LEVEL_VERBS = (
 )
 
 
+def _normalize_question_text(text: str) -> str:
+    """Normalize question text for duplicate comparison.
+
+    Lowercases, collapses whitespace, and strips common punctuation so
+    trivial formatting differences (extra spaces, a trailing period)
+    don't hide an otherwise-identical duplicate.
+    """
+    text = (text or "").lower().strip()
+    text = re.sub(r"[^\w\s]", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text
+
+
+def _detect_duplicate_questions(questions: List[Question]) -> str:
+    """Find exact/near-exact duplicate question texts across a merged paper.
+
+    Batched generation calls the LLM once per topic with limited
+    cross-batch awareness (see the ``avoid_repeating`` prompt section in
+    ``build_assessment_prompt``) — that reduces but does not guarantee
+    against duplicates, especially for short, generic recall questions
+    ("State one property of X…") that different batches can converge on
+    independently. This is a deterministic backstop: it can't rewrite a
+    duplicate, but it makes sure one doesn't ship silently — flagging it
+    in generation_notes so it surfaces in the exported paper's Agent
+    Notes / review context.
+
+    Args:
+        questions: The full merged, globally-renumbered question list.
+
+    Returns:
+        str: A warning message listing duplicate question_id pairs, or
+        an empty string if no duplicates were found.
+    """
+    seen: Dict[str, str] = {}  # normalized text -> first question_id
+    duplicate_pairs: List[str] = []
+    for q in questions:
+        norm = _normalize_question_text(q.question_text)
+        if not norm:
+            continue
+        if norm in seen:
+            duplicate_pairs.append(f"{seen[norm]} & {q.question_id}")
+        else:
+            seen[norm] = q.question_id
+
+    if not duplicate_pairs:
+        return ""
+    return (
+        "WARNING: possible duplicate questions detected (near-identical "
+        "text) at " + ", ".join(duplicate_pairs) + " — please review "
+        "before distributing this paper."
+    )
+
+
+def _parse_target_bloom_levels(bloom_targets: str) -> set:
+    """Parse a comma-separated Bloom targets string into a set of BloomLevel.
+
+    Args:
+        bloom_targets: e.g. "Apply, Analyze, Evaluate". Empty/unparseable
+            entries are ignored.
+
+    Returns:
+        set: Parsed BloomLevel values. Empty set if *bloom_targets* is
+        blank or nothing parses — callers should treat an empty set as
+        "no restriction specified" rather than "nothing is allowed".
+    """
+    if not bloom_targets:
+        return set()
+    levels = set()
+    for part in bloom_targets.split(","):
+        key = part.strip().lower()
+        if key in _BLOOM_MAP:
+            levels.add(_BLOOM_MAP[key])
+    return levels
+
+
 def _bloom_verb_calls_for_remember(q: Question) -> bool:
     """True if *q*'s own question text opens with an unambiguous recall verb.
 
@@ -120,7 +195,9 @@ def _bloom_verb_calls_for_remember(q: Question) -> bool:
     return any(text.startswith(v) for v in _REMEMBER_LEVEL_VERBS)
 
 
-def _fix_bloom_verb_mismatches(questions: List[Question]) -> None:
+def _fix_bloom_verb_mismatches(
+    questions: List[Question], bloom_targets: str = ""
+) -> None:
     """Downgrade obviously mismatched Bloom levels based on the leading verb.
 
     Deterministic safety net for cases like "Identify two key activities…"
@@ -130,6 +207,13 @@ def _fix_bloom_verb_mismatches(questions: List[Question]) -> None:
     higher TO Remember — it never upgrades a level, since under-claiming
     is harmless but a falsely high-order tag misrepresents what the
     question actually tests.
+
+    IMPORTANT: if the faculty specified target Bloom levels for this
+    assessment and Remember isn't one of them, this does NOT downgrade —
+    introducing a level the faculty explicitly didn't select is worse
+    than leaving a slightly-mismatched-but-in-scope tag. The mismatch
+    still gets logged so it's visible for QA, but the paper won't show a
+    Bloom level outside what was requested.
 
     This is the GLOBAL pass, applied once per generation run in
     :meth:`AssessmentAgent.generate` to every question regardless of
@@ -142,21 +226,39 @@ def _fix_bloom_verb_mismatches(questions: List[Question]) -> None:
     Args:
         questions: Questions to check in place (mutates ``bloom_level``
             on any that match).
+        bloom_targets: The plan's requested Bloom levels (comma-
+            separated string, e.g. "Apply, Analyze"). Empty string means
+            no restriction was specified, in which case downgrading to
+            Remember is always allowed.
     """
     demote_from = {
         BloomLevel.APPLY, BloomLevel.ANALYZE, BloomLevel.EVALUATE,
         BloomLevel.CREATE,
     }
+    allowed = _parse_target_bloom_levels(bloom_targets)
+    remember_in_scope = not allowed or BloomLevel.REMEMBER in allowed
     for q in questions:
         if q.bloom_level not in demote_from:
             continue
-        if _bloom_verb_calls_for_remember(q):
-            logger.debug(
-                "_fix_bloom_verb_mismatches(): downgrading %s from %s to "
-                "Remember — leading verb indicates recall.",
-                q.question_id, q.bloom_level,
+        if not _bloom_verb_calls_for_remember(q):
+            continue
+        if not remember_in_scope:
+            logger.warning(
+                "_fix_bloom_verb_mismatches(): %s reads as Remember-level "
+                "(%s) but is tagged %s, and Remember isn't in the "
+                "requested Bloom targets (%s) — leaving the tag as-is "
+                "rather than introducing an excluded level. Consider "
+                "reviewing this question manually.",
+                q.question_id, q.question_text[:60], q.bloom_level,
+                bloom_targets,
             )
-            q.bloom_level = BloomLevel.REMEMBER
+            continue
+        logger.debug(
+            "_fix_bloom_verb_mismatches(): downgrading %s from %s to "
+            "Remember — leading verb indicates recall.",
+            q.question_id, q.bloom_level,
+        )
+        q.bloom_level = BloomLevel.REMEMBER
 
 _ASSESSMENT_TYPE_MAP: Dict[str, AssessmentType] = {
     "internal assessment": AssessmentType.INTERNAL,
@@ -957,7 +1059,7 @@ class AssessmentAgent:
                 rag_context=rag_context,
                 sources=sources or [],
             )
-        _fix_bloom_verb_mismatches(result.questions)
+        _fix_bloom_verb_mismatches(result.questions, plan.bloom_targets)
         return result
 
     # ------------------------------------------------------------------
@@ -1338,6 +1440,7 @@ class AssessmentAgent:
         questions: List[Question],
         blueprint_entry: Tuple[List[int], List[int]],
         topic: str,
+        bloom_targets: str = "",
     ) -> None:
         """Force each question's marks/group to match the faculty blueprint,
         and mirror side A's CO/Bloom pattern onto side B.
@@ -1373,6 +1476,10 @@ class AssessmentAgent:
             blueprint_entry: ``(marks_for_q_a, marks_for_q_b)`` from
                 :func:`parse_vtu_marks_blueprint`.
             topic: Topic name, used only for the log message.
+            bloom_targets: The plan's requested Bloom levels (comma-
+                separated string). If set and Remember isn't among them,
+                the verb-mismatch pairwise check below won't introduce
+                Remember — see :func:`_fix_bloom_verb_mismatches`.
         """
         marks_a, marks_b = blueprint_entry
         expected = marks_a + marks_b
@@ -1404,11 +1511,26 @@ class AssessmentAgent:
         # Remember together — checking only one side risks leaving the
         # two OR-alternatives at different levels, which defeats the
         # "either one is a fair choice" point of mirroring them at all.
+        # Skip the downgrade entirely if Remember isn't in the faculty's
+        # requested Bloom targets — see _fix_bloom_verb_mismatches for
+        # why introducing an excluded level is worse than leaving the
+        # (still mismatched) original tag.
+        allowed = _parse_target_bloom_levels(bloom_targets)
+        remember_in_scope = not allowed or BloomLevel.REMEMBER in allowed
         side_a = questions[:len(marks_a)]
         side_b = questions[len(marks_a):len(marks_a) + len(marks_b)]
         for a_q, b_q in zip(side_a, side_b):
             if _bloom_verb_calls_for_remember(a_q) or _bloom_verb_calls_for_remember(b_q):
-                a_q.bloom_level = BloomLevel.REMEMBER
+                if remember_in_scope:
+                    a_q.bloom_level = BloomLevel.REMEMBER
+                else:
+                    logger.warning(
+                        "AssessmentAgent._apply_blueprint_marks(): topic "
+                        "%r pair reads as Remember-level but Remember "
+                        "isn't in the requested Bloom targets (%s) — "
+                        "leaving tags as-is. Consider reviewing manually.",
+                        topic[:60], bloom_targets,
+                    )
         for a_q, b_q in zip(side_a, side_b):
             b_q.co_mapping = list(a_q.co_mapping)
             b_q.bloom_level = a_q.bloom_level
@@ -1594,7 +1716,8 @@ class AssessmentAgent:
 
             if blueprint_entry is not None:
                 self._apply_blueprint_marks(
-                    batch_assessment.questions, blueprint_entry, batch_topics
+                    batch_assessment.questions, blueprint_entry, batch_topics,
+                    bloom_targets=plan.bloom_targets,
                 )
 
             batch_assessments.append(batch_assessment)
@@ -1764,6 +1887,15 @@ class AssessmentAgent:
 
         merged_count = len(all_questions)
         generation_notes = "; ".join(notes_parts) if notes_parts else ""
+
+        dup_warning = _detect_duplicate_questions(all_questions)
+        if dup_warning:
+            logger.warning(
+                "AssessmentAgent._merge_batches(): %s", dup_warning
+            )
+            generation_notes = (
+                (generation_notes + "; " if generation_notes else "") + dup_warning
+            )
 
         if merged_count < plan.question_count:
             shortfall = plan.question_count - merged_count
