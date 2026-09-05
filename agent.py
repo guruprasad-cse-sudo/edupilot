@@ -1867,6 +1867,7 @@ class AssessmentAgent:
             batch=plan.batch,
             teaching_department=plan.teaching_department,
             academic_year=plan.academic_year,
+            iat_number=plan.iat_number,
         )
 
         return Assessment(

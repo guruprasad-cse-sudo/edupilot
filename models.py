@@ -251,6 +251,13 @@ class AssessmentMetadata:
     """Academic year / term label (e.g. "2025-26 (Even Sem)"), appended
     to the exam title line on the institutional IAT header. Empty
     string when not specified."""
+    iat_number: str = ""
+    """Which Internal Assessment Test this is ("1" or "2"). Drives the
+    fixed Syllabus Coverage table (see downloads.py's
+    _SYLLABUS_COVERAGE_BY_IAT) — a constant, department-wide module
+    coverage convention, not something derived per-question. Empty
+    string when not applicable (e.g. non-IAT assessment types) or not
+    specified, in which case the Syllabus Coverage table is omitted."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -273,6 +280,7 @@ class AssessmentMetadata:
             "batch": self.batch,
             "teaching_department": self.teaching_department,
             "academic_year": self.academic_year,
+            "iat_number": self.iat_number,
         }
 
 
@@ -532,6 +540,7 @@ class AssessmentPlan:
     batch: str = ""
     teaching_department: str = ""
     academic_year: str = ""
+    iat_number: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -559,6 +568,7 @@ class AssessmentPlan:
             "batch": self.batch,
             "teaching_department": self.teaching_department,
             "academic_year": self.academic_year,
+            "iat_number": self.iat_number,
         }
 
     @classmethod
@@ -610,6 +620,7 @@ class AssessmentPlan:
                 data.get("teaching_department", "")
             ).strip(),
             academic_year=str(data.get("academic_year", "")).strip(),
+            iat_number=str(data.get("iat_number", "")).strip(),
         )
 
 

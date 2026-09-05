@@ -689,6 +689,19 @@ def render_generation_form() -> Optional[dict]:
                     help="Optional — appended to the exam title line on "
                          "the header.",
                 )
+            iat_number = ""
+            if _is_internal:
+                _iat_default = str(_ep("iat_number", "1"))
+                iat_number = st.radio(
+                    "Internal Assessment Number",
+                    options=["1", "2"],
+                    index=0 if _iat_default != "2" else 1,
+                    format_func=lambda v: f"{'First' if v == '1' else 'Second'} IAT",
+                    horizontal=True,
+                    help="Drives the fixed Syllabus Coverage table (Module "
+                         "coverage % is a department-wide constant per IAT, "
+                         "not computed from the questions).",
+                )
             topics = st.text_area(
                 "Topics to Cover *",
                 value=str(_ep("topics")),
@@ -908,6 +921,7 @@ def render_generation_form() -> Optional[dict]:
         "batch": batch.strip(),
         "teaching_department": teaching_department.strip(),
         "academic_year": academic_year.strip(),
+        "iat_number": iat_number,
     }
 
 

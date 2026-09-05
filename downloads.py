@@ -22,7 +22,7 @@ import textwrap
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT, TA_RIGHT
@@ -78,6 +78,18 @@ _ACCREDITATION_HIGHLIGHT_RE = re.compile(
     ) + ")"
 )
 _ACCREDITATION_HIGHLIGHT_COLOR = "CC0000"  # red, matches the official paper
+
+# Fixed, department-wide Module coverage convention per Internal Assessment
+# — NOT derived from the generated questions. This matches the syllabus
+# scheme's own stated policy (see the uploaded "CSE Scheme and Syllabus"
+# PDF: "the first Internal test at the end of 40-50% coverage of the
+# syllabus... the second Internal test after covering 85-90% of the
+# syllabus"). Same for every subject, hence a constant rather than
+# something computed per assessment.
+_SYLLABUS_COVERAGE_BY_IAT: Dict[str, List[Tuple[str, int]]] = {
+    "1": [("Module 1", 100), ("Module 2", 100), ("Module 3", 50)],
+    "2": [("Module 3", 50), ("Module 4", 100), ("Module 5", 100)],
+}
 # Institution logo (left) and IQAC accreditation badge (right) for the exam
 # paper header. Drop the actual image files at these paths — both are
 # optional: if a file is missing, the header simply renders without that
@@ -161,6 +173,7 @@ class ParsedAssessment:
     batch: str
     teaching_department: str
     academic_year: str
+    iat_number: str
 
     # Body
     questions: List[ParsedQuestion] = field(default_factory=list)
@@ -282,6 +295,7 @@ class AssessmentParser:
                 cls._safe(getattr(meta, "teaching_department", "")) or department
             ),
             academic_year=cls._safe(getattr(meta, "academic_year", "")),
+            iat_number=cls._safe(getattr(meta, "iat_number", "")),
             questions=parsed_questions,
             generation_notes=generation_notes,
             has_answer_key=has_any_answer_key,
@@ -842,6 +856,7 @@ class WordExporter:
                 doc, pa, vtu_modules, show_module_labels=is_semester_exam
             )
             self._add_co_coverage_table(doc, vtu_modules)
+            self._add_syllabus_coverage_table(doc, pa)
             self._add_official_co_table(doc, pa)
         elif is_case_study:
             self._add_header(doc, pa)
@@ -1388,6 +1403,45 @@ class WordExporter:
             cell_co.text = co
             cell_co.paragraphs[0].runs[0].bold = True
             cell_co.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+            cell_pct = table.cell(1, i)
+            cell_pct.text = f"{pct}%"
+            cell_pct.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+        doc.add_paragraph()
+
+    @staticmethod
+    def _add_syllabus_coverage_table(doc: DocxDocument, pa: ParsedAssessment) -> None:
+        """Render the fixed per-IAT Syllabus Coverage table, if applicable.
+
+        Unlike the CO coverage table above, this is NOT derived from the
+        generated questions — it's a fixed, department-wide Module
+        coverage convention that's the same for every subject (see
+        ``_SYLLABUS_COVERAGE_BY_IAT``). Renders nothing when
+        ``pa.iat_number`` doesn't match a known entry (e.g. not an
+        Internal Assessment, or the IAT Number wasn't set on the form).
+
+        Args:
+            doc: The in-progress python-docx Document.
+            pa: The parsed assessment (uses ``pa.iat_number``).
+        """
+        coverage = _SYLLABUS_COVERAGE_BY_IAT.get((pa.iat_number or "").strip())
+        if not coverage:
+            return
+
+        table = doc.add_table(rows=2, cols=len(coverage) + 1)
+        table.style = "Table Grid"
+
+        table.cell(0, 0).text = "Syllabus Coverage"
+        table.cell(0, 0).paragraphs[0].runs[0].bold = True
+        table.cell(1, 0).text = "Percentage"
+        table.cell(1, 0).paragraphs[0].runs[0].bold = True
+
+        for i, (module, pct) in enumerate(coverage, start=1):
+            cell_mod = table.cell(0, i)
+            cell_mod.text = module
+            cell_mod.paragraphs[0].runs[0].bold = True
+            cell_mod.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
 
             cell_pct = table.cell(1, i)
             cell_pct.text = f"{pct}%"
@@ -1994,6 +2048,7 @@ class PDFExporter:
                 )
             )
             story.extend(self._build_co_coverage_table(vtu_modules, styles))
+            story.extend(self._build_syllabus_coverage_table(pa, styles))
             story.extend(self._build_official_co_table(pa, styles))
         else:
             # ── Title block ──────────────────────────────────────────────
@@ -2467,6 +2522,47 @@ class PDFExporter:
             return []
 
         header_row = ["Course Outcomes"] + [co for co, _ in coverage]
+        pct_row = ["Percentage"] + [f"{pct}%" for _, pct in coverage]
+        col_widths = [3.5 * cm] + [
+            (16.0 - 3.5) / len(coverage) * cm for _ in coverage
+        ]
+        table = Table([header_row, pct_row], colWidths=col_widths)
+        table.setStyle(
+            TableStyle([
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.black),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.black),
+                ("FONTNAME", (0, 0), (-1, -1), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+                ("ALIGN", (1, 0), (-1, -1), "CENTER"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ])
+        )
+        return [Spacer(1, 8), KeepTogether([table]), Spacer(1, 8)]
+
+    def _build_syllabus_coverage_table(
+        self, pa: ParsedAssessment, styles: dict
+    ) -> list:
+        """Build the fixed per-IAT Syllabus Coverage table, if applicable.
+
+        Mirrors :meth:`WordExporter._add_syllabus_coverage_table` — see
+        its docstring; this is a fixed constant, not derived from the
+        generated questions. Returns an empty list when
+        ``pa.iat_number`` doesn't match a known entry.
+
+        Args:
+            pa: The parsed assessment (uses ``pa.iat_number``).
+            styles: Named ParagraphStyle dict.
+
+        Returns:
+            list: Flowables for the table (empty if not applicable).
+        """
+        coverage = _SYLLABUS_COVERAGE_BY_IAT.get((pa.iat_number or "").strip())
+        if not coverage:
+            return []
+
+        header_row = ["Syllabus Coverage"] + [m for m, _ in coverage]
         pct_row = ["Percentage"] + [f"{pct}%" for _, pct in coverage]
         col_widths = [3.5 * cm] + [
             (16.0 - 3.5) / len(coverage) * cm for _ in coverage
