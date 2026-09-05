@@ -394,13 +394,26 @@ def _sanitize_filename(name: str) -> str:
 
 def _rebuild_knowledge_index() -> None:
     """Rebuild the FAISS index from the knowledge directory (blocking)."""
-    from rag import RAGModule
+    from rag import RAGModule, catalog_diagrams_for_knowledge_base
 
     with st.spinner("Indexing documents… (first run downloads the embedding model, ~1 min)"):
         rag = RAGModule()
         count = rag.ingest(force_rebuild=True)
+        try:
+            diagram_count = catalog_diagrams_for_knowledge_base()
+        except Exception:  # noqa: BLE001 — never let diagram cataloging block text indexing
+            logger.warning(
+                "_rebuild_knowledge_index(): diagram cataloging failed, "
+                "continuing without it.", exc_info=True,
+            )
+            diagram_count = 0
     if count > 0:
         st.success(f"Knowledge base indexed: {count} chunks ready for retrieval.")
+        if diagram_count > 0:
+            st.success(
+                f"Also catalogued {diagram_count} content diagram(s) "
+                f"(figures, circuits, network diagrams) for use in generated questions."
+            )
     else:
         st.info("Knowledge base is empty — no documents indexed.")
 
@@ -1824,6 +1837,7 @@ def _reconstruct_assessment(data: Dict[str, Any]) -> Any:
                 ],
                 topic=q_raw.get("topic", ""),
                 case_background=q_raw.get("case_background", ""),
+                diagram_path=q_raw.get("diagram_path", ""),
             )
         )
 

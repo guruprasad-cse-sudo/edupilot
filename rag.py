@@ -32,7 +32,7 @@ from typing import List, Optional, Tuple
 
 from config import config
 from logging_utils import get_logger
-from models import SourceAttribution
+from models import Question, SourceAttribution
 
 logger = get_logger(__name__)
 
@@ -881,6 +881,284 @@ def extract_syllabus_co_table(course_code: str) -> List[Tuple[str, str, str]]:
             return rows
 
     return []
+
+
+# ---------------------------------------------------------------------------
+# Content diagram extraction (figures, circuits, network diagrams)
+# ---------------------------------------------------------------------------
+# Separate again from both the RAG chunking pipeline and the syllabus CO
+# parser above: this pulls genuine content images (technical figures,
+# circuit diagrams, charts) out of knowledge-base PDFs — filtering out
+# decorative template graphics (repeated banners, logos) — and catalogs
+# them with whatever real page text is available, so a generated question
+# can reference a real diagram instead of describing one from scratch.
+#
+# Text-only matching (no OCR): a diagram is only findable if its slide/page
+# has actual extractable text nearby (a title, a caption). Diagrams on
+# fully-flattened image slides (the whole slide is one scanned picture,
+# common for textbook-figure screenshots) have no text to match against
+# and simply stay uncatalogued-by-topic — see the conversation with the
+# person that scoped this decision. A worthwhile future upgrade (OCR
+# fallback) is intentionally NOT included here.
+
+_DIAGRAM_DECORATIVE_THRESHOLD_FRACTION = 0.15
+"""An image dimension repeating on at least this fraction of a document's
+pages is treated as decorative template art (banners, logos) and excluded."""
+
+_DIAGRAM_MIN_AREA_PX = 80 * 80
+"""Images smaller than this (in source pixels) are treated as bullet-point
+icons / decorative glyphs, not content diagrams."""
+
+_DIAGRAM_MAX_ASPECT_RATIO = 3.0
+"""Images more elongated than this (width:height or height:width) are
+treated as decorative ribbon/banner graphics, not content diagrams —
+real technical figures observed in practice are much closer to square."""
+
+_DIAGRAM_MANIFEST_FILENAME = "manifest.json"
+
+_STOPWORDS = {
+    "the", "a", "an", "of", "and", "or", "to", "in", "on", "for", "with",
+    "is", "are", "was", "were", "be", "this", "that", "at", "by", "as",
+    "it", "its", "from", "using", "use", "used", "how", "what", "which",
+}
+
+
+def _find_decorative_image_dims(pdf) -> set:
+    """Return the set of (width, height) pairs that repeat across a
+    document's pages often enough to be template/decorative art."""
+    n_pages = len(pdf.pages)
+    if n_pages == 0:
+        return set()
+    dim_counter: dict = {}
+    for page in pdf.pages:
+        for img in page.images:
+            dim = (round(img["width"]), round(img["height"]))
+            dim_counter[dim] = dim_counter.get(dim, 0) + 1
+    return {
+        dim for dim, count in dim_counter.items()
+        if count / n_pages >= _DIAGRAM_DECORATIVE_THRESHOLD_FRACTION
+    }
+
+
+def extract_content_diagrams(pdf_path: Path, source_name: str) -> List[dict]:
+    """Extract genuine content diagrams from one PDF, filtering out noise.
+
+    Two filters, applied together:
+      1. Recurring-dimension filter — an image size appearing on >=15% of
+         the document's pages is a repeated template element (banner,
+         logo), not content.
+      2. Aspect-ratio filter — images more elongated than 3:1 are ribbon/
+         divider graphics, not technical figures (verified against real
+         decorative banners: 8.46:1 and 4.91:1, vs real circuit/algorithm
+         figures at ~1:1).
+
+    Saves each qualifying image as a cropped PNG under
+    ``config.diagrams_dir / <source_name>/``, and returns metadata for
+    each (no captions are OCR'd — see module docstring above).
+
+    Args:
+        pdf_path: Path to the source PDF.
+        source_name: Stem used for the output subfolder and filenames
+            (typically the PDF's filename without extension).
+
+    Returns:
+        List of dicts, one per extracted diagram:
+        ``{"id", "source_file", "page", "image_path", "context_text"}``.
+        Empty list if the PDF can't be opened or has no qualifying images.
+    """
+    import pdfplumber  # lazy import — only needed for this feature
+
+    out_dir = config.diagrams_dir / source_name
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    manifest: List[dict] = []
+    try:
+        with pdfplumber.open(str(pdf_path)) as pdf:
+            decorative_dims = _find_decorative_image_dims(pdf)
+            idx = 0
+            for page_num, page in enumerate(pdf.pages, start=1):
+                page_text = (page.extract_text() or "").strip()
+                for img in page.images:
+                    dim = (round(img["width"]), round(img["height"]))
+                    if dim in decorative_dims:
+                        continue
+                    w, h = img["width"], img["height"]
+                    if w <= 0 or h <= 0 or w * h < _DIAGRAM_MIN_AREA_PX:
+                        continue
+                    if max(w / h, h / w) > _DIAGRAM_MAX_ASPECT_RATIO:
+                        continue
+                    try:
+                        bbox = (img["x0"], img["top"], img["x1"], img["bottom"])
+                        cropped_img = page.crop(bbox).to_image(resolution=150)
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug(
+                            "extract_content_diagrams(): skipped an image "
+                            "on %s page %d: %s", source_name, page_num, exc,
+                        )
+                        continue
+                    idx += 1
+                    fname = f"{source_name}_p{page_num}_{idx}.png"
+                    fpath = out_dir / fname
+                    cropped_img.save(str(fpath))
+                    manifest.append({
+                        "id": f"{source_name}_p{page_num}_{idx}",
+                        "source_file": source_name,
+                        "page": page_num,
+                        "image_path": str(fpath),
+                        "context_text": page_text[:400],
+                    })
+    except Exception as exc:  # noqa: BLE001 — never let a bad PDF break ingest
+        logger.warning(
+            "extract_content_diagrams(): failed to process %s: %s",
+            pdf_path, exc,
+        )
+        return []
+
+    logger.info(
+        "extract_content_diagrams(): extracted %d content diagram(s) from %s",
+        len(manifest), source_name,
+    )
+    return manifest
+
+
+def catalog_diagrams_for_knowledge_base() -> int:
+    """Extract and catalog content diagrams from every PDF in the knowledge base.
+
+    Scans ``config.knowledge_dir`` for PDFs, runs
+    :func:`extract_content_diagrams` on each, and writes a combined
+    manifest to ``config.diagrams_dir / manifest.json``. Safe to call
+    repeatedly — re-running replaces the manifest and re-extracts (no
+    incremental diffing, since this is expected to run alongside the
+    existing full-rebuild knowledge base ingestion, not on every request).
+
+    Returns:
+        int: Total number of content diagrams catalogued across all PDFs.
+    """
+    knowledge_dir = config.knowledge_dir
+    if not knowledge_dir.exists():
+        return 0
+
+    all_entries: List[dict] = []
+    for pdf_path in sorted(knowledge_dir.glob("*.pdf")):
+        source_name = re.sub(r"[^\w\-]", "_", pdf_path.stem)
+        entries = extract_content_diagrams(pdf_path, source_name)
+        all_entries.extend(entries)
+
+    config.diagrams_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = config.diagrams_dir / _DIAGRAM_MANIFEST_FILENAME
+    try:
+        manifest_path.write_text(json.dumps(all_entries, indent=2))
+    except OSError as exc:
+        logger.warning(
+            "catalog_diagrams_for_knowledge_base(): failed to write "
+            "manifest: %s", exc,
+        )
+
+    logger.info(
+        "catalog_diagrams_for_knowledge_base(): catalogued %d diagram(s) "
+        "across %d PDF(s)",
+        len(all_entries),
+        len(list(knowledge_dir.glob("*.pdf"))),
+    )
+    return len(all_entries)
+
+
+def _load_diagram_manifest() -> List[dict]:
+    """Load the cataloged-diagram manifest from disk, if it exists."""
+    manifest_path = config.diagrams_dir / _DIAGRAM_MANIFEST_FILENAME
+    if not manifest_path.exists():
+        return []
+    try:
+        return json.loads(manifest_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        logger.warning("_load_diagram_manifest(): failed to read: %s", exc)
+        return []
+
+
+def _keyword_overlap_score(query: str, candidate: str) -> int:
+    """Count overlapping non-stopword keywords between two texts."""
+    def _words(s: str) -> set:
+        return {
+            w for w in re.findall(r"[a-z0-9]+", s.lower())
+            if len(w) > 2 and w not in _STOPWORDS
+        }
+    return len(_words(query) & _words(candidate))
+
+
+def find_relevant_diagrams(query_text: str, top_k: int = 1) -> List[dict]:
+    """Find catalogued diagrams whose page text best matches *query_text*.
+
+    Simple keyword-overlap scoring (no embeddings/LLM call — fast,
+    deterministic, and easy to reason about for a first version). Only
+    diagrams with at least one overlapping keyword are returned, so a
+    topic with no genuinely related diagram gets nothing back rather
+    than a weakly-related best-effort guess.
+
+    Args:
+        query_text: The question text or topic to match against (e.g.
+            a generated question's text, or the faculty's topic string).
+        top_k: Maximum number of diagrams to return.
+
+    Returns:
+        List of manifest entries (see :func:`extract_content_diagrams`),
+        best match first. Empty list if no catalog exists yet or nothing
+        scores above zero overlap.
+    """
+    manifest = _load_diagram_manifest()
+    if not manifest or not query_text:
+        return []
+
+    scored = [
+        (entry, _keyword_overlap_score(query_text, entry.get("context_text", "")))
+        for entry in manifest
+    ]
+    scored = [(e, s) for e, s in scored if s > 0]
+    scored.sort(key=lambda pair: pair[1], reverse=True)
+    return [e for e, _ in scored[:top_k]]
+
+
+def attach_diagrams_to_questions(questions: List[Question]) -> int:
+    """Attach a matching catalogued diagram to each question, where one exists.
+
+    Loads the diagram manifest once (not per-question) and matches each
+    question's own text against it via :func:`find_relevant_diagrams`'s
+    scoring logic. Mutates ``question.diagram_path`` in place for any
+    question with a positive-scoring match; leaves it empty otherwise —
+    most questions won't have a relevant diagram, and that's expected,
+    not an error.
+
+    Args:
+        questions: Questions to check and mutate in place.
+
+    Returns:
+        int: Number of questions that got a diagram attached.
+    """
+    manifest = _load_diagram_manifest()
+    if not manifest:
+        return 0
+
+    attached = 0
+    for q in questions:
+        if getattr(q, "diagram_path", ""):
+            continue  # already set (e.g. by a previous pass)
+        scored = [
+            (entry, _keyword_overlap_score(q.question_text or "", entry.get("context_text", "")))
+            for entry in manifest
+        ]
+        scored = [(e, s) for e, s in scored if s > 0]
+        if not scored:
+            continue
+        scored.sort(key=lambda pair: pair[1], reverse=True)
+        best_entry, _ = scored[0]
+        q.diagram_path = best_entry["image_path"]
+        attached += 1
+
+    if attached:
+        logger.info(
+            "attach_diagrams_to_questions(): attached diagrams to %d/%d questions",
+            attached, len(questions),
+        )
+    return attached
 
 
 def _cli_main() -> None:

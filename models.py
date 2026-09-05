@@ -187,6 +187,14 @@ class Question:
     built on — kept separate from question_text (which holds the actual
     task/ask) so export can render them as distinct "Case Background" /
     "Your Task" sections. Empty string for every other assessment type."""
+    diagram_path: str = ""
+    """Absolute path to a catalogued content diagram (figure, circuit,
+    network diagram) from the knowledge base that this question
+    references — attached automatically via rag.py's
+    attach_diagrams_to_questions() when the question's own text overlaps
+    a catalogued diagram's page context. Empty string (the common case)
+    means no relevant diagram was found; export simply renders the
+    question as text-only in that case."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -209,6 +217,7 @@ class Question:
             "topic": self.topic,
             "blueprint_group": self.blueprint_group,
             "case_background": self.case_background,
+            "diagram_path": self.diagram_path,
         }
 
 

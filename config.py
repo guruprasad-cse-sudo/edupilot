@@ -58,6 +58,7 @@ class EduPilotConfig:
     embedding_model_name: str
     vectorstore_path: Path
     knowledge_dir: Path
+    diagrams_dir: Path
 
     # Observability
     log_level: str
@@ -159,6 +160,15 @@ def _build_config() -> EduPilotConfig:
         ),
         knowledge_dir=_resolve_path(
             _get_env("KNOWLEDGE_DIR", "knowledge") or "knowledge"
+        ),
+        # Extracted content diagrams (figures, circuits, network diagrams —
+        # decorative template graphics are filtered out during extraction,
+        # see rag.py's extract_content_diagrams()). Defaults alongside
+        # vectorstore/knowledge so it lives on the same persistent disk
+        # when VECTORSTORE_PATH/KNOWLEDGE_DIR are pointed at one (e.g.
+        # /var/data/...) — set DIAGRAMS_DIR explicitly to override.
+        diagrams_dir=_resolve_path(
+            _get_env("DIAGRAMS_DIR", "diagrams") or "diagrams"
         ),
         log_level=(_get_env("LOG_LEVEL", "INFO") or "INFO").upper(),
         runs_dir=_resolve_path(

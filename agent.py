@@ -1060,6 +1060,14 @@ class AssessmentAgent:
                 sources=sources or [],
             )
         _fix_bloom_verb_mismatches(result.questions, plan.bloom_targets)
+        try:
+            from rag import attach_diagrams_to_questions
+            attach_diagrams_to_questions(result.questions)
+        except Exception as exc:  # noqa: BLE001 — never let this break generation
+            logger.warning(
+                "AssessmentAgent.generate(): diagram matching failed, "
+                "continuing without diagrams: %s", exc,
+            )
         return result
 
     # ------------------------------------------------------------------

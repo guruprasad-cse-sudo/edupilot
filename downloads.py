@@ -145,6 +145,7 @@ class ParsedQuestion:
     topic: str = ""  # syllabus topic/module this question targets
     blueprint_group: str = ""  # "A"/"B" when a custom marks blueprint was used
     case_background: str = ""  # Consultancy Case Study: scenario/context text
+    diagram_path: str = ""  # path to an attached content diagram, if any
 
 
 @dataclass
@@ -268,6 +269,7 @@ class AssessmentParser:
                     case_background=cls._safe(
                         getattr(q, "case_background", "")
                     ),
+                    diagram_path=getattr(q, "diagram_path", "") or "",
                 )
             )
 
@@ -1318,7 +1320,13 @@ class WordExporter:
                 cell.paragraphs[0].runs[0].bold = True
             self._shade_cell(cell, "F0F4F8")
 
-        col_widths = [Inches(w) for w in (0.55, 3.9, 0.6, 0.6, 0.6)]
+        # Printable width is 5.87in (8.27in A4 minus 1.2in margins each
+        # side, per _configure_page) — these must sum to fit within that,
+        # or the table silently overflows the page margin. That overflow
+        # was invisible for wrapped text (Word just narrows the rendered
+        # column) but clips a fixed-width embedded image, since an image
+        # doesn't reflow the way text does.
+        col_widths = [Inches(w) for w in (0.5, 3.3, 0.62, 0.65, 0.65)]
 
         def _full_width_row(text: str, bold: bool = True) -> None:
             row_cells = table.add_row().cells
@@ -1329,6 +1337,28 @@ class WordExporter:
             if p.runs:
                 p.runs[0].bold = bold
             self._shade_cell(row_cells[0], "F0F4F8")
+
+        def _diagram_row(diagram_path: str) -> None:
+            """Full-width merged row holding an attached diagram image.
+
+            Deliberately NOT embedded inside the narrow "Questions" cell:
+            LibreOffice's fixed-layout table rendering clips a fixed-
+            width image that exceeds its cell's actual rendered width,
+            even when the nominal column width should be sufficient — a
+            full-width merged row (~5.8in usable) has plenty of margin
+            and also reads more like an actual textbook figure placement.
+            """
+            row_cells = table.add_row().cells
+            row_cells[0].merge(row_cells[-1])
+            p = row_cells[0].paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            try:
+                p.add_run().add_picture(diagram_path, width=Inches(3.2))
+            except Exception as exc:  # noqa: BLE001
+                logger.warning(
+                    "WordExporter: failed to embed diagram %s: %s",
+                    diagram_path, exc,
+                )
 
         def _question_group_rows(group: VTUQuestionGroup) -> None:
             multi = len(group.subparts) > 1
@@ -1351,6 +1381,11 @@ class WordExporter:
                     row_cells[idx].paragraphs[0].alignment = (
                         WD_ALIGN_PARAGRAPH.CENTER
                     )
+                # attached diagram (figure/circuit/network diagram), if any —
+                # its own full-width row right below this sub-part's row.
+                diagram_path = getattr(sp.question, "diagram_path", "")
+                if diagram_path and Path(diagram_path).exists():
+                    _diagram_row(diagram_path)
 
         for module in modules:
             if show_module_labels:
@@ -2458,9 +2493,24 @@ class PDFExporter:
             multi = len(group.subparts) > 1
             for sp in group.subparts:
                 q_label = f"{group.q_number}. {sp.letter}" if multi else f"{group.q_number}."
+                question_cell_content = [
+                    Paragraph(self._esc(sp.question.text), styles["vtu_cell_text"])
+                ]
+                diagram_path = getattr(sp.question, "diagram_path", "")
+                if diagram_path and Path(diagram_path).exists():
+                    try:
+                        question_cell_content.append(Spacer(1, 4))
+                        question_cell_content.append(
+                            Image(diagram_path, width=6.0 * cm, height=4.0 * cm, kind="proportional")
+                        )
+                    except Exception as exc:  # noqa: BLE001
+                        logger.warning(
+                            "PDFExporter: failed to embed diagram %s: %s",
+                            diagram_path, exc,
+                        )
                 data.append([
                     q_label,
-                    Paragraph(self._esc(sp.question.text), styles["vtu_cell_text"]),
+                    question_cell_content,
                     sp.question.marks,
                     sp.question.co_mapping,
                     self._bloom_short_code(sp.question.bloom_level),
