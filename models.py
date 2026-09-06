@@ -550,6 +550,15 @@ class AssessmentPlan:
     teaching_department: str = ""
     academic_year: str = ""
     iat_number: str = ""
+    include_kb_diagrams: bool = False
+    """Whether to auto-attach knowledge-base diagrams (figures, circuits,
+    network diagrams from uploaded PDFs) to matching questions. Opt-in
+    and defaults to False — matching is keyword-based and can attach a
+    diagram to more questions than a faculty actually wants illustrated,
+    so this stays off unless explicitly enabled for this generation.
+    Does NOT affect faculty-authored [DFA]/[NFA]/[AUTOMATON] diagrams
+    (see diagram_renderer.py) — those remain independently opt-in via
+    Additional Instructions regardless of this setting."""
 
     def to_dict(self) -> Dict[str, Any]:
         """Return a JSON-serialisable dictionary representation.
@@ -578,6 +587,7 @@ class AssessmentPlan:
             "teaching_department": self.teaching_department,
             "academic_year": self.academic_year,
             "iat_number": self.iat_number,
+            "include_kb_diagrams": self.include_kb_diagrams,
         }
 
     @classmethod
@@ -630,6 +640,7 @@ class AssessmentPlan:
             ).strip(),
             academic_year=str(data.get("academic_year", "")).strip(),
             iat_number=str(data.get("iat_number", "")).strip(),
+            include_kb_diagrams=bool(data.get("include_kb_diagrams", False)),
         )
 
 

@@ -1060,14 +1060,15 @@ class AssessmentAgent:
                 sources=sources or [],
             )
         _fix_bloom_verb_mismatches(result.questions, plan.bloom_targets)
-        try:
-            from rag import attach_diagrams_to_questions
-            attach_diagrams_to_questions(result.questions)
-        except Exception as exc:  # noqa: BLE001 — never let this break generation
-            logger.warning(
-                "AssessmentAgent.generate(): diagram matching failed, "
-                "continuing without diagrams: %s", exc,
-            )
+        if plan.include_kb_diagrams:
+            try:
+                from rag import attach_diagrams_to_questions
+                attach_diagrams_to_questions(result.questions)
+            except Exception as exc:  # noqa: BLE001 — never let this break generation
+                logger.warning(
+                    "AssessmentAgent.generate(): diagram matching failed, "
+                    "continuing without diagrams: %s", exc,
+                )
         try:
             self._attach_custom_automaton_diagrams(result.questions, plan.extra_instructions)
         except Exception as exc:  # noqa: BLE001 — never let this break generation
@@ -1458,59 +1459,90 @@ class AssessmentAgent:
         Looks for ``[DFA]``/``[NFA]``/``[AUTOMATON]`` blocks in
         *extra_instructions* (see ``diagram_renderer.py`` for the input
         format), renders each to a real diagram, and attaches it to
-        whichever generated question best references it — matched by
+        EVERY generated question that references it — matched by
         counting how many of the automaton's exact state names (e.g.
-        "q0", "q1") appear in each question's text. This relies on rule
-        8 in ``ASSESSMENT_SYSTEM_PROMPT`` instructing the LLM to use
-        those exact state names verbatim; if the LLM didn't comply (no
-        question mentions any state name), the diagram is rendered but
-        left unattached rather than guessing which question it belongs to.
+        "q0", "q1") appear in each question's text; any question
+        mentioning at least one state name gets the diagram, not just
+        the single best match. This is deliberate: it's common for
+        several sub-questions (e.g. "trace the states for input X" and
+        "which state is accepting") to all reference the same
+        automaton, and a student reading a "the DFA below" reference
+        with no diagram actually shown is worse than the same diagram
+        appearing more than once. This relies on rule 8 in
+        ``ASSESSMENT_SYSTEM_PROMPT`` instructing the LLM to use those
+        exact state names verbatim; if no question mentions any state
+        name, the diagram is rendered but left unattached rather than
+        guessing which question it belongs to.
+
+        Also strips any raw ``[DFA]``/``[NFA]``/``[AUTOMATON]`` block
+        that leaked verbatim into a question's text — prompt compliance
+        on "never paste the raw block" isn't guaranteed, and that
+        markup must never reach a printed paper. Applied to every
+        question regardless of whether a diagram was attached to it.
 
         Args:
             questions: The full generated question list (mutated in
-                place — sets ``diagram_path`` on the best-matching
-                question for each spec found).
+                place — sets ``diagram_path`` on every matching
+                question for each spec found, and cleans
+                ``question_text`` of any leaked block).
             extra_instructions: The plan's free-text instructions field,
                 scanned for automaton spec blocks.
 
         Returns:
-            int: Number of diagrams successfully attached.
+            int: Number of question-diagram attachments made (a single
+            diagram attached to 3 questions counts as 3).
         """
-        if not extra_instructions:
-            return 0
+        from diagram_renderer import strip_automaton_blocks
 
-        from diagram_renderer import render_all_automaton_specs
+        if extra_instructions:
+            from diagram_renderer import render_all_automaton_specs
 
-        rendered_specs = render_all_automaton_specs(extra_instructions)
-        attached = 0
-        for spec in rendered_specs:
-            state_names = [s.lower() for s in spec.get("states", [])]
-            if not state_names:
-                continue
-            best_q, best_score = None, 0
-            for q in questions:
-                if getattr(q, "diagram_path", ""):
-                    continue  # already has one (e.g. from the KB catalog)
-                text_lower = (q.question_text or "").lower()
-                score = sum(1 for s in state_names if s in text_lower)
-                if score > best_score:
-                    best_q, best_score = q, score
-            if best_q is not None and best_score > 0:
-                best_q.diagram_path = spec["image_path"]
-                attached += 1
-            else:
+            rendered_specs = render_all_automaton_specs(extra_instructions)
+            attached = 0
+            for spec in rendered_specs:
+                state_names = [s.lower() for s in spec.get("states", [])]
+                if not state_names:
+                    continue
+                matched_any = False
+                for q in questions:
+                    # Match against the ORIGINAL text (before stripping
+                    # below) — if the LLM leaked the raw block into a
+                    # question, that block itself contains the state
+                    # names, and stripping it first would wipe out the
+                    # only mentions of them, breaking the match. Match
+                    # first, strip for display after.
+                    text_lower = (q.question_text or "").lower()
+                    score = sum(1 for s in state_names if s in text_lower)
+                    if score > 0:
+                        q.diagram_path = spec["image_path"]
+                        attached += 1
+                        matched_any = True
+                if not matched_any:
+                    logger.warning(
+                        "AssessmentAgent._attach_custom_automaton_diagrams(): "
+                        "rendered a %s diagram but no generated question "
+                        "referenced its state names (%s) — leaving it "
+                        "unattached. The LLM may not have used the automaton "
+                        "as instructed.",
+                        spec.get("kind", "automaton"), ", ".join(spec["states"]),
+                    )
+        else:
+            attached = 0
+
+        for q in questions:
+            cleaned = strip_automaton_blocks(q.question_text)
+            if cleaned != q.question_text:
                 logger.warning(
                     "AssessmentAgent._attach_custom_automaton_diagrams(): "
-                    "rendered a %s diagram but no generated question "
-                    "referenced its state names (%s) — leaving it "
-                    "unattached. The LLM may not have used the automaton "
-                    "as instructed.",
-                    spec.get("kind", "automaton"), ", ".join(spec["states"]),
+                    "%s contained a leaked raw automaton block — stripped "
+                    "it from the visible question text.", q.question_id,
                 )
+                q.question_text = cleaned
+
         if attached:
             logger.info(
                 "AssessmentAgent._attach_custom_automaton_diagrams(): "
-                "attached %d custom diagram(s)", attached,
+                "attached %d custom diagram instance(s)", attached,
             )
         return attached
 

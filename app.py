@@ -791,6 +791,22 @@ def render_generation_form() -> Optional[dict]:
             height=60,
         )
 
+        include_kb_diagrams = st.checkbox(
+            "Attach relevant diagrams from Knowledge Base where a strong "
+            "match exists",
+            value=bool(_ep("include_kb_diagrams", False)),
+            help=(
+                "Off by default. When enabled, questions get automatically "
+                "matched (by keyword overlap) against figures/circuits/"
+                "network diagrams extracted from your uploaded PDFs — not "
+                "every question will get one, only where a real topical "
+                "match exists. This is separate from faculty-authored "
+                "[DFA]/[NFA]/[AUTOMATON] diagrams (see Additional "
+                "Instructions above), which always work regardless of "
+                "this setting."
+            ),
+        )
+
         vtu_marks_blueprint = st.text_area(
             "Custom Sub-Question Marks (optional — Semester Examination "
             "& Internal Assessment)",
@@ -935,6 +951,7 @@ def render_generation_form() -> Optional[dict]:
         "teaching_department": teaching_department.strip(),
         "academic_year": academic_year.strip(),
         "iat_number": iat_number,
+        "include_kb_diagrams": include_kb_diagrams,
     }
 
 
