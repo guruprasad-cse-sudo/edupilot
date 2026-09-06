@@ -1685,34 +1685,44 @@ class AssessmentAgent:
 
         # Mirror side A's CO/Bloom pattern onto side B, position by
         # position — NOT unifying within a side. Before mirroring, check
-        # BOTH sides' own question text for a clear verb/Bloom-level
-        # mismatch (in either direction — a recall verb tagged too high,
-        # or a higher-order verb like "Apply"/"Compare" tagged too low)
-        # and, if either side's verb implies a different level, correct
-        # BOTH sides together — checking only one side risks leaving the
-        # two OR-alternatives at different levels, which defeats the
-        # "either one is a fair choice" point of mirroring them at all.
-        # Skip the correction entirely if the verb-implied level isn't in
-        # the faculty's requested Bloom targets — see
+        # EACH side's own question text against its OWN current tag
+        # independently (not "infer(A) or infer(B), compared only
+        # against A's tag" — that biases toward A and silently masks a
+        # genuine mismatch on B whenever A merely happens to already be
+        # correctly tagged; observed in practice: side A "Demonstrate…"
+        # was already correctly Apply, which caused side B "Identify
+        # the term…" — clearly Remember, tagged Understand — to never
+        # get checked at all). If EITHER side has a real mismatch,
+        # correct BOTH sides together — checking only one side risks
+        # leaving the two OR-alternatives at different levels, which
+        # defeats the "either one is a fair choice" point of mirroring
+        # them at all. Skip the correction entirely if the verb-implied
+        # level isn't in the faculty's requested Bloom targets — see
         # _fix_bloom_verb_mismatches for why introducing an excluded
         # level is worse than leaving the (still mismatched) original tag.
         allowed = _parse_target_bloom_levels(bloom_targets)
         side_a = questions[:len(marks_a)]
         side_b = questions[len(marks_a):len(marks_a) + len(marks_b)]
         for a_q, b_q in zip(side_a, side_b):
-            inferred = _infer_bloom_from_verb(a_q) or _infer_bloom_from_verb(b_q)
-            if inferred is None or inferred == a_q.bloom_level:
+            a_inferred = _infer_bloom_from_verb(a_q)
+            b_inferred = _infer_bloom_from_verb(b_q)
+            target_level = None
+            if a_inferred is not None and a_inferred != a_q.bloom_level:
+                target_level = a_inferred
+            elif b_inferred is not None and b_inferred != b_q.bloom_level:
+                target_level = b_inferred
+            if target_level is None:
                 continue
-            if allowed and inferred not in allowed:
+            if allowed and target_level not in allowed:
                 logger.warning(
                     "AssessmentAgent._apply_blueprint_marks(): topic %r "
                     "pair's verb implies %s but isn't in the requested "
                     "Bloom targets (%s) — leaving tags as-is. Consider "
                     "reviewing manually.",
-                    topic[:60], inferred, bloom_targets,
+                    topic[:60], target_level, bloom_targets,
                 )
                 continue
-            a_q.bloom_level = inferred
+            a_q.bloom_level = target_level
         for a_q, b_q in zip(side_a, side_b):
             b_q.co_mapping = list(a_q.co_mapping)
             b_q.bloom_level = a_q.bloom_level
