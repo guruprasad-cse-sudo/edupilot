@@ -106,6 +106,16 @@ Rules you MUST follow:
    question_text. Questions must read as standalone academic questions,
    without referencing their own sourcing scope. This applies to every
    assessment type, including Internal Assessment and Semester Examination.
+8. If the instructions include a structured [DFA], [NFA], or [AUTOMATON]
+   block (states, alphabet, transitions), write ONE question that
+   directly references that exact automaton — using its exact state
+   names (e.g. "q0", "q1") verbatim in question_text, not paraphrased or
+   renamed. A rendered diagram of it will be attached automatically
+   based on matching those exact names, so the question text must
+   actually contain them (e.g. "Consider the DFA with states q0, q1,
+   q2, q3... trace the sequence of states for input 1011", or "...draw
+   the state diagram for the given DFA"). Do not invent a different
+   automaton or change the given transitions.
 """
 
 # ---------------------------------------------------------------------------

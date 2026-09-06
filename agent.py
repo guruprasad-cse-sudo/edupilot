@@ -1068,6 +1068,13 @@ class AssessmentAgent:
                 "AssessmentAgent.generate(): diagram matching failed, "
                 "continuing without diagrams: %s", exc,
             )
+        try:
+            self._attach_custom_automaton_diagrams(result.questions, plan.extra_instructions)
+        except Exception as exc:  # noqa: BLE001 — never let this break generation
+            logger.warning(
+                "AssessmentAgent.generate(): custom automaton diagram "
+                "rendering failed, continuing without it: %s", exc,
+            )
         return result
 
     # ------------------------------------------------------------------
@@ -1442,6 +1449,70 @@ class AssessmentAgent:
     # ------------------------------------------------------------------
     # Batched generation
     # ------------------------------------------------------------------
+
+    def _attach_custom_automaton_diagrams(
+        self, questions: List[Question], extra_instructions: str
+    ) -> int:
+        """Render any faculty-authored automaton specs and attach to matching questions.
+
+        Looks for ``[DFA]``/``[NFA]``/``[AUTOMATON]`` blocks in
+        *extra_instructions* (see ``diagram_renderer.py`` for the input
+        format), renders each to a real diagram, and attaches it to
+        whichever generated question best references it — matched by
+        counting how many of the automaton's exact state names (e.g.
+        "q0", "q1") appear in each question's text. This relies on rule
+        8 in ``ASSESSMENT_SYSTEM_PROMPT`` instructing the LLM to use
+        those exact state names verbatim; if the LLM didn't comply (no
+        question mentions any state name), the diagram is rendered but
+        left unattached rather than guessing which question it belongs to.
+
+        Args:
+            questions: The full generated question list (mutated in
+                place — sets ``diagram_path`` on the best-matching
+                question for each spec found).
+            extra_instructions: The plan's free-text instructions field,
+                scanned for automaton spec blocks.
+
+        Returns:
+            int: Number of diagrams successfully attached.
+        """
+        if not extra_instructions:
+            return 0
+
+        from diagram_renderer import render_all_automaton_specs
+
+        rendered_specs = render_all_automaton_specs(extra_instructions)
+        attached = 0
+        for spec in rendered_specs:
+            state_names = [s.lower() for s in spec.get("states", [])]
+            if not state_names:
+                continue
+            best_q, best_score = None, 0
+            for q in questions:
+                if getattr(q, "diagram_path", ""):
+                    continue  # already has one (e.g. from the KB catalog)
+                text_lower = (q.question_text or "").lower()
+                score = sum(1 for s in state_names if s in text_lower)
+                if score > best_score:
+                    best_q, best_score = q, score
+            if best_q is not None and best_score > 0:
+                best_q.diagram_path = spec["image_path"]
+                attached += 1
+            else:
+                logger.warning(
+                    "AssessmentAgent._attach_custom_automaton_diagrams(): "
+                    "rendered a %s diagram but no generated question "
+                    "referenced its state names (%s) — leaving it "
+                    "unattached. The LLM may not have used the automaton "
+                    "as instructed.",
+                    spec.get("kind", "automaton"), ", ".join(spec["states"]),
+                )
+        if attached:
+            logger.info(
+                "AssessmentAgent._attach_custom_automaton_diagrams(): "
+                "attached %d custom diagram(s)", attached,
+            )
+        return attached
 
     def _apply_blueprint_marks(
         self,
