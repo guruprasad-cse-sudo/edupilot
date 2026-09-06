@@ -84,18 +84,167 @@ _DIFFICULTY_MAP: Dict[str, DifficultyLevel] = {
     "hard": DifficultyLevel.HARD,
 }
 
-# Leading verbs that unambiguously signal Remember-level recall — used by
-# _fix_bloom_verb_mismatches() as a conservative, deterministic safety net.
-# Intentionally short and unambiguous: this only catches clear-cut cases
-# (e.g. "Identify two..." tagged Analyze) rather than trying to fully
-# re-derive Bloom level from question text, which is far too fuzzy to do
-# reliably with a keyword list. The prompt-level guidance (see rule 1a/1b
-# in ASSESSMENT_SYSTEM_PROMPT) is the primary defence; this just catches
-# what slips through.
-_REMEMBER_LEVEL_VERBS = (
-    "identify", "state", "list", "define", "name", "recall", "mention",
-    "what is", "what are", "who is", "who are",
+# Leading verbs mapped to their standard Revised Bloom's Taxonomy level —
+# mirrors the reference table given to the LLM in rule 1a of
+# ASSESSMENT_SYSTEM_PROMPT. Used by _infer_bloom_from_verb() as a
+# deterministic, bidirectional safety net: unlike the earlier version of
+# this check (which only ever downgraded a mismatched question TO
+# Remember), this catches mismatches in BOTH directions and across ALL
+# six levels — e.g. "Apply the DFA..." mistagged Understand (should be
+# Apply), "Compare the..." mistagged Understand (should be Analyze), or
+# "Explain the..." mistagged Remember (should be Understand). Observed
+# in practice: LLM Bloom tagging drifts in both directions, not just
+# "recall verb tagged too high", so a one-directional fix wasn't enough.
+_VERB_LEVEL_MAP: Dict[str, BloomLevel] = {
+    # Remember
+    "define": BloomLevel.REMEMBER, "list": BloomLevel.REMEMBER,
+    "state": BloomLevel.REMEMBER, "identify": BloomLevel.REMEMBER,
+    "name": BloomLevel.REMEMBER, "recall": BloomLevel.REMEMBER,
+    "mention": BloomLevel.REMEMBER, "label": BloomLevel.REMEMBER,
+    "what is": BloomLevel.REMEMBER, "what are": BloomLevel.REMEMBER,
+    "who is": BloomLevel.REMEMBER, "who are": BloomLevel.REMEMBER,
+    # Understand
+    "explain": BloomLevel.UNDERSTAND, "describe": BloomLevel.UNDERSTAND,
+    "summarize": BloomLevel.UNDERSTAND, "summarise": BloomLevel.UNDERSTAND,
+    "classify": BloomLevel.UNDERSTAND, "discuss": BloomLevel.UNDERSTAND,
+    "outline": BloomLevel.UNDERSTAND,
+    # Apply
+    "solve": BloomLevel.APPLY, "demonstrate": BloomLevel.APPLY,
+    "use": BloomLevel.APPLY, "illustrate": BloomLevel.APPLY,
+    "calculate": BloomLevel.APPLY, "implement": BloomLevel.APPLY,
+    "apply": BloomLevel.APPLY,
+    # Analyze
+    "differentiate": BloomLevel.ANALYZE, "compare": BloomLevel.ANALYZE,
+    "contrast": BloomLevel.ANALYZE, "examine": BloomLevel.ANALYZE,
+    "analyze": BloomLevel.ANALYZE, "analyse": BloomLevel.ANALYZE,
+    # Evaluate
+    "justify": BloomLevel.EVALUATE, "critique": BloomLevel.EVALUATE,
+    "assess": BloomLevel.EVALUATE, "argue": BloomLevel.EVALUATE,
+    "recommend": BloomLevel.EVALUATE, "defend": BloomLevel.EVALUATE,
+    "evaluate": BloomLevel.EVALUATE,
+    # Create
+    "design": BloomLevel.CREATE, "propose": BloomLevel.CREATE,
+    "formulate": BloomLevel.CREATE, "construct": BloomLevel.CREATE,
+    "compose": BloomLevel.CREATE, "devise": BloomLevel.CREATE,
+    "create": BloomLevel.CREATE,
+}
+# Sorted longest-first so multi-word entries ("what is") are checked
+# before any shorter entry that might otherwise match a prefix of them.
+_VERB_LEVEL_ENTRIES = sorted(
+    _VERB_LEVEL_MAP.items(), key=lambda kv: len(kv[0]), reverse=True
 )
+
+
+def _parse_target_bloom_levels(bloom_targets: str) -> set:
+    """Parse a comma-separated Bloom targets string into a set of BloomLevel.
+
+    Args:
+        bloom_targets: e.g. "Apply, Analyze, Evaluate". Empty/unparseable
+            entries are ignored.
+
+    Returns:
+        set: Parsed BloomLevel values. Empty set if *bloom_targets* is
+        blank or nothing parses — callers should treat an empty set as
+        "no restriction specified" rather than "nothing is allowed".
+    """
+    if not bloom_targets:
+        return set()
+    levels = set()
+    for part in bloom_targets.split(","):
+        key = part.strip().lower()
+        if key in _BLOOM_MAP:
+            levels.add(_BLOOM_MAP[key])
+    return levels
+
+
+def _leading_text(q: Question) -> str:
+    """Return *q*'s question text, lowercased and with any leading
+    sub-part marker ("a) ", "iii) ") stripped, for verb matching."""
+    text = (q.question_text or "").strip().lower()
+    text = re.sub(r"^[a-z]{1,3}[\)\.]\s*", "", text)
+    text = re.sub(r"^[ivx]{1,4}[\)\.]\s*", "", text)
+    return text
+
+
+def _infer_bloom_from_verb(q: Question) -> Optional[BloomLevel]:
+    """Infer the Bloom level implied by *q*'s own leading verb, if any.
+
+    Pure text check — does not look at or modify ``q.bloom_level``. Only
+    matches an unambiguous verb at the very start of the question text
+    (after stripping a leading sub-part marker); returns None rather
+    than guessing when no listed verb matches, since re-deriving Bloom
+    level from arbitrary text is far too fuzzy to do reliably beyond
+    this fixed, curated verb list.
+
+    Args:
+        q: Question to check.
+
+    Returns:
+        The matched BloomLevel, or None if no listed verb is found at
+        the start of the text.
+    """
+    text = _leading_text(q)
+    for verb, level in _VERB_LEVEL_ENTRIES:
+        if text.startswith(verb):
+            return level
+    return None
+
+
+def _fix_bloom_verb_mismatches(
+    questions: List[Question], bloom_targets: str = ""
+) -> None:
+    """Correct Bloom level tags that don't match their question's own verb.
+
+    Deterministic safety net for cases like "Identify two key
+    activities…" tagged Analyze (should be Remember), "Apply the DFA…"
+    tagged Understand (should be Apply), or "Compare the…" tagged
+    Understand (should be Analyze) — the tag is corrected to match
+    whatever the question's own leading verb actually implies,
+    regardless of which direction the mismatch runs.
+
+    IMPORTANT: if the faculty specified target Bloom levels for this
+    assessment and the verb-implied level isn't one of them, this does
+    NOT correct the tag — introducing a level the faculty explicitly
+    didn't select is worse than leaving a mismatched-but-in-scope tag.
+    The mismatch is still logged so it's visible for QA.
+
+    This is the GLOBAL pass, applied once per generation run in
+    :meth:`AssessmentAgent.generate` to every question regardless of
+    path. For blueprinted (a/b/c sub-part) assessments,
+    ``_apply_blueprint_marks`` already applies the same check pairwise
+    (per OR-alternative side) before this runs, so mirrored pairs stay
+    consistent — this pass is then mostly a no-op for those, and the
+    real coverage here is single-call / non-blueprinted generation.
+
+    Args:
+        questions: Questions to check in place (mutates ``bloom_level``
+            on any that have a clear verb/tag mismatch).
+        bloom_targets: The plan's requested Bloom levels (comma-
+            separated string, e.g. "Apply, Analyze"). Empty string means
+            no restriction was specified, in which case any correction
+            is always allowed.
+    """
+    allowed = _parse_target_bloom_levels(bloom_targets)
+    for q in questions:
+        inferred = _infer_bloom_from_verb(q)
+        if inferred is None or inferred == q.bloom_level:
+            continue
+        if allowed and inferred not in allowed:
+            logger.warning(
+                "_fix_bloom_verb_mismatches(): %s's verb implies %s but "
+                "is tagged %s, and %s isn't in the requested Bloom "
+                "targets (%s) — leaving the tag as-is. Consider "
+                "reviewing this question manually.",
+                q.question_id, inferred, q.bloom_level, inferred,
+                bloom_targets,
+            )
+            continue
+        logger.debug(
+            "_fix_bloom_verb_mismatches(): correcting %s from %s to %s "
+            "based on its leading verb.",
+            q.question_id, q.bloom_level, inferred,
+        )
+        q.bloom_level = inferred
 
 
 def _normalize_question_text(text: str) -> str:
@@ -149,116 +298,6 @@ def _detect_duplicate_questions(questions: List[Question]) -> str:
         "text) at " + ", ".join(duplicate_pairs) + " — please review "
         "before distributing this paper."
     )
-
-
-def _parse_target_bloom_levels(bloom_targets: str) -> set:
-    """Parse a comma-separated Bloom targets string into a set of BloomLevel.
-
-    Args:
-        bloom_targets: e.g. "Apply, Analyze, Evaluate". Empty/unparseable
-            entries are ignored.
-
-    Returns:
-        set: Parsed BloomLevel values. Empty set if *bloom_targets* is
-        blank or nothing parses — callers should treat an empty set as
-        "no restriction specified" rather than "nothing is allowed".
-    """
-    if not bloom_targets:
-        return set()
-    levels = set()
-    for part in bloom_targets.split(","):
-        key = part.strip().lower()
-        if key in _BLOOM_MAP:
-            levels.add(_BLOOM_MAP[key])
-    return levels
-
-
-def _bloom_verb_calls_for_remember(q: Question) -> bool:
-    """True if *q*'s own question text opens with an unambiguous recall verb.
-
-    Pure text check — does not look at or modify ``q.bloom_level``. Used
-    by both :func:`_fix_bloom_verb_mismatches` (global safety net) and
-    the per-pair mirroring check in ``_apply_blueprint_marks`` (checks
-    both OR-alternative sides' own text before deciding whether to
-    demote the pair together).
-
-    Args:
-        q: Question to check.
-
-    Returns:
-        bool: True if the text starts with a Remember-level verb (after
-        stripping a leading "a) "/"iii) " sub-part marker).
-    """
-    text = (q.question_text or "").strip().lower()
-    text = re.sub(r"^[a-z]{1,3}[\)\.]\s*", "", text)
-    text = re.sub(r"^[ivx]{1,4}[\)\.]\s*", "", text)
-    return any(text.startswith(v) for v in _REMEMBER_LEVEL_VERBS)
-
-
-def _fix_bloom_verb_mismatches(
-    questions: List[Question], bloom_targets: str = ""
-) -> None:
-    """Downgrade obviously mismatched Bloom levels based on the leading verb.
-
-    Deterministic safety net for cases like "Identify two key activities…"
-    tagged Analyze or Evaluate — a low-order recall verb paired with a
-    high-order Bloom tag. Only fires on unambiguous verb matches at the
-    very start of the question text, and only downgrades FROM Apply-or-
-    higher TO Remember — it never upgrades a level, since under-claiming
-    is harmless but a falsely high-order tag misrepresents what the
-    question actually tests.
-
-    IMPORTANT: if the faculty specified target Bloom levels for this
-    assessment and Remember isn't one of them, this does NOT downgrade —
-    introducing a level the faculty explicitly didn't select is worse
-    than leaving a slightly-mismatched-but-in-scope tag. The mismatch
-    still gets logged so it's visible for QA, but the paper won't show a
-    Bloom level outside what was requested.
-
-    This is the GLOBAL pass, applied once per generation run in
-    :meth:`AssessmentAgent.generate` to every question regardless of
-    path. For blueprinted (a/b/c sub-part) assessments,
-    ``_apply_blueprint_marks`` already applies the same check pairwise
-    (per OR-alternative side) before this runs, so mirrored pairs stay
-    consistent — this pass is then mostly a no-op for those, and the
-    real coverage here is single-call / non-blueprinted generation.
-
-    Args:
-        questions: Questions to check in place (mutates ``bloom_level``
-            on any that match).
-        bloom_targets: The plan's requested Bloom levels (comma-
-            separated string, e.g. "Apply, Analyze"). Empty string means
-            no restriction was specified, in which case downgrading to
-            Remember is always allowed.
-    """
-    demote_from = {
-        BloomLevel.APPLY, BloomLevel.ANALYZE, BloomLevel.EVALUATE,
-        BloomLevel.CREATE,
-    }
-    allowed = _parse_target_bloom_levels(bloom_targets)
-    remember_in_scope = not allowed or BloomLevel.REMEMBER in allowed
-    for q in questions:
-        if q.bloom_level not in demote_from:
-            continue
-        if not _bloom_verb_calls_for_remember(q):
-            continue
-        if not remember_in_scope:
-            logger.warning(
-                "_fix_bloom_verb_mismatches(): %s reads as Remember-level "
-                "(%s) but is tagged %s, and Remember isn't in the "
-                "requested Bloom targets (%s) — leaving the tag as-is "
-                "rather than introducing an excluded level. Consider "
-                "reviewing this question manually.",
-                q.question_id, q.question_text[:60], q.bloom_level,
-                bloom_targets,
-            )
-            continue
-        logger.debug(
-            "_fix_bloom_verb_mismatches(): downgrading %s from %s to "
-            "Remember — leading verb indicates recall.",
-            q.question_id, q.bloom_level,
-        )
-        q.bloom_level = BloomLevel.REMEMBER
 
 _ASSESSMENT_TYPE_MAP: Dict[str, AssessmentType] = {
     "internal assessment": AssessmentType.INTERNAL,
@@ -1616,32 +1655,34 @@ class AssessmentAgent:
 
         # Mirror side A's CO/Bloom pattern onto side B, position by
         # position — NOT unifying within a side. Before mirroring, check
-        # BOTH sides' own question text for an obvious verb/Bloom-level
-        # mismatch (e.g. "Identify two…" wrongly tagged Analyze) and, if
-        # either side's text calls for Remember, force the WHOLE PAIR to
-        # Remember together — checking only one side risks leaving the
+        # BOTH sides' own question text for a clear verb/Bloom-level
+        # mismatch (in either direction — a recall verb tagged too high,
+        # or a higher-order verb like "Apply"/"Compare" tagged too low)
+        # and, if either side's verb implies a different level, correct
+        # BOTH sides together — checking only one side risks leaving the
         # two OR-alternatives at different levels, which defeats the
         # "either one is a fair choice" point of mirroring them at all.
-        # Skip the downgrade entirely if Remember isn't in the faculty's
-        # requested Bloom targets — see _fix_bloom_verb_mismatches for
-        # why introducing an excluded level is worse than leaving the
-        # (still mismatched) original tag.
+        # Skip the correction entirely if the verb-implied level isn't in
+        # the faculty's requested Bloom targets — see
+        # _fix_bloom_verb_mismatches for why introducing an excluded
+        # level is worse than leaving the (still mismatched) original tag.
         allowed = _parse_target_bloom_levels(bloom_targets)
-        remember_in_scope = not allowed or BloomLevel.REMEMBER in allowed
         side_a = questions[:len(marks_a)]
         side_b = questions[len(marks_a):len(marks_a) + len(marks_b)]
         for a_q, b_q in zip(side_a, side_b):
-            if _bloom_verb_calls_for_remember(a_q) or _bloom_verb_calls_for_remember(b_q):
-                if remember_in_scope:
-                    a_q.bloom_level = BloomLevel.REMEMBER
-                else:
-                    logger.warning(
-                        "AssessmentAgent._apply_blueprint_marks(): topic "
-                        "%r pair reads as Remember-level but Remember "
-                        "isn't in the requested Bloom targets (%s) — "
-                        "leaving tags as-is. Consider reviewing manually.",
-                        topic[:60], bloom_targets,
-                    )
+            inferred = _infer_bloom_from_verb(a_q) or _infer_bloom_from_verb(b_q)
+            if inferred is None or inferred == a_q.bloom_level:
+                continue
+            if allowed and inferred not in allowed:
+                logger.warning(
+                    "AssessmentAgent._apply_blueprint_marks(): topic %r "
+                    "pair's verb implies %s but isn't in the requested "
+                    "Bloom targets (%s) — leaving tags as-is. Consider "
+                    "reviewing manually.",
+                    topic[:60], inferred, bloom_targets,
+                )
+                continue
+            a_q.bloom_level = inferred
         for a_q, b_q in zip(side_a, side_b):
             b_q.co_mapping = list(a_q.co_mapping)
             b_q.bloom_level = a_q.bloom_level
