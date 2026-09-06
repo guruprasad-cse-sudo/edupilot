@@ -147,22 +147,39 @@ def _parse_single_block(body: str) -> Optional[dict]:
 
 
 def render_automaton_diagram(spec: dict) -> str:
-    """Render a parsed automaton spec to a PNG using Graphviz.
+    """Render a parsed automaton spec to a PNG using matplotlib.
 
-    Multiple transitions between the same pair of states (e.g. "0" and
-    "1" both going q0 -> q0) are combined onto a single edge with a
-    comma-separated label, matching standard automaton diagram
-    convention, rather than drawing two overlapping arrows.
+    Pure-Python rendering (matplotlib only, no external binary) —
+    deliberately NOT using Graphviz, even though it produces a cleaner
+    default layout, because Graphviz's Python package is only a wrapper
+    around the separate ``dot`` command-line tool, which must be
+    installed at the OS level. Render's native Python runtime has no
+    way to install system-wide packages (only Docker-based deploys do),
+    so a Graphviz-based renderer would silently fail in production even
+    though it works in any environment with ``dot`` pre-installed
+    (observed in practice: "failed to execute PosixPath('dot')..." at
+    runtime). matplotlib is a pure pip dependency, so this works
+    anywhere the rest of the app already runs.
+
+    States are arranged on a circle; multiple transitions between the
+    same state pair are combined onto one edge with a comma-separated
+    label; self-loops get their own small arc above the state; an arrow
+    from empty space marks the start state; accepting states get a
+    double circle — all standard automaton diagram conventions.
 
     Args:
         spec: A dict as returned by :func:`parse_automaton_specs`.
 
     Returns:
         str: Path to the rendered PNG file. Empty string if rendering
-        failed (e.g. Graphviz not available) — callers should treat
-        that as "no diagram", not raise.
+        failed — callers should treat that as "no diagram", not raise.
     """
-    import graphviz  # lazy import — only needed for this feature
+    import math
+
+    import matplotlib
+    matplotlib.use("Agg")  # headless — no display server in this environment
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Arc, Circle, FancyArrowPatch
 
     out_dir = config.diagrams_dir / _CUSTOM_DIAGRAM_SUBDIR
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -171,31 +188,106 @@ def render_automaton_diagram(spec: dict) -> str:
     # with the exact same automaton reuses the same file instead of
     # piling up duplicates.
     fingerprint = hashlib.md5(repr(sorted(spec.items())).encode()).hexdigest()[:12]
-    out_path = out_dir / f"automaton_{fingerprint}"
+    out_path = out_dir / f"automaton_{fingerprint}.png"
 
     try:
-        dot = graphviz.Digraph(format="png")
-        dot.attr(rankdir="LR")
-        dot.attr("node", shape="circle", fontsize="12")
-
+        states = spec["states"]
+        n = len(states)
         accept_set = set(spec.get("accept", []))
-        for state in spec["states"]:
-            shape = "doublecircle" if state in accept_set else "circle"
-            dot.node(state, state, shape=shape)
+        start = spec["start"]
 
-        # Start-state arrow (standard automaton convention: an arrow
-        # from nowhere pointing at the start state).
-        dot.node("__start__", "", shape="point")
-        dot.edge("__start__", spec["start"])
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.set_aspect("equal")
+        ax.axis("off")
+
+        radius_layout = max(2.5, n * 0.7)
+        node_radius = 0.35
+        positions = {}
+        for i, s in enumerate(states):
+            angle = 2 * math.pi * i / n - math.pi / 2  # start at top, clockwise
+            positions[s] = (
+                radius_layout * math.cos(angle),
+                radius_layout * math.sin(angle),
+            )
 
         grouped: Dict[Tuple[str, str], List[str]] = {}
         for frm, sym, to in spec["transitions"]:
             grouped.setdefault((frm, to), []).append(sym)
-        for (frm, to), syms in grouped.items():
-            dot.edge(frm, to, label=",".join(syms))
 
-        rendered_path = dot.render(str(out_path), cleanup=True)
-        return rendered_path
+        for (frm, to), syms in grouped.items():
+            label = ",".join(syms)
+            x1, y1 = positions[frm]
+            x2, y2 = positions[to]
+            if frm == to:
+                loop_cx, loop_cy = x1, y1 + node_radius * 1.55
+                loop_w, loop_h = node_radius * 1.3, node_radius * 1.1
+                ax.add_patch(Arc(
+                    (loop_cx, loop_cy), loop_w, loop_h, angle=0,
+                    theta1=15, theta2=345, color="black", lw=1.3, zorder=4,
+                ))
+                end_angle = math.radians(15)
+                ex = loop_cx + (loop_w / 2) * math.cos(end_angle)
+                ey = loop_cy + (loop_h / 2) * math.sin(end_angle)
+                tangent_angle = end_angle + math.pi / 2
+                hx = ex - 0.12 * math.cos(tangent_angle)
+                hy = ey - 0.12 * math.sin(tangent_angle)
+                ax.annotate(
+                    "", xy=(ex, ey), xytext=(hx, hy),
+                    arrowprops=dict(arrowstyle="-|>", color="black", lw=1.3),
+                    zorder=4,
+                )
+                ax.text(loop_cx, loop_cy + loop_h * 0.85, label,
+                        ha="center", va="center", fontsize=10)
+            else:
+                dx, dy = x2 - x1, y2 - y1
+                dist = math.hypot(dx, dy)
+                ux, uy = dx / dist, dy / dist
+                sx, sy = x1 + ux * node_radius, y1 + uy * node_radius
+                ex, ey = x2 - ux * node_radius, y2 - uy * node_radius
+                has_reverse = (to, frm) in grouped
+                connectionstyle = "arc3,rad=0.15" if has_reverse else "arc3,rad=0.0"
+                ax.add_patch(FancyArrowPatch(
+                    (sx, sy), (ex, ey), arrowstyle="-|>", mutation_scale=15,
+                    color="black", lw=1.2, connectionstyle=connectionstyle,
+                ))
+                mx, my = (sx + ex) / 2, (sy + ey) / 2
+                perp_x, perp_y = -uy, ux
+                offset = 0.28 if has_reverse else 0.2
+                ax.text(
+                    mx + perp_x * offset, my + perp_y * offset, label,
+                    ha="center", va="center", fontsize=10,
+                    bbox=dict(boxstyle="round,pad=0.1", fc="white", ec="none"),
+                )
+
+        # Start-state arrow (standard automaton convention: an arrow
+        # from nowhere pointing at the start state).
+        sx, sy = positions[start]
+        ax.annotate(
+            "", xy=(sx - node_radius, sy),
+            xytext=(sx - node_radius * 2.2, sy),
+            arrowprops=dict(arrowstyle="-|>", color="black", lw=1.4),
+        )
+
+        for s in states:
+            x, y = positions[s]
+            ax.add_patch(Circle(
+                (x, y), node_radius, facecolor="white", edgecolor="black",
+                lw=1.4, zorder=5,
+            ))
+            if s in accept_set:
+                ax.add_patch(Circle(
+                    (x, y), node_radius * 0.8, facecolor="none",
+                    edgecolor="black", lw=1.2, zorder=5,
+                ))
+            ax.text(x, y, s, ha="center", va="center", fontsize=11, zorder=6)
+
+        margin = radius_layout + node_radius * 4
+        ax.set_xlim(-margin, margin)
+        ax.set_ylim(-margin, margin)
+        plt.tight_layout()
+        plt.savefig(str(out_path), dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        return str(out_path)
     except Exception as exc:  # noqa: BLE001 — never let this break generation
         logger.warning(
             "render_automaton_diagram(): rendering failed: %s", exc,

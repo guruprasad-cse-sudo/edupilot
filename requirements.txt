@@ -32,7 +32,13 @@ python-docx==1.1.2
 reportlab==4.2.2
 pypdf==4.2.0
 pdfplumber==0.11.9
-graphviz==0.21
+
+# ── Diagram rendering ────────────────────────────────────────────────────────
+# Pure-Python (no external binary) — used by diagram_renderer.py to draw
+# faculty-authored automaton (DFA/NFA) diagrams. Deliberately NOT graphviz:
+# that package only wraps the separate `dot` command-line tool, which
+# Render's native Python runtime has no way to install system-wide.
+matplotlib>=3.8
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 python-dotenv==1.0.1
