@@ -135,6 +135,36 @@ _VERB_LEVEL_ENTRIES = sorted(
 )
 
 
+def split_topics(topics_str: str) -> List[str]:
+    """Split a comma-separated topics string into clean topic names.
+
+    Handles natural "A, B, C, and D" listing style — a faculty typing
+    "Topic 1, Topic 2, and Topic 3" is extremely natural English, but a
+    plain comma-split leaves the last topic as " and Topic 3", which
+    then fails to exactly match that same topic's blueprint line in
+    Custom Sub-Question Marks (blueprint lookups are exact-string) and
+    silently falls back to un-blueprinted, freely-improvised marks for
+    that one topic — observed in practice: a 5-topic blueprint where
+    every line summed to 10 marks still produced a wildly uneven total
+    because the last topic's name didn't match due to a leading "and ".
+    This strips a leading "and " (case-insensitive) from each item
+    after splitting, so "and Topic 3" normalizes to "Topic 3".
+
+    Args:
+        topics_str: Raw comma-separated topics string from the form.
+
+    Returns:
+        List of cleaned, non-empty topic strings in original order.
+    """
+    topics = []
+    for t in (topics_str or "").split(","):
+        cleaned = t.strip()
+        cleaned = re.sub(r"^and\s+", "", cleaned, flags=re.IGNORECASE).strip()
+        if cleaned:
+            topics.append(cleaned)
+    return topics
+
+
 def _parse_target_bloom_levels(bloom_targets: str) -> set:
     """Parse a comma-separated Bloom targets string into a set of BloomLevel.
 
@@ -1187,7 +1217,7 @@ class AssessmentAgent:
                 for every topic that receives at least one question, in the
                 original topic order.
         """
-        raw = [t.strip() for t in topics_str.split(",") if t.strip()]
+        raw = split_topics(topics_str)
         if not raw:
             raw = ["General"]
 
@@ -1245,7 +1275,7 @@ class AssessmentAgent:
         if not is_semester_exam:
             return custom
 
-        all_topics = [t.strip() for t in plan.topics.split(",") if t.strip()]
+        all_topics = split_topics(plan.topics)
         if not all_topics:
             all_topics = ["General"]
 
@@ -1320,7 +1350,7 @@ class AssessmentAgent:
         batch_size = config.batch_size
         blueprint = self._resolve_vtu_blueprint(plan)
         self._vtu_blueprint = blueprint
-        all_topics = [t.strip() for t in plan.topics.split(",") if t.strip()]
+        all_topics = split_topics(plan.topics)
         if not all_topics:
             all_topics = ["General"]
 
