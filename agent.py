@@ -330,55 +330,79 @@ def _detect_duplicate_questions(questions: List[Question]) -> str:
     )
 
 
-def _detect_out_of_scope_bloom_levels(
+_BLOOM_ORDER: List[BloomLevel] = [
+    BloomLevel.REMEMBER, BloomLevel.UNDERSTAND, BloomLevel.APPLY,
+    BloomLevel.ANALYZE, BloomLevel.EVALUATE, BloomLevel.CREATE,
+]
+
+
+def _enforce_bloom_scope(
     questions: List[Question], bloom_targets: str
 ) -> str:
-    """Flag any question tagged with a Bloom level outside the requested targets.
+    """Force any out-of-scope Bloom tag to the closest requested level.
 
     This is a DIFFERENT check from :func:`_fix_bloom_verb_mismatches`:
     that one only catches a MISMATCH between a question's own verb and
     its own tag (e.g. "Compare…" tagged Understand). It does nothing
     when a question's verb and tag already agree with each other but
     that agreed-upon level simply isn't one the faculty asked for —
-    e.g. the LLM writes "Define the term X" and tags it Remember, and
-    both are internally consistent, but Remember wasn't in the
-    requested Bloom targets at all. There's no verb/tag mismatch to
-    "fix" in that case (nothing about the question's OWN wording is
-    wrong), so this needs a separate, simpler check: does the final
-    tag fall within the requested set, full stop.
+    e.g. the LLM writes "Identify two X" (a genuine Remember-level
+    question) and tags it Remember, and both are internally
+    consistent, but Remember wasn't in the requested Bloom targets at
+    all. Observed in practice: despite an explicit prompt instruction
+    not to do this (see rule 1a/8 in ASSESSMENT_SYSTEM_PROMPT), the LLM
+    still defaults short, low-mark sub-parts to Remember-style recall
+    questions regardless of the requested scope — prompt compliance
+    alone isn't reliable enough here, so this is a deterministic
+    backstop that actually changes the tag rather than only warning.
 
-    This can't safely auto-correct such cases (there's no verb signal
-    pointing at a better level — the question was written for Remember
-    on purpose), so it only flags them in generation_notes for the
-    faculty to review, rather than silently leaving an out-of-scope
-    question in the paper unremarked.
+    There's no verb signal pointing at a "correct" replacement (the
+    question was genuinely written as a recall question, not
+    mistagged), so this reassigns to whichever requested level is
+    numerically CLOSEST on the Remember→Create scale — the least
+    aggressive change available — and flags every reassignment in the
+    returned message, since the question's own wording may no longer
+    perfectly match its new tag. This trades "wrong level, but at
+    least internally consistent" for "requested scope is honoured, but
+    a manual look may be worthwhile" — for a faculty who explicitly
+    restricted the target levels, staying within that restriction is
+    the higher priority of the two imperfect options.
 
     Args:
         questions: The full generated question list, after all other
-            corrections have already run.
+            corrections have already run. Mutated in place.
         bloom_targets: The plan's requested Bloom levels (comma-
             separated string). Empty string means no restriction was
-            specified, in which case this always returns "".
+            specified, in which case this is a no-op.
 
     Returns:
-        str: A warning message listing out-of-scope question IDs and
-        their levels, or an empty string if none were found (or no
-        restriction was specified).
+        str: A warning message listing every reassignment made (old
+        level → new level), or an empty string if none were needed (or
+        no restriction was specified).
     """
     allowed = _parse_target_bloom_levels(bloom_targets)
     if not allowed:
         return ""
-    offenders = [
-        f"{q.question_id} ({q.bloom_level.value})"
-        for q in questions
-        if q.bloom_level not in allowed
-    ]
-    if not offenders:
+    reassignments = []
+    for q in questions:
+        if q.bloom_level in allowed:
+            continue
+        current_rank = _BLOOM_ORDER.index(q.bloom_level)
+        closest = min(
+            allowed, key=lambda lvl: abs(_BLOOM_ORDER.index(lvl) - current_rank)
+        )
+        reassignments.append(
+            f"{q.question_id} ({q.bloom_level.value}→{closest.value})"
+        )
+        q.bloom_level = closest
+    if not reassignments:
         return ""
     return (
-        "WARNING: these questions are tagged outside the requested Bloom "
-        f"targets ({bloom_targets}): " + ", ".join(offenders) + " — please "
-        "review before distributing this paper."
+        "WARNING: these questions were tagged outside the requested "
+        f"Bloom targets ({bloom_targets}) and were reassigned to the "
+        "closest permitted level — the question wording may not "
+        "perfectly match its new tag, please review: "
+        + ", ".join(reassignments) + "."
     )
 
 
@@ -1182,7 +1206,7 @@ class AssessmentAgent:
                 sources=sources or [],
             )
         _fix_bloom_verb_mismatches(result.questions, plan.bloom_targets)
-        scope_warning = _detect_out_of_scope_bloom_levels(
+        scope_warning = _enforce_bloom_scope(
             result.questions, plan.bloom_targets
         )
         if scope_warning:
