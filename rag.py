@@ -267,6 +267,30 @@ def format_rag_context(
 # RAGModule
 # ---------------------------------------------------------------------------
 
+_RAG_MODULE_SINGLETON: Optional["RAGModule"] = None
+
+
+def get_shared_rag_module() -> "RAGModule":
+    """Return the process-wide RAGModule singleton, creating it on first call.
+
+    Shared by orchestrator.py (single upfront retrieval, used for
+    non-batched generation) and agent.py's AssessmentAgent._generate_batched
+    (fresh, topic-scoped retrieval per batch — see that method's
+    docstring for why per-batch retrieval matters). Living in rag.py
+    rather than orchestrator.py specifically so agent.py can import it
+    without risking a circular import (orchestrator.py already imports
+    from agent.py to run AssessmentAgent).
+
+    Returns:
+        RAGModule: The shared instance, lazily created and cached.
+    """
+    global _RAG_MODULE_SINGLETON
+    if _RAG_MODULE_SINGLETON is None:
+        _RAG_MODULE_SINGLETON = RAGModule()
+        logger.info("RAGModule singleton created (process-wide cache)")
+    return _RAG_MODULE_SINGLETON
+
+
 class RAGModule:
     """Manages the FAISS vector store and retrieval pipeline.
 

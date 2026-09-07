@@ -46,20 +46,18 @@ from models import (
 logger = get_logger(__name__)
 
 # ---------------------------------------------------------------------------
-# Process-wide RAGModule singleton — avoids recreating (and potentially
-# re-loading embeddings / FAISS) on every pipeline run.
+# Process-wide RAGModule singleton — moved to rag.py's get_shared_rag_module()
+# so agent.py can also use it (for per-batch, topic-scoped retrieval; see
+# AssessmentAgent._generate_batched) without a circular import. This
+# wrapper is kept only for backward compatibility with existing call
+# sites in this file.
 # ---------------------------------------------------------------------------
-_RAG_MODULE_SINGLETON = None
 
 
 def _get_rag_module():
-    """Return the process-wide RAGModule singleton, creating it on first call."""
-    global _RAG_MODULE_SINGLETON
-    if _RAG_MODULE_SINGLETON is None:
-        from rag import RAGModule  # lazy import
-        _RAG_MODULE_SINGLETON = RAGModule()
-        logger.info("RAGModule singleton created (process-wide cache)")
-    return _RAG_MODULE_SINGLETON
+    """Return the process-wide RAGModule singleton (see rag.get_shared_rag_module)."""
+    from rag import get_shared_rag_module  # lazy import
+    return get_shared_rag_module()
 
 
 # ---------------------------------------------------------------------------

@@ -2035,6 +2035,45 @@ class AssessmentAgent:
                     f"topics: {batch_topics}. "
                     f"Other batches will cover the remaining topics separately."
                 )
+            # ── Fresh, topic-scoped RAG retrieval for THIS batch ───────────
+            # The context passed into generate() (and used as a fallback
+            # below) was retrieved ONCE, upfront, using a query that
+            # blends ALL of the plan's topics together — orchestrator.py
+            # has no per-batch visibility, so it can't do better than
+            # that single combined retrieval. That's a real problem for
+            # batched generation specifically: the SAME 5 chunks then get
+            # reused as context for every batch regardless of which
+            # topic that batch actually covers, so a batch's questions
+            # can end up grounded in another topic's (or even another
+            # module's) content if it happened to score well against the
+            # combined query. Observed in practice: a "2D Transformations"
+            # topic's batch was generated using retrieved context
+            # dominated by a DIFFERENT module's circle-drawing content,
+            # because "OpenGL"/"coordinates" (generic terms shared by
+            # both modules) pulled it into the top-5 for the whole-
+            # assessment combined query. Doing a SEPARATE retrieval here,
+            # scoped to just this batch's own topic(s), fixes that at
+            # the source — falls back to the shared upfront context if
+            # this fails or the knowledge base has nothing better.
+            batch_rag_context = rag_context
+            batch_sources = sources
+            try:
+                from rag import format_rag_context, get_shared_rag_module
+                batch_query = f"{plan.course_name} {batch_topics}".strip()
+                batch_rag_results = get_shared_rag_module().retrieve(
+                    batch_query, top_k=5
+                )
+                if batch_rag_results:
+                    batch_rag_context = format_rag_context(batch_rag_results)
+                    batch_sources = [attr for _, attr in batch_rag_results]
+            except Exception as exc:  # noqa: BLE001 — fall back, never break generation
+                logger.warning(
+                    "AssessmentAgent._generate_batched(): per-batch RAG "
+                    "retrieval failed for batch %d/%d (topic %r), falling "
+                    "back to the shared whole-assessment context: %s",
+                    batch_num, total_batches, batch_topics[:60], exc,
+                )
+
             user_prompt = build_assessment_prompt(
                 assessment_type=plan.assessment_type,
                 course_name=plan.course_name,
@@ -2042,7 +2081,7 @@ class AssessmentAgent:
                 topics=batch_topics,
                 bloom_targets=plan.bloom_targets,
                 co_mapping=plan.co_mapping,
-                rag_context=rag_context,
+                rag_context=batch_rag_context,
                 question_count=batch_count,
                 marks_per_question=plan.marks_per_question,
                 difficulty=plan.difficulty,
@@ -2061,7 +2100,7 @@ class AssessmentAgent:
             batch_assessment = self._invoke_batch_with_parse_retry(
                 user_prompt=user_prompt,
                 plan=plan,
-                sources=sources,
+                sources=batch_sources,
                 batch_num=batch_num,
                 total_batches=total_batches,
                 call_start_tracker=call_start_tracker,
