@@ -19,6 +19,7 @@ question matching below has something to match against).
 Input format (embedded anywhere in Additional Instructions)::
 
     [DFA]
+    Topic: Finite Automata
     States: q0, q1, q2, q3
     Alphabet: 0, 1
     Start: q0
@@ -37,6 +38,16 @@ Input format (embedded anywhere in Additional Instructions)::
 ``[NFA]`` and ``[AUTOMATON]`` are accepted as aliases of the same format
 (NFA transitions may list multiple target states after ``->``, comma-
 separated, and/or use "epsilon" as the symbol for an epsilon-transition).
+
+``Topic:`` is optional but strongly recommended whenever more than one
+automaton is provided in the same request (e.g. 10 problems each with
+their own diagram) — see :func:`_attach_diagrams_to_questions` for why:
+without it, diagrams are matched to questions purely by state-name
+overlap, which breaks down if multiple automatons reuse the same
+generic names (q0, q1, q2...), a very likely scenario. When given,
+``Topic:`` must match one of the exact topic names in the faculty's
+"Topics to Cover" field — matching is then unambiguous regardless of
+state naming.
 """
 
 from __future__ import annotations
@@ -57,6 +68,32 @@ _AUTOMATON_BLOCK_RE = re.compile(
 _TRANSITION_LINE_RE = re.compile(r"^(.+?)\s*,\s*(.+?)\s*->\s*(.+)$")
 
 _CUSTOM_DIAGRAM_SUBDIR = "custom_automata"
+
+
+def strip_automaton_blocks(text: str) -> str:
+    """Remove any raw [DFA]/[NFA]/[AUTOMATON] block from student-facing text.
+
+    Deterministic safety net alongside the prompt instruction (rule 8 in
+    ASSESSMENT_SYSTEM_PROMPT) telling the LLM never to paste the raw
+    structured block into question_text — prompt compliance isn't
+    guaranteed, and this markup must never reach a printed paper (it's
+    for internal diagram rendering only). Applied to every question's
+    text as a final pass regardless of whether a diagram was actually
+    attached.
+
+    Args:
+        text: A question's raw text, possibly containing a leaked block.
+
+    Returns:
+        str: The text with any [DFA]...[/DFA] (or NFA/AUTOMATON) block
+        removed and surrounding whitespace collapsed. Unchanged if no
+        block is present.
+    """
+    if not text or "[" not in text:
+        return text
+    cleaned = _AUTOMATON_BLOCK_RE.sub("", text)
+    cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+    return cleaned
 
 
 def parse_automaton_specs(text: str) -> List[dict]:
@@ -98,14 +135,16 @@ def _parse_single_block(body: str) -> Optional[dict]:
 
     Returns:
         dict with ``states``, ``alphabet``, ``start``, ``accept``,
-        ``transitions`` (list of ``(from, symbol, to)`` tuples), or
-        None if the block is missing required fields.
+        ``transitions`` (list of ``(from, symbol, to)`` tuples), and
+        ``topic`` (optional — empty string if not given), or None if the
+        block is missing required fields.
     """
     states: List[str] = []
     alphabet: List[str] = []
     start = ""
     accept: List[str] = []
     transitions: List[Tuple[str, str, str]] = []
+    topic = ""
 
     in_transitions = False
     for raw_line in body.splitlines():
@@ -113,7 +152,10 @@ def _parse_single_block(body: str) -> Optional[dict]:
         if not line:
             continue
         low = line.lower()
-        if low.startswith("states:"):
+        if low.startswith("topic:"):
+            topic = line.split(":", 1)[1].strip()
+            in_transitions = False
+        elif low.startswith("states:"):
             states = [s.strip() for s in line.split(":", 1)[1].split(",") if s.strip()]
             in_transitions = False
         elif low.startswith("alphabet:"):
@@ -143,6 +185,7 @@ def _parse_single_block(body: str) -> Optional[dict]:
         "start": start,
         "accept": accept,
         "transitions": transitions,
+        "topic": topic,
     }
 
 

@@ -213,6 +213,14 @@ class AssessmentParser:
             A fully populated :class:`ParsedAssessment` ready for export.
         """
         meta = assessment.metadata
+        logger.info(
+            "AssessmentParser.parse(): EXPORT-TIME BLOOM SNAPSHOT (as "
+            "received from the caller): %s",
+            "; ".join(
+                f"{q.question_id}={q.bloom_level.value}"
+                for q in assessment.questions
+            ),
+        )
 
         # ── Header ──────────────────────────────────────────────────────────
         department = cls._safe(meta.department) or _UNIVERSITY_TAGLINE

@@ -1207,6 +1207,13 @@ class AssessmentAgent:
                 "AssessmentAgent.generate(): custom automaton diagram "
                 "rendering failed, continuing without it: %s", exc,
             )
+        logger.info(
+            "AssessmentAgent.generate(): FINAL BLOOM SNAPSHOT before "
+            "returning to caller: %s",
+            "; ".join(
+                f"{q.question_id}={q.bloom_level.value}" for q in result.questions
+            ),
+        )
         return result
 
     # ------------------------------------------------------------------
@@ -1831,6 +1838,17 @@ class AssessmentAgent:
             if b_inferred is not None and b_inferred != b_q.bloom_level:
                 _apply_if_allowed(b_q, b_inferred)
 
+            logger.info(
+                "AssessmentAgent._apply_blueprint_marks(): topic %r — "
+                "POST-STEP1 STATE: %s='%s' (verb infers %s) is now tagged "
+                "%s; %s='%s' (verb infers %s) is now tagged %s.",
+                topic[:60],
+                a_q.question_id, (a_q.question_text or "")[:40], a_inferred,
+                a_q.bloom_level,
+                b_q.question_id, (b_q.question_text or "")[:40], b_inferred,
+                b_q.bloom_level,
+            )
+
             # Step 2: if they still disagree after independent
             # correction, only cross-mirror when one side had no verb
             # evidence at all (nothing of its own to go on, so
@@ -2250,6 +2268,12 @@ class AssessmentAgent:
             merged_count,
             len(batches),
             merged_count,
+        )
+        logger.info(
+            "AssessmentAgent._merge_batches(): POST-MERGE BLOOM SNAPSHOT: %s",
+            "; ".join(
+                f"{q.question_id}={q.bloom_level.value}" for q in all_questions
+            ),
         )
         return merged
 
