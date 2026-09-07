@@ -639,6 +639,65 @@ def render_generation_form() -> Optional[dict]:
             "marks_per_question", _default_marks_per_question, 1, 100
         )
 
+    # Diagram block insert buttons live OUTSIDE the form for the same
+    # reason Assessment Type does (see comment above) — a button inside
+    # st.form() doesn't take effect until the whole form is submitted,
+    # so it couldn't insert text into Additional Instructions live. These
+    # append a ready-to-edit example block (see diagram_renderer.py for
+    # the format) to the Additional Instructions field below, so a
+    # faculty doesn't have to remember or type the exact syntax from
+    # scratch — they just edit the placeholder state names/transitions
+    # in place.
+    _DFA_TEMPLATE = (
+        "\n[DFA]\n"
+        "Topic: <exact topic name from Topics to Cover>\n"
+        "States: q0, q1, q2\n"
+        "Alphabet: 0, 1\n"
+        "Start: q0\n"
+        "Accept: q2\n"
+        "Transitions:\n"
+        "q0, 0 -> q1\n"
+        "q0, 1 -> q0\n"
+        "q1, 0 -> q2\n"
+        "q1, 1 -> q0\n"
+        "q2, 0 -> q2\n"
+        "q2, 1 -> q2\n"
+        "[/DFA]\n"
+    )
+    _NFA_TEMPLATE = (
+        "\n[NFA]\n"
+        "Topic: <exact topic name from Topics to Cover>\n"
+        "States: q0, q1, q2\n"
+        "Alphabet: a, b\n"
+        "Start: q0\n"
+        "Accept: q2\n"
+        "Transitions:\n"
+        "q0, a -> q0, q1\n"
+        "q1, b -> q2\n"
+        "[/NFA]\n"
+    )
+    col_add_dfa, col_add_nfa, _col_add_spacer = st.columns([1, 1, 3])
+    with col_add_dfa:
+        if st.button("+ Add DFA block", help=(
+            "Inserts a ready-to-edit DFA template into Additional "
+            "Instructions below — replace the placeholder states/"
+            "transitions with your own, and set Topic to match one of "
+            "your Topics to Cover exactly."
+        )):
+            current = st.session_state.get(
+                "gen_extra_instructions", str(_ep("extra_instructions"))
+            )
+            st.session_state["gen_extra_instructions"] = current + _DFA_TEMPLATE
+    with col_add_nfa:
+        if st.button("+ Add NFA block", help=(
+            "Same as DFA, but for a nondeterministic automaton — "
+            "transitions may list multiple target states."
+        )):
+            current = st.session_state.get(
+                "gen_extra_instructions", str(_ep("extra_instructions"))
+            )
+            st.session_state["gen_extra_instructions"] = current + _NFA_TEMPLATE
+
     with st.form("generation_form"):
         col_left, col_right = st.columns(2)
 
@@ -788,7 +847,8 @@ def render_generation_form() -> Optional[dict]:
                 "e.g. Focus on practical applications; "
                 "avoid pure definition questions."
             ),
-            height=60,
+            height=140,
+            key="gen_extra_instructions",
         )
 
         include_kb_diagrams = st.checkbox(
