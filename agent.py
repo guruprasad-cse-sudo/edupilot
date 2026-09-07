@@ -329,6 +329,59 @@ def _detect_duplicate_questions(questions: List[Question]) -> str:
         "before distributing this paper."
     )
 
+
+def _detect_out_of_scope_bloom_levels(
+    questions: List[Question], bloom_targets: str
+) -> str:
+    """Flag any question tagged with a Bloom level outside the requested targets.
+
+    This is a DIFFERENT check from :func:`_fix_bloom_verb_mismatches`:
+    that one only catches a MISMATCH between a question's own verb and
+    its own tag (e.g. "Compare…" tagged Understand). It does nothing
+    when a question's verb and tag already agree with each other but
+    that agreed-upon level simply isn't one the faculty asked for —
+    e.g. the LLM writes "Define the term X" and tags it Remember, and
+    both are internally consistent, but Remember wasn't in the
+    requested Bloom targets at all. There's no verb/tag mismatch to
+    "fix" in that case (nothing about the question's OWN wording is
+    wrong), so this needs a separate, simpler check: does the final
+    tag fall within the requested set, full stop.
+
+    This can't safely auto-correct such cases (there's no verb signal
+    pointing at a better level — the question was written for Remember
+    on purpose), so it only flags them in generation_notes for the
+    faculty to review, rather than silently leaving an out-of-scope
+    question in the paper unremarked.
+
+    Args:
+        questions: The full generated question list, after all other
+            corrections have already run.
+        bloom_targets: The plan's requested Bloom levels (comma-
+            separated string). Empty string means no restriction was
+            specified, in which case this always returns "".
+
+    Returns:
+        str: A warning message listing out-of-scope question IDs and
+        their levels, or an empty string if none were found (or no
+        restriction was specified).
+    """
+    allowed = _parse_target_bloom_levels(bloom_targets)
+    if not allowed:
+        return ""
+    offenders = [
+        f"{q.question_id} ({q.bloom_level.value})"
+        for q in questions
+        if q.bloom_level not in allowed
+    ]
+    if not offenders:
+        return ""
+    return (
+        "WARNING: these questions are tagged outside the requested Bloom "
+        f"targets ({bloom_targets}): " + ", ".join(offenders) + " — please "
+        "review before distributing this paper."
+    )
+
+
 _ASSESSMENT_TYPE_MAP: Dict[str, AssessmentType] = {
     "internal assessment": AssessmentType.INTERNAL,
     "internal": AssessmentType.INTERNAL,
@@ -1129,6 +1182,15 @@ class AssessmentAgent:
                 sources=sources or [],
             )
         _fix_bloom_verb_mismatches(result.questions, plan.bloom_targets)
+        scope_warning = _detect_out_of_scope_bloom_levels(
+            result.questions, plan.bloom_targets
+        )
+        if scope_warning:
+            logger.warning("AssessmentAgent.generate(): %s", scope_warning)
+            result.generation_notes = (
+                (result.generation_notes + "; " if result.generation_notes else "")
+                + scope_warning
+            )
         if plan.include_kb_diagrams:
             try:
                 from rag import attach_diagrams_to_questions

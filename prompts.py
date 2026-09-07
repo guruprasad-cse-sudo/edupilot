@@ -116,6 +116,12 @@ Rules you MUST follow:
    q2, q3... trace the sequence of states for input 1011", or "...draw
    the state diagram for the given DFA"). Do not invent a different
    automaton or change the given transitions.
+   NEVER copy the raw [DFA]/[NFA]/[AUTOMATON] block itself (the
+   "States:", "Alphabet:", "Transitions:" lines, or the [DFA]/[/DFA]
+   tags) into question_text — that markup is for internal diagram
+   rendering only and must never appear in text shown to students.
+   Describe the automaton in natural language using its state names,
+   never paste the structured block verbatim.
 """
 
 # ---------------------------------------------------------------------------
@@ -548,11 +554,23 @@ def build_assessment_prompt(
             f"MARKS PER QUESTION: {marks_per_question}\n"
         )
 
+    bloom_constraint = (
+        f"BLOOM LEVELS TO TARGET: {bloom_targets}\n"
+        f"This is a HARD CONSTRAINT, not a suggestion: every single question "
+        f"AND every lettered sub-part (a, b, c...) must be tagged with one of "
+        f"exactly these levels — {bloom_targets}. Do NOT use Remember, or any "
+        f"other level, unless it is explicitly listed above, even for a short "
+        f"or low-mark sub-part; a low-mark sub-part should still be written "
+        f"and tagged at one of the permitted levels (e.g. a brief Understand-"
+        f"level question), not defaulted to Remember just because it's short.\n"
+        if bloom_targets.strip() else f"BLOOM LEVELS TO TARGET: {bloom_targets}\n"
+    )
+
     return (
         f"ASSESSMENT TYPE: {assessment_type}\n"
         f"COURSE: {course_name}" + (f" ({course_code})" if course_code else "") + "\n"
         f"TOPICS: {topics}\n"
-        f"BLOOM LEVELS TO TARGET: {bloom_targets}\n"
+        f"{bloom_constraint}"
         f"COURSE OUTCOMES TO MAP: {co_mapping}\n"
         f"{count_and_marks_section}"
         f"DIFFICULTY: {difficulty}\n"
