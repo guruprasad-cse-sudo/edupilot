@@ -451,19 +451,30 @@ def build_vtu_paper_layout(
 
 
 def _mirror_pair_co_bloom(pair: List["VTUQuestionGroup"]) -> None:
-    """Mirror the first side's CO/Bloom pattern onto the second side.
+    """Mirror the first side's CO mapping onto the second side.
 
     Q(n) and Q(n+1) are two alternative versions of the SAME question —
-    a student answers only one — so if Q(n)'s sub-parts are CO1/CO2/CO1
-    at Bloom levels L1/L3/L1, its OR-counterpart Q(n+1) should carry
-    that identical pattern across its own a)/b)/c), even though the
-    question text differs. This is a display-level safety net: agent.py
-    already applies this at generation time for blueprinted assessments
-    (see AssessmentAgent._apply_blueprint_marks), but export can be
-    called on older saved runs generated before that fix existed, so
-    this re-applies the same rule at render time regardless of when or
-    how the assessment was generated. A no-op when the pair has only
-    one side (no OR-alternative to mirror against).
+    a student answers only one — so mirroring CO mapping keeps them
+    consistent even though the question text differs. CO has no
+    independent "ground truth" to check against (unlike Bloom level,
+    where a question's own verb implies a specific level), so
+    unconditionally copying it here is always safe.
+
+    IMPORTANT: this does NOT touch Bloom level, unlike an earlier
+    version of this function. agent.py's AssessmentAgent.
+    _apply_blueprint_marks() is the authoritative source for Bloom
+    level — it corrects each side independently to match its own
+    verb, and deliberately leaves two OR-alternatives at genuinely
+    different levels when their own wording implies different things
+    (logging a warning for faculty review rather than forcing one to
+    match the other). This function used to also copy Bloom level
+    unconditionally as a render-time safety net for older saved runs —
+    but that blind copy actively destroyed agent.py's more careful,
+    per-side-correct value on every NEW generation (observed in
+    practice: agent.py correctly tagged a side "Analyze" based on its
+    own "Analyze the relationship…" wording, and this function then
+    silently overwrote it back to the OTHER side's "Understand" right
+    before rendering). Trust whatever agent.py already computed.
 
     Args:
         pair: A ``module.pairs[i]`` entry — a list of 1 or 2
@@ -476,7 +487,6 @@ def _mirror_pair_co_bloom(pair: List["VTUQuestionGroup"]) -> None:
     side_a, side_b = pair[0].subparts, pair[1].subparts
     for a_sp, b_sp in zip(side_a, side_b):
         b_sp.question.co_mapping = a_sp.question.co_mapping
-        b_sp.question.bloom_level = a_sp.question.bloom_level
 
 
 def _compute_co_coverage(modules: List["VTUModule"]) -> List[tuple]:
