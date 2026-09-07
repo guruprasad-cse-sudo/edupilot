@@ -1528,20 +1528,29 @@ class AssessmentAgent:
         Looks for ``[DFA]``/``[NFA]``/``[AUTOMATON]`` blocks in
         *extra_instructions* (see ``diagram_renderer.py`` for the input
         format), renders each to a real diagram, and attaches it to
-        EVERY generated question that references it — matched by
-        counting how many of the automaton's exact state names (e.g.
-        "q0", "q1") appear in each question's text; any question
-        mentioning at least one state name gets the diagram, not just
-        the single best match. This is deliberate: it's common for
-        several sub-questions (e.g. "trace the states for input X" and
-        "which state is accepting") to all reference the same
-        automaton, and a student reading a "the DFA below" reference
-        with no diagram actually shown is worse than the same diagram
-        appearing more than once. This relies on rule 8 in
-        ``ASSESSMENT_SYSTEM_PROMPT`` instructing the LLM to use those
-        exact state names verbatim; if no question mentions any state
-        name, the diagram is rendered but left unattached rather than
-        guessing which question it belongs to.
+        matching questions using one of two strategies:
+
+        1. **Topic-based** (preferred, used whenever the block includes
+           an optional ``Topic:`` line): attaches to every question
+           whose own ``.topic`` field exactly matches (case-
+           insensitive). Unambiguous regardless of state naming — this
+           is the only reliable option once more than one automaton is
+           provided in the same request, since state-name matching
+           breaks down when multiple automatons reuse the same generic
+           names (q0, q1, q2...), which is a very likely scenario for,
+           say, "10 problems each with their own diagram".
+        2. **State-name matching** (fallback, used when no ``Topic:``
+           is given): attaches to EVERY question whose text mentions at
+           least one of the automaton's exact state names — not just
+           the single best match, since it's common for several sub-
+           questions to all reference the same automaton, and a
+           question reading "the DFA below" with nothing shown is worse
+           than the same diagram appearing more than once. This relies
+           on rule 8 in ``ASSESSMENT_SYSTEM_PROMPT`` instructing the LLM
+           to use the exact state names verbatim.
+
+        If neither strategy finds a match, the diagram is rendered but
+        left unattached rather than guessing which question it belongs to.
 
         Also strips any raw ``[DFA]``/``[NFA]``/``[AUTOMATON]`` block
         that leaked verbatim into a question's text — prompt compliance
@@ -1569,23 +1578,48 @@ class AssessmentAgent:
             rendered_specs = render_all_automaton_specs(extra_instructions)
             attached = 0
             for spec in rendered_specs:
-                state_names = [s.lower() for s in spec.get("states", [])]
-                if not state_names:
-                    continue
+                topic = (spec.get("topic") or "").strip().lower()
                 matched_any = False
-                for q in questions:
-                    # Match against the ORIGINAL text (before stripping
-                    # below) — if the LLM leaked the raw block into a
-                    # question, that block itself contains the state
-                    # names, and stripping it first would wipe out the
-                    # only mentions of them, breaking the match. Match
-                    # first, strip for display after.
-                    text_lower = (q.question_text or "").lower()
-                    score = sum(1 for s in state_names if s in text_lower)
-                    if score > 0:
-                        q.diagram_path = spec["image_path"]
-                        attached += 1
-                        matched_any = True
+
+                if topic:
+                    # Strategy 1: topic-based, unambiguous regardless of
+                    # state naming.
+                    for q in questions:
+                        if (q.topic or "").strip().lower() == topic:
+                            q.diagram_path = spec["image_path"]
+                            attached += 1
+                            matched_any = True
+                    if not matched_any:
+                        logger.warning(
+                            "AssessmentAgent._attach_custom_automaton_diagrams(): "
+                            "rendered a %s diagram tagged Topic: %r but no "
+                            "question has a matching .topic — check that "
+                            "this exactly matches an entry in Topics to "
+                            "Cover. Falling back to state-name matching.",
+                            spec.get("kind", "automaton"), spec["topic"],
+                        )
+
+                if not matched_any:
+                    # Strategy 2: state-name matching (no Topic given, or
+                    # the given Topic didn't match anything).
+                    state_names = [s.lower() for s in spec.get("states", [])]
+                    if not state_names:
+                        continue
+                    for q in questions:
+                        # Match against the ORIGINAL text (before
+                        # stripping below) — if the LLM leaked the raw
+                        # block into a question, that block itself
+                        # contains the state names, and stripping it
+                        # first would wipe out the only mentions of
+                        # them, breaking the match. Match first, strip
+                        # for display after.
+                        text_lower = (q.question_text or "").lower()
+                        score = sum(1 for s in state_names if s in text_lower)
+                        if score > 0:
+                            q.diagram_path = spec["image_path"]
+                            attached += 1
+                            matched_any = True
+
                 if not matched_any:
                     logger.warning(
                         "AssessmentAgent._attach_custom_automaton_diagrams(): "
@@ -1683,49 +1717,82 @@ class AssessmentAgent:
             # with an empty blueprint_group, so export's automatic
             # even-split fallback picks them up rather than mis-grouping.
 
-        # Mirror side A's CO/Bloom pattern onto side B, position by
-        # position — NOT unifying within a side. Before mirroring, check
-        # EACH side's own question text against its OWN current tag
-        # independently (not "infer(A) or infer(B), compared only
-        # against A's tag" — that biases toward A and silently masks a
-        # genuine mismatch on B whenever A merely happens to already be
-        # correctly tagged; observed in practice: side A "Demonstrate…"
-        # was already correctly Apply, which caused side B "Identify
-        # the term…" — clearly Remember, tagged Understand — to never
-        # get checked at all). If EITHER side has a real mismatch,
-        # correct BOTH sides together — checking only one side risks
-        # leaving the two OR-alternatives at different levels, which
-        # defeats the "either one is a fair choice" point of mirroring
-        # them at all. Skip the correction entirely if the verb-implied
-        # level isn't in the faculty's requested Bloom targets — see
-        # _fix_bloom_verb_mismatches for why introducing an excluded
-        # level is worse than leaving the (still mismatched) original tag.
+        # Mirror side A's CO mapping onto side B unconditionally (no
+        # verb-based ground truth exists for CO, so there's nothing to
+        # independently verify — mirroring is the best available
+        # signal). Bloom level is handled differently: EACH side is
+        # first corrected to match its OWN verb where one is inferrable
+        # — NOT forced to match the other side's inferred value. An
+        # earlier version of this logic did exactly that (whichever
+        # side had a detected mismatch "won", overwriting the other
+        # side's tag to match) and that silently broke already-correct
+        # questions: e.g. side A "Describe the components…" (correctly
+        # Understand) got overwritten to Analyze just because side B
+        # "Compare the state transitions…" was mismatched and its
+        # inferred level "won". Two OR-alternatives can legitimately
+        # ask about the same topic at genuinely different cognitive
+        # levels if their wording differs that much — that's a content
+        # problem (the two alternatives aren't well-matched in
+        # difficulty), not a tagging problem, and shouldn't be papered
+        # over by mislabeling one of them. So: cross-mirror Bloom level
+        # only when one side has NO verb evidence at all (nothing to
+        # independently correct it to); when both sides have their own
+        # verb evidence and it still disagrees after independent
+        # correction, leave each at its own correct value and flag the
+        # pair for manual review instead of guessing which one is
+        # "right" for the other.
         allowed = _parse_target_bloom_levels(bloom_targets)
         side_a = questions[:len(marks_a)]
         side_b = questions[len(marks_a):len(marks_a) + len(marks_b)]
         for a_q, b_q in zip(side_a, side_b):
+            b_q.co_mapping = list(a_q.co_mapping)
+
             a_inferred = _infer_bloom_from_verb(a_q)
             b_inferred = _infer_bloom_from_verb(b_q)
-            target_level = None
+
+            def _apply_if_allowed(q: Question, inferred: BloomLevel) -> bool:
+                if allowed and inferred not in allowed:
+                    logger.warning(
+                        "AssessmentAgent._apply_blueprint_marks(): topic "
+                        "%r — %s's verb implies %s but isn't in the "
+                        "requested Bloom targets (%s) — leaving its tag "
+                        "as-is. Consider reviewing manually.",
+                        topic[:60], q.question_id, inferred, bloom_targets,
+                    )
+                    return False
+                q.bloom_level = inferred
+                return True
+
+            # Step 1: correct each side independently to match its own verb.
             if a_inferred is not None and a_inferred != a_q.bloom_level:
-                target_level = a_inferred
-            elif b_inferred is not None and b_inferred != b_q.bloom_level:
-                target_level = b_inferred
-            if target_level is None:
+                _apply_if_allowed(a_q, a_inferred)
+            if b_inferred is not None and b_inferred != b_q.bloom_level:
+                _apply_if_allowed(b_q, b_inferred)
+
+            # Step 2: if they still disagree after independent
+            # correction, only cross-mirror when one side had no verb
+            # evidence at all (nothing of its own to go on, so
+            # adopting the other side's value is strictly better than
+            # leaving it unrelated to either).
+            if a_q.bloom_level == b_q.bloom_level:
                 continue
-            if allowed and target_level not in allowed:
+            if a_inferred is None and b_inferred is not None:
+                a_q.bloom_level = b_q.bloom_level
+            elif b_inferred is None and a_inferred is not None:
+                b_q.bloom_level = a_q.bloom_level
+            elif a_inferred is not None and b_inferred is not None:
                 logger.warning(
-                    "AssessmentAgent._apply_blueprint_marks(): topic %r "
-                    "pair's verb implies %s but isn't in the requested "
-                    "Bloom targets (%s) — leaving tags as-is. Consider "
-                    "reviewing manually.",
-                    topic[:60], target_level, bloom_targets,
+                    "AssessmentAgent._apply_blueprint_marks(): topic %r — "
+                    "%s and %s are OR-alternatives but their own wording "
+                    "implies different Bloom levels (%s vs %s) — each is "
+                    "individually correct, but the pair isn't matched in "
+                    "difficulty. Consider rephrasing one to match the "
+                    "other, or reviewing manually.",
+                    topic[:60], a_q.question_id, b_q.question_id,
+                    a_q.bloom_level, b_q.bloom_level,
                 )
-                continue
-            a_q.bloom_level = target_level
-        for a_q, b_q in zip(side_a, side_b):
-            b_q.co_mapping = list(a_q.co_mapping)
-            b_q.bloom_level = a_q.bloom_level
+            # else: neither side has verb evidence — nothing to correct
+            # or cross-mirror from; leave both as generated.
         if len(side_a) != len(side_b):
             logger.debug(
                 "AssessmentAgent._apply_blueprint_marks(): topic %r side "
